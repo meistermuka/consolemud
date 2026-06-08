@@ -36,6 +36,7 @@ public class CommandParser
         _commands["attack"] = new KillCommand();
         
         _commands["wield"] = new WieldCommand();
+        _commands["wear"] = new WearCommand();
     }
 
     public void ParseAndExecute(string input, Player player, WorldState world)

@@ -15,4 +15,8 @@ public class Item
     public bool IsWeapon { get; set; }
     public string DiceNotation { get; set; } // e.g. "1d6"
     public string[] AttackVerbs { get; set; } // ["slash", "stab", "slice"]
+    
+    // Armour properties
+    public bool IsArmour { get; set; }
+    public int ArmourRating { get; set; }
 }

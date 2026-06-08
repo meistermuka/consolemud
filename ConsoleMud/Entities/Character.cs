@@ -18,4 +18,6 @@ public abstract class Character
     
     // New eqipment slot
     public Item EquippedWeapon { get; set; }
+    public Item EquippedArmour { get; set; }
+    public Character CombatTarget { get; set; }
 }
