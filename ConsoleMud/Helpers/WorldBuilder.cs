@@ -26,15 +26,31 @@ public static class WorldBuilder
         state.Rooms[armory.Id] = armory;
 
         // 3. Populate Items
-        var sword = new Item { Name = "sword", Description = "A sharp, lightweight steel shortsword.", IsGetable = true };
+        var sword = new Item
+        {
+            Name = "sword", 
+            Description = "A sharp, lightweight steel shortsword.", 
+            IsGetable = true,
+            IsWeapon = true,
+            DiceNotation = "3d8",
+            AttackVerbs = new[] { "slash", "stab", "slice" }
+        };
         armory.Items.Add(sword);
 
         var anvil = new Item { Name = "anvil", Description = "A heavy black anvil. It's not budging.", IsGetable = false };
         armory.Items.Add(anvil);
 
         // 4. Populate NPCs
+        var ratClaws = new Item
+        {
+            Name = "sharp claws",
+            IsWeapon = true,
+            DiceNotation = "1d4",
+            AttackVerbs = new[] { "scratch", "claw" }
+        };
         var rat = new NonPlayerCharacter { Name = "rat", Description = "A giant, red-eyed mangy rat gnawing on a bone.", Health = 12, MaxHealth = 12, CurrentRoomId = hallway.Id };
         rat.Inventory.Add(new Item { Name = "key", Description = "A small, shiny key.", IsGetable = true});
+        rat.EquippedWeapon = ratClaws;
         hallway.Characters.Add(rat);
         state.Characters[rat.Id] = rat;
 
