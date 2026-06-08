@@ -10,6 +10,9 @@ public abstract class Character
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     
+    public int Mana { get; set; }
+    public int MaxMana { get; set; }
+    
     // Location tracking
     public Guid CurrentRoomId { get; set; }
     
@@ -20,4 +23,6 @@ public abstract class Character
     public Item EquippedWeapon { get; set; }
     public Item EquippedArmour { get; set; }
     public Character CombatTarget { get; set; }
+    
+    public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

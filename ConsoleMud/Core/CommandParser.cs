@@ -38,6 +38,7 @@ public class CommandParser
         _commands["wield"] = new WieldCommand();
         _commands["wear"] = new WearCommand();
         _commands["bash"] = new BashCommand();
+        _commands["status"] = new StatusCommand();
     }
 
     public void ParseAndExecute(string input, Player player, WorldState world)
