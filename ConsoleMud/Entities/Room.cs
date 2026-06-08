@@ -12,4 +12,6 @@ public class Room
     // Who and what is in the room
     public List<Character> Characters { get; set; } = new();
     public List<Item> Items { get; set; } = new();
+    
+    public bool IsOutside { get; set; }
 }

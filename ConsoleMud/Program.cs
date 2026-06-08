@@ -17,6 +17,9 @@ class Program
         
         //var foyerId = world.Rooms.First(r => r.Value.Name.Contains("Foyer")).Key;
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
+        var timeEngine = new  TimeEngine(world);
+        var cts = new CancellationTokenSource();
+        Task.Run(() => timeEngine.StartAsync(cts.Token));
 
         var startingRoom = world.Rooms.Values.First();
 

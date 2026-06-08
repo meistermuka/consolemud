@@ -25,4 +25,5 @@ public abstract class Character
     public Character CombatTarget { get; set; }
     
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public List<ActiveEffect> StatusEffects { get; set; } = new();
 }
