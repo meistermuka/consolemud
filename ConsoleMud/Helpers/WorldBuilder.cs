@@ -32,7 +32,7 @@ public static class WorldBuilder
             Description = "A sharp, lightweight steel shortsword.", 
             IsGetable = true,
             IsWeapon = true,
-            DiceNotation = "3d8",
+            DiceNotation = "2d4",
             AttackVerbs = new[] { "slash", "stab", "slice" }
         };
         armory.Items.Add(sword);
