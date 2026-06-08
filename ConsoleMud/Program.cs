@@ -93,7 +93,9 @@ class Program
         int finalDamage = Math.Max(1, rawDamage - armourMitigation);
         defender.Health -= finalDamage;
         
-        Console.WriteLine($"{attacker.Name} {verb}s {defender.Name} for {finalDamage} damage! ({dice}) -> [{defender.Name} HP: {Math.Max(0, defender.Health)}/{defender.MaxHealth}]");
+        Console.WriteLine($"{attacker.Name} {verb}s {defender.Name} for {finalDamage} damage! " +
+                          $"({dice} rolled {rawDamage}, mitigated by -{armourMitigation} armor) -> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
+
         
         if (defender.Health <= 0)
             HandleDeath(defender, world);

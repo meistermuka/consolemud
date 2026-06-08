@@ -24,6 +24,16 @@ public static class WorldBuilder
         state.Rooms[foyer.Id] = foyer;
         state.Rooms[hallway.Id] = hallway;
         state.Rooms[armory.Id] = armory;
+        
+        var armor = new Item
+        {
+            Name = "chainmail", 
+            Description = "Heavy iron link mail.", 
+            IsGetable = true, 
+            IsArmour = true, 
+            ArmourRating = 3
+        };
+        foyer.Items.Add(armor);
 
         // 3. Populate Items
         var sword = new Item
