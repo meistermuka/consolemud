@@ -35,4 +35,12 @@ public abstract class Character
     
     public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) ? item : null;
     public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
+    
+    public CharacterClass Class { get; set; }
+    public int Strength { get; set; }
+    public int Dexterity { get; set; }
+    public int Constitution { get; set; }
+    public int Intelligence { get; set; }
+    public int Wisdom { get; set; }
+    public int Charisma { get; set; }
 }
