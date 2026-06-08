@@ -1,0 +1,33 @@
+using ConsoleMud.Entities;
+
+namespace ConsoleMud.Core.Commands;
+
+public class DropCommand : ICommand
+{
+    public void Execute(Player player, string[] args, WorldState world)
+    {
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Drop what?");
+            return;
+        }
+
+        string targetItemName = string.Join(" ", args).ToLower();
+        var room = world.Rooms[player.CurrentRoomId];
+
+        // Find the item in the player's inventory
+        var item = player.Inventory.FirstOrDefault(i => i.Name.Equals(targetItemName, StringComparison.OrdinalIgnoreCase));
+
+        if (item == null)
+        {
+            Console.WriteLine($"You aren't carrying a '{targetItemName}'.");
+            return;
+        }
+
+        // Atomic transfer: Remove from player, add to room
+        player.Inventory.Remove(item);
+        room.Items.Add(item);
+
+        Console.WriteLine($"You drop the {item.Name} onto the ground.");
+    }
+}

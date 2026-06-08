@@ -1,0 +1,24 @@
+using ConsoleMud.Entities;
+using ConsoleMud.Enums;
+
+namespace ConsoleMud.Core.Commands;
+
+public class MoveCommand : ICommand
+{
+    private readonly Direction _direction;
+    public MoveCommand(Direction direction) => _direction = direction;
+
+    public void Execute(Player player, string[] args, WorldState world)
+    {
+        var currentRoom = world.Rooms[player.CurrentRoomId];
+        if (currentRoom.Exits.TryGetValue(_direction, out var targetRoomId))
+        {
+            world.MoveCharacter(player, targetRoomId);
+            Console.WriteLine($"You move {_direction.ToString().ToLower()}.");
+            // Auto-execute a Look command so the player sees what's in the new room'
+            new LookCommand().Execute(player, args, world);
+        }
+        else
+            Console.WriteLine($"You can't go {_direction.ToString().ToLower()}.");
+    }
+}
