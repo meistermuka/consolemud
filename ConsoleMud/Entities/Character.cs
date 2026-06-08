@@ -1,3 +1,5 @@
+using ConsoleMud.Enums;
+
 namespace ConsoleMud.Entities;
 
 public abstract class Character
@@ -26,4 +28,11 @@ public abstract class Character
     
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public List<ActiveEffect> StatusEffects { get; set; } = new();
+    
+    public Dictionary<EquipmentSlot, Item> Equipment { get; set; } = new();
+    // Dynamically calculate total mitiga for all equipped armour items
+    public int TotalArmourRating => Equipment.Values.Sum(i => i.ArmourRating);
+    
+    public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) ? item : null;
+    public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
 }

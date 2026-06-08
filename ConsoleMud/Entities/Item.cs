@@ -1,3 +1,5 @@
+using ConsoleMud.Enums;
+
 namespace ConsoleMud.Entities;
 
 public class Item
@@ -19,4 +21,8 @@ public class Item
     // Armour properties
     public bool IsArmour { get; set; }
     public int ArmourRating { get; set; }
+    
+    public bool IsEquippable { get; set; }
+    public EquipmentSlot TargetSlot { get; set; }
+    public bool IsShield { get; set; }
 }
