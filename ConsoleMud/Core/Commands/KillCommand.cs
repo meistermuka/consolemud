@@ -27,38 +27,14 @@ public class KillCommand : ICommand
             Console.WriteLine($"There is no '{targetName}' here to attack.");
             return;
         }
+        
+        // Establish mutual engagement
+        player.CombatTarget = npc;
+        npc.CombatTarget = player;
 
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"\n⚔️ COMBAT ENGAGED: {player.Name} vs {npc.Name} ⚔️");
         Console.ResetColor();
-
-        // Automated combat loop
-        while (player.Health > 0 && npc.Health > 0)
-        {
-            // player attacks npc
-            ExecuteAttack(player, npc);
-            if (npc.Health <= 0)
-            {
-                HandleNpcDeath(npc, room, world);
-                break;
-            }
-            
-            // short pause for tension and readability
-            Thread.Sleep(1000);
-            
-            // npc attacks player
-            ExecuteAttack(npc, player);
-            if (player.Health <= 0)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("\n*** YOU HAVE BEEN SLAIN ***\nGame Over.");
-                Console.ResetColor();
-                Environment.Exit(0);
-            }
-            
-            Console.WriteLine("----------------------------------------");
-            Thread.Sleep(1000);
-        }
     }
     
     private void ExecuteAttack(Character attacker, Character defender)
