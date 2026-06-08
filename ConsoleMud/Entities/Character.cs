@@ -15,4 +15,7 @@ public abstract class Character
     
     // Inventory
     public List<Item> Inventory { get; set; } = new();
+    
+    // New eqipment slot
+    public Item EquippedWeapon { get; set; }
 }

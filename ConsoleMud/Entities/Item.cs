@@ -11,6 +11,8 @@ public class Item
     public bool IsContainer { get; set; }
     public List<Item> Contents { get; set; } = new(); // Used if IsContainer is True
     
-    // For weapons/armour add optional stats class
-    //public ItemAttributes Attributes { get; set; }
+    // Weapon properties
+    public bool IsWeapon { get; set; }
+    public string DiceNotation { get; set; } // e.g. "1d6"
+    public string[] AttackVerbs { get; set; } // ["slash", "stab", "slice"]
 }
