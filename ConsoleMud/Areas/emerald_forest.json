@@ -7,8 +7,10 @@
       "Name": "sword",
       "Description": "A finely forged steel shortsword.",
       "IsGetable": true,
+      "IsEquippable": true,
       "IsWeapon": true,
       "DiceNotation": "3d4",
+      "TargetSlot": "MainHand",
       "AttackVerbs": ["slash", "slice"]
     },
     {
@@ -17,6 +19,8 @@
       "Description": "A vest of boiled leather.",
       "IsGetable": true,
       "IsArmor": true,
+      "IsEquippable": true,
+      "TargetSlot": "Torso",
       "ArmorRating": 2
     },
     {
@@ -25,8 +29,39 @@
       "Description": "A pitted, rusty dagger.",
       "IsGetable": true,
       "IsWeapon": true,
+      "TargetSlot": "OffHand",
       "DiceNotation": "1d4",
       "AttackVerbs": ["stab", "pierce"]
+    },
+    {
+      "VirtualId": "iron_helm",
+      "Name": "iron helmet",
+      "Description": "A heavy iron helmet.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "IsArmor": true,
+      "TargetSlot": "Head",
+      "ArmorRating": 2
+    },
+    {
+      "VirtualId": "gold_ring_1",
+      "Name": "gold ring",
+      "Description": "A shiny signet ring.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "TargetSlot": "Ring1",
+      "ArmorRating": 0
+    },
+    {
+      "VirtualId": "wooden_shield",
+      "Name": "shield",
+      "Description": "A sturdy round shield.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "IsArmor": true,
+      "TargetSlot": "OffHand",
+      "IsShield": true,
+      "ArmorRating": 4
     }
   ],
   "NpcTemplates": [
@@ -56,8 +91,13 @@
       "Description": "The shadows deepen. You hear rustling in the brush.",
       "Exits": { "West": "forest_entrance" },
       "Spawns": {
-        "Items": [ { "TemplateId": "steel_sword", "Count": 1 } ],
-        "Npcs": [ { "TemplateId": "street_Walker", "Count": 2 } ]
+        "Items": [ 
+          { "TemplateId": "steel_sword", "Count": 1 },
+          { "TemplateId":  "wooden_shield", "Count": 1 },
+          { "TemplateId": "gold_ring_1", "Count": 1 },
+          { "TemplateId": "iron_helm", "Count": 1 },
+          { "TemplateId": "rusty_dagger", "Count": 1}],
+        "Npcs": [ { "TemplateId": "street_walker", "Count": 2 } ]
       }
     }
   ]

@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Enums;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -26,16 +27,30 @@ public class WieldCommand : ICommand
             Console.WriteLine($"You can't wield a {weapon.Name}. It's not a weapon.");
             return;
         }
+        
+        var targetSlot = weapon.TargetSlot;
+
+        if (targetSlot != EquipmentSlot.MainHand && targetSlot != EquipmentSlot.OffHand)
+        {
+            targetSlot = EquipmentSlot.MainHand;
+        }
+
+        if (targetSlot == EquipmentSlot.OffHand && player.MainHandWeapon == null)
+        {
+            Console.WriteLine("You must wield a weapon in your MainHand before dual-wielding an OffHand weapon.");
+            return;
+        }
 
         // Swap out old weapon if necessary
-        if (player.EquippedWeapon != null)
+        if (player.Equipment.TryGetValue(targetSlot, out var oldWeapon))
         {
-            player.Inventory.Add(player.EquippedWeapon);
-            Console.WriteLine($"You stop wielding your {player.EquippedWeapon.Name}.");
+            player.Inventory.Add(oldWeapon);
+            player.Equipment.Remove(targetSlot);
+            Console.WriteLine($"You stop wielding your {oldWeapon.Name}.");
         }
 
         player.Inventory.Remove(weapon);
-        player.EquippedWeapon = weapon;
+        player.Equipment[targetSlot] = weapon;
 
         Console.WriteLine($"You wield the {weapon.Name}! ({weapon.DiceNotation})");
     }

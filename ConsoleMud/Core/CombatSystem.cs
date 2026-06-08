@@ -29,24 +29,44 @@ public class CombatSystem
     
     private void ExecuteAttack(Character attacker, Character defender)
     {
-        string verb = attacker.EquippedWeapon?.AttackVerbs[Random.Shared.Next(attacker.EquippedWeapon.AttackVerbs.Length)] ?? "punch";
-        string dice = attacker.EquippedWeapon?.DiceNotation ?? "1d3";
+        // --- 1. MAIN HAND ATTACK ---
+        var mainWeapon = attacker.MainHandWeapon;
+        string mainVerb = mainWeapon?.AttackVerbs[Random.Shared.Next(mainWeapon.AttackVerbs.Length)] ?? "punch";
+        string mainDice = mainWeapon?.DiceNotation ?? "1d3";
 
+        ResolveSingleHit(attacker, defender, mainVerb, mainDice, "Main Hand");
+
+        // --- 2. DUAL-WIELD OFF-HAND ATTACK ---
+        var offWeapon = attacker.OffHandWeapon;
+        if (defender.Health > 0 && offWeapon != null)
+        {
+            string offVerb = offWeapon.AttackVerbs[Random.Shared.Next(offWeapon.AttackVerbs.Length)] ?? "strike";
+            string offDice = offWeapon.DiceNotation;
+
+            // Dual wielding follow up attack round
+            ResolveSingleHit(attacker, defender, offVerb, offDice, "Off Hand");
+        }
+    }
+
+    private void ResolveSingleHit(Character attacker, Character defender, string verb, string dice, string handLabel)
+    {
         int rawDamage = DiceRoller.Roll(dice);
-        int armorMitigation = defender.EquippedArmour?.ArmourRating ?? 0;
-        
-        // Damage Reduction Math (Minimum of 1 damage ensures fights resolve)
+
+        // Grabs the target's new aggregated TotalArmorRating parameter
+        int armorMitigation = defender.TotalArmourRating;
         int finalDamage = Math.Max(1, rawDamage - armorMitigation);
+
         defender.Health -= finalDamage;
 
-        // Print the output to the console
-        Console.WriteLine($"\n⚔️ {attacker.Name} {verb}s {defender.Name} for {finalDamage} damage! " +
+        Console.WriteLine($"\n⚔️ [{handLabel}] {attacker.Name} {verb}s {defender.Name} for {finalDamage} damage! " +
                           $"({dice} rolled {rawDamage}, armor reduced -{armorMitigation}) -> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
 
         if (defender.Health <= 0)
+        {
             HandleDeath(defender);
+        }
     }
-    
+
     private void HandleDeath(Character deadCharacter)
     {
         // Break combat engagements immediately

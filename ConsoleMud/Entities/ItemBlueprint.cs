@@ -1,3 +1,5 @@
+using ConsoleMud.Enums;
+
 namespace ConsoleMud.Entities;
 
 public class ItemBlueprint
@@ -11,5 +13,8 @@ public class ItemBlueprint
     public string DiceNotation { get; set; }
     public string[] AttackVerbs { get; set; }
     public bool IsArmor { get; set; }
+    public bool IsEquippable { get; set; }
+    public bool IsShield { get; set; }
     public int ArmorRating { get; set; }
+    public string TargetSlot { get; set; }
 }
