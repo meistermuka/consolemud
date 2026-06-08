@@ -2,6 +2,7 @@
 
 using ConsoleMud.Core;
 using ConsoleMud.Core.Commands;
+using ConsoleMud.Core.Services;
 using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
 
@@ -10,10 +11,14 @@ class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Booting local world...standby...");
-        var world = WorldBuilder.CreateSampleWorld();
+        //var world = WorldBuilder.CreateSampleWorld();
+        var world = new WorldState();
         var parser = new CommandParser();
         
-        var foyerId = world.Rooms.First(r => r.Value.Name.Contains("Foyer")).Key;
+        //var foyerId = world.Rooms.First(r => r.Value.Name.Contains("Foyer")).Key;
+        AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
+
+        var startingRoom = world.Rooms.Values.First();
 
         var player = new Player
         {
@@ -21,14 +26,14 @@ class Program
             Description = "An elf",
             Health = 100,
             MaxHealth = 100,
-            CurrentRoomId = foyerId
+            CurrentRoomId = startingRoom.Id
         };
         
         // Tracking player in the master state
-        world.Rooms[foyerId].Characters.Add(player);
+        startingRoom.Characters.Add(player);
         world.Characters[player.Id] = player;
         
-        Console.Clear();
+        //Console.Clear();
         Console.WriteLine("=== Welcome to the Sandbox MUD ===");
         
         // Renter initial starting room

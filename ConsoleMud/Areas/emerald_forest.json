@@ -1,0 +1,31 @@
+{
+  "Name": "The Emerald Forest",
+  "Author": "MUD Builder",
+  "Rooms": [
+    {
+      "VirtualId": "forest_entrance",
+      "Name": "The Forest Edge",
+      "Description": "Sunlight filters through a thick canopy of emerald leaves. A worn dirt path winds to the east.",
+      "Exits": {
+        "East": "deep_woods"
+      }
+    },
+    {
+      "VirtualId": "deep_woods",
+      "Name": "Deep Whispering Woods",
+      "Description": "The shadows deepen here. The path stretches west back to safety, or north into total darkness.",
+      "Exits": {
+        "West": "forest_entrance",
+        "North": "hidden_grove"
+      }
+    },
+    {
+      "VirtualId": "hidden_grove",
+      "Name": "A Hidden Grove",
+      "Description": "A peaceful clearing centered around a small, crystal-clear spring.",
+      "Exits": {
+        "South": "deep_woods"
+      }
+    }
+  ]
+}
