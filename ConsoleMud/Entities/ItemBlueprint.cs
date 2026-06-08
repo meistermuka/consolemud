@@ -1,0 +1,15 @@
+namespace ConsoleMud.Entities;
+
+public class ItemBlueprint
+{
+    public string VirtualId { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsGetable { get; set; }
+    public bool IsContainer { get; set; }
+    public bool IsWeapon { get; set; }
+    public string DiceNotation { get; set; }
+    public string[] AttackVerbs { get; set; }
+    public bool IsArmor { get; set; }
+    public int ArmorRating { get; set; }
+}

@@ -1,30 +1,63 @@
 {
   "Name": "The Emerald Forest",
   "Author": "MUD Builder",
+  "ItemTemplates": [
+    {
+      "VirtualId": "steel_sword",
+      "Name": "sword",
+      "Description": "A finely forged steel shortsword.",
+      "IsGetable": true,
+      "IsWeapon": true,
+      "DiceNotation": "3d4",
+      "AttackVerbs": ["slash", "slice"]
+    },
+    {
+      "VirtualId": "leather_vest",
+      "Name": "leather armor",
+      "Description": "A vest of boiled leather.",
+      "IsGetable": true,
+      "IsArmor": true,
+      "ArmorRating": 2
+    },
+    {
+      "VirtualId": "rusty_dagger",
+      "Name": "dagger",
+      "Description": "A pitted, rusty dagger.",
+      "IsGetable": true,
+      "IsWeapon": true,
+      "DiceNotation": "1d4",
+      "AttackVerbs": ["stab", "pierce"]
+    }
+  ],
+  "NpcTemplates": [
+    {
+      "VirtualId": "street_walker",
+      "Name": "walker",
+      "Description": "A lean gray street walker with predatory yellow eyes.",
+      "Health": 25,
+      "MaxHealth": 25,
+      "EquippedWeaponTemplateId": "rusty_dagger"
+    }
+  ],
   "Rooms": [
     {
       "VirtualId": "forest_entrance",
       "Name": "The Forest Edge",
-      "Description": "Sunlight filters through a thick canopy of emerald leaves. A worn dirt path winds to the east.",
-      "Exits": {
-        "East": "deep_woods"
+      "Description": "Sunlight filters through a thick canopy. A path winds east.",
+      "Exits": { "East": "deep_woods" },
+      "Spawns": {
+        "Items": [ { "TemplateId": "leather_vest", "Count": 1 } ],
+        "Npcs": []
       }
     },
     {
       "VirtualId": "deep_woods",
       "Name": "Deep Whispering Woods",
-      "Description": "The shadows deepen here. The path stretches west back to safety, or north into total darkness.",
-      "Exits": {
-        "West": "forest_entrance",
-        "North": "hidden_grove"
-      }
-    },
-    {
-      "VirtualId": "hidden_grove",
-      "Name": "A Hidden Grove",
-      "Description": "A peaceful clearing centered around a small, crystal-clear spring.",
-      "Exits": {
-        "South": "deep_woods"
+      "Description": "The shadows deepen. You hear rustling in the brush.",
+      "Exits": { "West": "forest_entrance" },
+      "Spawns": {
+        "Items": [ { "TemplateId": "steel_sword", "Count": 1 } ],
+        "Npcs": [ { "TemplateId": "street_Walker", "Count": 2 } ]
       }
     }
   ]

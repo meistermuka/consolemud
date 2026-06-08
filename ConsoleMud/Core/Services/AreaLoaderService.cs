@@ -19,12 +19,16 @@ public static class AreaLoaderService
             Console.WriteLine($"Failed to parse area file: {filePath}");
 
         Console.WriteLine($"Loaded area: {areaBlueprint.Name}");
+        
+        var itemTemplates = areaBlueprint.ItemTemplates.ToDictionary(t => t.VirtualId, StringComparer.OrdinalIgnoreCase);
+        var npcTemplates = areaBlueprint.NpcTemplates.ToDictionary(t => t.VirtualId, StringComparer.OrdinalIgnoreCase);
+
 
         // A temporary map linking the file's text ID to our live runtime Guid
         var idTranslationTable = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
         var createdRooms = new List<(Room RoomEntity, RoomBlueprint Blueprint)>();
 
-        // 2. First Pass: Create the Room entities and assign fresh Guids
+        // Pass 1: Create the Room entities and assign fresh Guids
         foreach (var bp in areaBlueprint.Rooms)
         {
             var liveRoom = new Room
@@ -32,7 +36,6 @@ public static class AreaLoaderService
                 Name = bp.Name,
                 Description = bp.Description
             };
-
             // Pair the textual VirtualId to this room's permanent memory Guid
             idTranslationTable[bp.VirtualId] = liveRoom.Id;
 
@@ -65,10 +68,73 @@ public static class AreaLoaderService
                     }
                 }
             }
+            
+            // Execute Item Spawning Configuration
+            foreach (var spawnRef in blueprint.Spawns.Items)
+            {
+                if (itemTemplates.TryGetValue(spawnRef.TemplateId, out var itemBp))
+                {
+                    for (int i = 0; i < spawnRef.Count; i++)
+                    {
+                        liveRoom.Items.Add(CreateLiveItem(itemBp));
+                    }
+                }
+            }
+            
+            // Execute NPC Spawning Configuration
+            foreach (var spawnRef in blueprint.Spawns.Npcs)
+            {
+                if (npcTemplates.TryGetValue(spawnRef.TemplateId, out var npcBp))
+                {
+                    for (int i = 0; i < spawnRef.Count; i++)
+                    {
+                        var liveNpc = CreateLiveNpc(npcBp, liveRoom.Id, itemTemplates);
+                        liveRoom.Characters.Add(liveNpc);
+                        world.Characters[liveNpc.Id] = liveNpc; // Track globally in main thread state
+                    }
+                }
+            }
+            
             // 4. inject completed room into active live worldstate memory loop
             world.Rooms[liveRoom.Id] = liveRoom;
         }
         
         Console.WriteLine($"Successfully loaded {createdRooms.Count} rooms from '{areaBlueprint.Name}'.\n");
+    }
+
+    private static Item CreateLiveItem(ItemBlueprint bp)
+    {
+        return new Item
+        {
+            Name = bp.Name,
+            Description = bp.Description,
+            IsGetable = bp.IsGetable,
+            IsContainer = bp.IsContainer,
+            IsWeapon = bp.IsWeapon,
+            DiceNotation = bp.DiceNotation,
+            AttackVerbs = bp.AttackVerbs,
+            IsArmour = bp.IsArmor,
+            ArmourRating = bp.ArmorRating
+        };
+    }
+    
+    private static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, Dictionary<string, ItemBlueprint> itemTemplates)
+    {
+        var npc = new NonPlayerCharacter
+        {
+            Name = bp.Name,
+            Description = bp.Description,
+            Health = bp.Health,
+            MaxHealth = bp.MaxHealth,
+            CurrentRoomId = roomId
+        };
+
+        // If the NPC template requests an equipped starter item weapon, generate it automatically
+        if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))
+        {
+            npc.EquippedWeapon = CreateLiveItem(weaponBp);
+        }
+
+        return npc;
     }
 }
