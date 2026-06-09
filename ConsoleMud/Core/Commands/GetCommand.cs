@@ -31,7 +31,7 @@ public class GetCommand : ICommand
     private void HandleStandardGet(Player player, string itemName, WorldState world)
     {
         var room = world.Rooms[player.CurrentRoomId];
-        var item = room.Items.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+        var item = room.Items.FirstOrDefault(i => i.MatchesKeyword(itemName));
 
         if (item == null) { Console.WriteLine($"You don't see a '{itemName}' here."); return; }
         if (!item.IsGetable) { Console.WriteLine($"The {item.Name} is too heavy."); return; }
@@ -53,7 +53,7 @@ public class GetCommand : ICommand
         if (!container.IsContainer) { Console.WriteLine($"The {container.Name} cannot hold items."); return; }
 
         // Find item inside the container
-        var item = container.Contents.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+        var item = container.Contents.FirstOrDefault(i => i.MatchesKeyword(itemName));
         if (item == null) { Console.WriteLine($"There is no '{itemName}' inside the {container.Name}."); return; }
 
         container.Contents.Remove(item);
