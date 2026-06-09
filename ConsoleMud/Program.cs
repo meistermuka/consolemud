@@ -10,7 +10,6 @@ class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Booting local world...standby...");
-        //var world = WorldBuilder.CreateSampleWorld();
         var world = new WorldState();
         var parser = new CommandParser();
         
@@ -30,7 +29,7 @@ class Program
         
         Console.WriteLine("=== Welcome to the Sandbox MUD ===");
         
-        // Renter initial starting room
+        // Render initial starting room
         new LookCommand().Execute(player, Array.Empty<string>(), world);
         
         // Main loop

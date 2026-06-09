@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -31,14 +32,29 @@ public class GetCommand : ICommand
     private void HandleStandardGet(Player player, string itemName, WorldState world)
     {
         var room = world.Rooms[player.CurrentRoomId];
-        var item = room.Items.FirstOrDefault(i => i.MatchesKeyword(itemName));
+        var (targetIndex, cleanKeyword) = KeywordParser.ExtractIndex(itemName);
+        Item foundItem = null;
+        int currentMatchCount = 0;
+        
+        foreach (var item in room.Items)
+        {
+            if (item.MatchesKeyword(cleanKeyword))
+            {
+                currentMatchCount++;
+                if (currentMatchCount == targetIndex)
+                {
+                    foundItem = item;
+                    break;
+                }
+            }
+        }
 
-        if (item == null) { Console.WriteLine($"You don't see a '{itemName}' here."); return; }
-        if (!item.IsGetable) { Console.WriteLine($"The {item.Name} is too heavy."); return; }
+        if (foundItem == null) { Console.WriteLine($"You don't see a '{itemName}' here."); return; }
+        if (!foundItem.IsGetable) { Console.WriteLine($"The {foundItem.Name} is too heavy."); return; }
 
-        room.Items.Remove(item);
-        player.Inventory.Add(item);
-        Console.WriteLine($"You pick up the {item.Name}.");
+        room.Items.Remove(foundItem);
+        player.Inventory.Add(foundItem);
+        Console.WriteLine($"You pick up the {foundItem.Name}.");
     }
 
     private void HandleContainerGet(Player player, string itemName, string containerName, WorldState world)

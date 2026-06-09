@@ -96,7 +96,7 @@
           { "TemplateId":  "wooden_shield", "Count": 1 },
           { "TemplateId": "gold_ring_1", "Count": 1 },
           { "TemplateId": "iron_helm", "Count": 1 },
-          { "TemplateId": "rusty_dagger", "Count": 1}],
+          { "TemplateId": "rusty_dagger", "Count": 3 }],
         "Npcs": [ { "TemplateId": "street_walker", "Count": 2 } ]
       }
     }
