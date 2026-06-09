@@ -10,7 +10,7 @@ public class WearCommand : ICommand
         if (args.Length == 0) { Console.WriteLine("Wear what?"); return; }
 
         string targetName = string.Join(" ", args);
-        var item = player.Inventory.FirstOrDefault(i => i.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
+        var item = player.Inventory.FirstOrDefault(i => i.MatchesKeyword(targetName));
 
         if (item == null)
         {

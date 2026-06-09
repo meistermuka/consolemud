@@ -5,6 +5,8 @@ namespace ConsoleMud.Core;
 public class CombatSystem
 {
     private readonly WorldState _world;
+    private const string DefaultDiceNotation = "1d3";
+    private const string DefaultAttackVerb = "punch";
     
     public CombatSystem(WorldState world) => _world = world;
 
@@ -31,8 +33,8 @@ public class CombatSystem
     {
         // --- 1. MAIN HAND ATTACK ---
         var mainWeapon = attacker.MainHandWeapon;
-        string mainVerb = mainWeapon?.AttackVerbs[Random.Shared.Next(mainWeapon.AttackVerbs.Length)] ?? "punch";
-        string mainDice = mainWeapon?.DiceNotation ?? "1d3";
+        string mainVerb = mainWeapon?.AttackVerbs[Random.Shared.Next(mainWeapon.AttackVerbs.Length)] ?? DefaultAttackVerb;
+        string mainDice = mainWeapon?.DiceNotation ?? DefaultDiceNotation;
 
         ResolveSingleHit(attacker, defender, mainVerb, mainDice, "Main Hand");
 

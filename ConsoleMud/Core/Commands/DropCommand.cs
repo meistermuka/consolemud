@@ -16,7 +16,7 @@ public class DropCommand : ICommand
         var room = world.Rooms[player.CurrentRoomId];
 
         // Find the item in the player's inventory
-        var item = player.Inventory.FirstOrDefault(i => i.Name.Equals(targetItemName, StringComparison.OrdinalIgnoreCase));
+        var item = player.Inventory.FirstOrDefault(i => i.MatchesKeyword(targetItemName));
 
         if (item == null)
         {

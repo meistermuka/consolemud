@@ -30,10 +30,10 @@ public abstract class Character
     public List<ActiveEffect> StatusEffects { get; set; } = new();
     
     public Dictionary<EquipmentSlot, Item> Equipment { get; set; } = new();
-    // Dynamically calculate total mitiga for all equipped armour items
+    // Dynamically calculate total mitigation for all equipped armour items
     public int TotalArmourRating => Equipment.Values.Sum(i => i.ArmourRating);
     
-    public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) ? item : null;
+    public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) && item.IsWeapon ? item : null;
     public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
     
     public CharacterClass Class { get; set; }
