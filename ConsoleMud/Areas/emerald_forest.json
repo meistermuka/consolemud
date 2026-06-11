@@ -14,6 +14,17 @@
       "AttackVerbs": ["slash", "slice"]
     },
     {
+      "VirtualId": "dire_wolf_fangs",
+      "Name": "sharp fangs",
+      "Description": "A sharp set of direwolf fangs.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "DiceNotation": "3d4",
+      "TargetSlot": "MainHand",
+      "AttackVerbs": ["bite"]
+    },
+    {
       "VirtualId": "leather_vest",
       "Name": "leather armor",
       "Description": "A vest of boiled leather.",
@@ -80,6 +91,7 @@
       "Description": "A massive, corrupted beast dripping black saliva",
       "Health": 45,
       "MaxHealth": 45,
+      "EquippedWeaponTemplateId": "dire_wolf_fangs",
       "IsAggressive": true
     }
   ],
@@ -90,7 +102,14 @@
       "Description": "Sunlight filters through a thick canopy. A path winds east.",
       "Exits": { "East": "deep_woods" },
       "Spawns": {
-        "Items": [ { "TemplateId": "leather_vest", "Count": 1 } ],
+        "Items": [ 
+          { "TemplateId": "leather_vest", "Count": 1 },
+          { "TemplateId": "steel_sword", "Count": 1 },
+          { "TemplateId":  "wooden_shield", "Count": 1 },
+          { "TemplateId": "gold_ring_1", "Count": 1 },
+          { "TemplateId": "iron_helm", "Count": 1 },
+          { "TemplateId": "rusty_dagger", "Count": 3 }
+        ],
         "Npcs": []
       }
     },
@@ -100,12 +119,7 @@
       "Description": "The shadows deepen. You hear rustling in the brush.",
       "Exits": { "West": "forest_entrance" },
       "Spawns": {
-        "Items": [ 
-          { "TemplateId": "steel_sword", "Count": 1 },
-          { "TemplateId":  "wooden_shield", "Count": 1 },
-          { "TemplateId": "gold_ring_1", "Count": 1 },
-          { "TemplateId": "iron_helm", "Count": 1 },
-          { "TemplateId": "rusty_dagger", "Count": 3 }],
+        "Items": [],
         "Npcs": [ 
           { "TemplateId": "street_walker", "Count": 2 },
           { "TemplateId": "dire_wolf", "Count": 1 }

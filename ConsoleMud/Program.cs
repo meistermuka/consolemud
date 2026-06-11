@@ -13,7 +13,6 @@ class Program
         var world = new WorldState();
         var parser = new CommandParser();
         
-        //var foyerId = world.Rooms.First(r => r.Value.Name.Contains("Foyer")).Key;
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
 

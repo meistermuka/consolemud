@@ -58,14 +58,9 @@ public static class AreaLoaderService
 
                     // Locate the destination room's Guid via our lookup map
                     if (idTranslationTable.TryGetValue(targetVirtualId, out var targetGuid))
-                    {
                         liveRoom.Exits[direction] = targetGuid;
-                    }
                     else
-                    {
-                        Console.WriteLine(
-                            $"[Warning] Room '{blueprint.VirtualId}' points to an invalid exit target: '{targetVirtualId}'");
-                    }
+                        Console.WriteLine($"[Warning] Room '{blueprint.VirtualId}' points to an invalid exit target: '{targetVirtualId}'");
                 }
             }
             
@@ -94,7 +89,6 @@ public static class AreaLoaderService
                     }
                 }
             }
-            
             // 4. inject completed room into active live worldstate memory loop
             world.Rooms[liveRoom.Id] = liveRoom;
         }
@@ -136,9 +130,7 @@ public static class AreaLoaderService
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically
         if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))
-        {
-            npc.EquippedWeapon = CreateLiveItem(weaponBp);
-        }
+            npc.Equipment[EquipmentSlot.MainHand] = CreateLiveItem(weaponBp);
 
         return npc;
     }
