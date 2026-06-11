@@ -8,4 +8,5 @@ public class NpcBlueprint
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public string EquippedWeaponTemplateId { get; set; }
+    public bool IsAggressive { get; set; }
 }

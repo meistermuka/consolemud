@@ -71,7 +71,16 @@
       "Description": "A lean gray street walker with predatory yellow eyes.",
       "Health": 25,
       "MaxHealth": 25,
-      "EquippedWeaponTemplateId": "rusty_dagger"
+      "EquippedWeaponTemplateId": "rusty_dagger",
+      "IsAggressive": false
+    },
+    {
+      "VirtualId": "dire_wolf",
+      "Name": "ferocious dire wolf",
+      "Description": "A massive, corrupted beast dripping black saliva",
+      "Health": 45,
+      "MaxHealth": 45,
+      "IsAggressive": true
     }
   ],
   "Rooms": [
@@ -97,7 +106,10 @@
           { "TemplateId": "gold_ring_1", "Count": 1 },
           { "TemplateId": "iron_helm", "Count": 1 },
           { "TemplateId": "rusty_dagger", "Count": 3 }],
-        "Npcs": [ { "TemplateId": "street_walker", "Count": 2 } ]
+        "Npcs": [ 
+          { "TemplateId": "street_walker", "Count": 2 },
+          { "TemplateId": "dire_wolf", "Count": 1 }
+        ]
       }
     }
   ]

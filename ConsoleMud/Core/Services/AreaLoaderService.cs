@@ -130,7 +130,8 @@ public static class AreaLoaderService
             Description = bp.Description,
             Health = bp.Health,
             MaxHealth = bp.MaxHealth,
-            CurrentRoomId = roomId
+            CurrentRoomId = roomId,
+            IsAggressive = bp.IsAggressive,
         };
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically
