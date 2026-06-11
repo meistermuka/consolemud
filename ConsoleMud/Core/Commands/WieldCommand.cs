@@ -28,20 +28,10 @@ public class WieldCommand : ICommand
             return;
         }
         
-        var targetSlot = weapon.TargetSlot;
+        // Wield always targets the main hand. The off hand is handled by "second".
+        var targetSlot = EquipmentSlot.MainHand;
 
-        if (targetSlot != EquipmentSlot.MainHand && targetSlot != EquipmentSlot.OffHand)
-        {
-            targetSlot = EquipmentSlot.MainHand;
-        }
-
-        if (targetSlot == EquipmentSlot.OffHand && player.MainHandWeapon == null)
-        {
-            Console.WriteLine("You must wield a weapon in your MainHand before dual-wielding an OffHand weapon.");
-            return;
-        }
-
-        // Swap out old weapon if necessary
+        // Swap out the current main-hand weapon if there is one
         if (player.Equipment.TryGetValue(targetSlot, out var oldWeapon))
         {
             player.Inventory.Add(oldWeapon);
@@ -52,6 +42,6 @@ public class WieldCommand : ICommand
         player.Inventory.Remove(weapon);
         player.Equipment[targetSlot] = weapon;
 
-        Console.WriteLine($"You wield the {weapon.Name}! ({weapon.DiceNotation})");
+        Console.WriteLine($"You wield the {weapon.Name} in your main hand! ({weapon.DiceNotation})");
     }
 }

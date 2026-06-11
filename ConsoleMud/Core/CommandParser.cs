@@ -37,6 +37,8 @@ public class CommandParser
         
         _commands["wield"] = new WieldCommand();
         _commands["wear"] = new WearCommand();
+        _commands["second"] = new SecondCommand();
+        _commands["sec"] = new SecondCommand();
         _commands["bash"] = new BashCommand();
         _commands["status"] = new StatusCommand();
         _commands["equipment"] = new EquipmentCommand();
