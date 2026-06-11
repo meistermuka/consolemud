@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class EquipmentCommand : ICommand
 {
+    public string Description => "Show everything you have equipped.";
+    public string Usage => "equipment";
+    public string Example => "eq";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         Console.ForegroundColor = ConsoleColor.Cyan;

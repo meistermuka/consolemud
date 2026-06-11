@@ -4,6 +4,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class DropCommand : ICommand
 {
+    public string Description => "Drop an item from your inventory onto the ground.";
+    public string Usage => "drop <item>";
+    public string Example => "drop dagger";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0)

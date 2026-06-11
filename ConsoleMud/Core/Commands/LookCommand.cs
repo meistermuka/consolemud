@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class LookCommand : ICommand
 {
+    public string Description => "Look at your surroundings, an item, or inside a container.";
+    public string Usage => "look [in] [target]";
+    public string Example => "look in chest";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         // "look" with no target -> describe the current room

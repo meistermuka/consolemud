@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class WearCommand : ICommand
 {
+    public string Description => "Wear a piece of armor or equipment.";
+    public string Usage => "wear <item>";
+    public string Example => "wear iron helmet";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0) { Console.WriteLine("Wear what?"); return; }

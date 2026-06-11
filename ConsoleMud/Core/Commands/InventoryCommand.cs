@@ -4,6 +4,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class InventoryCommand : ICommand
 {
+    public string Description => "List what you are carrying.";
+    public string Usage => "inventory";
+    public string Example => "inv";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         Console.WriteLine("\nYou are carrying:");

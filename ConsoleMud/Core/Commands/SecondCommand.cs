@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class SecondCommand : ICommand
 {
+    public string Description => "Hold a weapon or shield in your off hand.";
+    public string Usage => "second <weapon|shield>";
+    public string Example => "second shield";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0)

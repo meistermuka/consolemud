@@ -8,6 +8,10 @@ public class MoveCommand : ICommand
     private readonly Direction _direction;
     public MoveCommand(Direction direction) => _direction = direction;
 
+    public string Description => $"Travel {_direction.ToString().ToLower()} through that exit if one is open.";
+    public string Usage => _direction.ToString().ToLower();
+    public string Example => _direction.ToString().ToLower();
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         var currentRoom = world.Rooms[player.CurrentRoomId];

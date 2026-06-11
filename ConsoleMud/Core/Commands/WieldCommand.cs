@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class WieldCommand : ICommand
 {
+    public string Description => "Wield a weapon in your main hand.";
+    public string Usage => "wield <weapon>";
+    public string Example => "wield sword";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0)

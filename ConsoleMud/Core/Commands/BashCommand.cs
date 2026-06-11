@@ -4,6 +4,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class BashCommand : ICommand
 {
+    public string Description => "Off-balance an enemy with a heavy strike (costs mana).";
+    public string Usage => "bash";
+    public string Example => "bash";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (player.CombatTarget == null)

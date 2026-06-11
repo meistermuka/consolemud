@@ -5,6 +5,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class GetCommand : ICommand
 {
+    public string Description => "Pick up an item, or take one from a container.";
+    public string Usage => "get <item> [from <container>]";
+    public string Example => "get sword from chest";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0)

@@ -44,6 +44,10 @@ public class CommandParser
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();
+
+        _commands["help"] = new HelpCommand(_commands);
+        _commands["commands"] = new CommandsCommand(_commands);
+        _commands["cmds"] = new CommandsCommand(_commands);
     }
 
     public void ParseAndExecute(string input, Player player, WorldState world)

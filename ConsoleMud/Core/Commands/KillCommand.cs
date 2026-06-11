@@ -7,6 +7,10 @@ public class KillCommand : ICommand
 {
     private static readonly Random _random = new();
 
+    public string Description => "Attack a target and engage it in combat.";
+    public string Usage => "kill <target>";
+    public string Example => "kill wolf";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         if (args.Length == 0)

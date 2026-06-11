@@ -4,6 +4,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class PutCommand : ICommand
 {
+    public string Description => "Place an item from your inventory into a container.";
+    public string Usage => "put <item> in <container>";
+    public string Example => "put ring in sack";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         int inIndex = Array.IndexOf(args, "in");

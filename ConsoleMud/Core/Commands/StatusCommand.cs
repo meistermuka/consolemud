@@ -4,6 +4,10 @@ namespace ConsoleMud.Core.Commands;
 
 public class StatusCommand : ICommand
 {
+    public string Description => "Show your health, mana, attributes, and class.";
+    public string Usage => "status";
+    public string Example => "status";
+
     public void Execute(Player player, string[] args, WorldState world)
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
