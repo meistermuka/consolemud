@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,31 +14,49 @@ public class KillCommand : ICommand
             Console.WriteLine("Kill what?");
             return;
         }
-
-        string targetName = string.Join(" ", args).ToLower();
+        
+        string rawInput = string.Join(" ", args);
+        var (targetIndex, cleanKeyword) = KeywordParser.ExtractIndex(rawInput);
         var room = world.Rooms[player.CurrentRoomId];
 
         // Locate the target NPC
-        var npc = room.Characters
-            .OfType<NonPlayerCharacter>()
-            .FirstOrDefault(c => c.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
-
-        if (npc == null)
+        NonPlayerCharacter targetNpc = null;
+        int matchCount = 0;
+        foreach (var npc in room.Characters.OfType<NonPlayerCharacter>())
         {
-            Console.WriteLine($"There is no '{targetName}' here to attack.");
+            if (npc.MatchesKeyword(cleanKeyword))
+            {
+                matchCount++;
+                if (matchCount == targetIndex)
+                {
+                    targetNpc = npc;
+                    break;
+                }
+            }
+        }
+
+        if (targetNpc == null)
+        {
+            Console.WriteLine($"There is no '{rawInput}' here to attack.");
             return;
         }
-        
-        // Establish mutual engagement
-        player.CombatTarget = npc;
-        // If the NPC isn't fighting anyone yet, have them retaliate against the player
-        if (npc.CombatTarget == null)
+
+        if (player.CombatTarget == targetNpc)
         {
-            npc.CombatTarget = player;
+            Console.WriteLine($"You are already engaged in combat with {targetNpc.Name}.");
+            return;
+        }
+         
+        // Establish mutual engagement
+        player.CombatTarget = targetNpc;
+        // If the NPC isn't fighting anyone yet, have them retaliate against the player
+        if (targetNpc.CombatTarget == null)
+        {
+            targetNpc.CombatTarget = player;
         }
 
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"\n⚔️ COMBAT ENGAGED: {player.Name} vs {npc.Name} ⚔️");
+        Console.WriteLine($"\n⚔️ COMBAT ENGAGED: {player.Name} vs {targetNpc.Name} ⚔️");
         Console.ResetColor();
     }
 }
