@@ -12,7 +12,10 @@ class Program
         Console.WriteLine("Booting local world...standby...");
         var world = new WorldState();
         var parser = new CommandParser();
-        
+
+        var definitions = new DefinitionRegistry();
+        definitions.LoadAll("Definitions");
+
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
 

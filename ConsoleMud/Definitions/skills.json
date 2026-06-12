@@ -1,0 +1,235 @@
+[
+  {
+    "Id": "kick",
+    "Name": "kick",
+    "Description": "A swift low strike that lands while your weapon recovers.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 3,
+    "DamageType": "Physical",
+    "DiceNotation": "1d4",
+    "AttributeBonus": "Strength",
+    "Tags": ["Active"]
+  },
+  {
+    "Id": "rescue",
+    "Name": "rescue",
+    "Description": "Intercept an enemy attacking a weaker ally, forcing it to target you.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 0,
+    "Tags": ["Active", "Tactical"]
+  },
+  {
+    "Id": "bash",
+    "Name": "bash",
+    "Description": "Slam a target, dealing minor damage and staggering its next pulse.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 6,
+    "DamageType": "Physical",
+    "DiceNotation": "1d6",
+    "Parameters": { "staggerPulses": 1 },
+    "Tags": ["Active", "Crowd Control"]
+  },
+  {
+    "Id": "armor_optimization",
+    "Name": "armor optimization",
+    "Description": "Wear heavy armor more efficiently, adding to torso and head protection.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": { "armorBonus": 2 },
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "disarm",
+    "Name": "disarm",
+    "Description": "A technical strike with a chance to knock the target's weapon to the floor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 15,
+    "Parameters": { "dropChance": 0.4 },
+    "Tags": ["Active", "Utility"]
+  },
+  {
+    "Id": "second_wind",
+    "Name": "second wind",
+    "Description": "Recover a burst of health once per fight when dropping below a threshold.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": { "thresholdPct": 25, "healAmount": 30 },
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "dual_wield_specialization",
+    "Name": "dual-wield specialization",
+    "Description": "Remove the penalty on off-hand strikes.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "taunt",
+    "Name": "taunt",
+    "Description": "A battlecry that forces unengaged aggressive NPCs to target you.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 20,
+    "Tags": ["Active", "Aggro"]
+  },
+  {
+    "Id": "cleave",
+    "Name": "cleave",
+    "Description": "A sweeping strike: full damage to the target, half to others in combat.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 15,
+    "DamageType": "Physical",
+    "Parameters": { "splashFraction": 0.5 },
+    "Tags": ["Active", "AoE"]
+  },
+  {
+    "Id": "blind_fight",
+    "Name": "blind-fight",
+    "Description": "Maintain full accuracy and dodge in rooms with environmental blindness.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "parry",
+    "Name": "parry",
+    "Description": "A chance each round to fully negate an enemy's main-hand strike.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": { "baseChance": 0.1 },
+    "Tags": ["Passive", "Defense"]
+  },
+  {
+    "Id": "lunge",
+    "Name": "lunge",
+    "Description": "Open combat with a high-accuracy strike dealing maximum weapon damage.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 20,
+    "DamageType": "Physical",
+    "Tags": ["Active", "Gap Closer"]
+  },
+  {
+    "Id": "critical_mastery",
+    "Name": "critical mastery",
+    "Description": "Maximum natural weapon rolls become critical strikes, doubling damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "berserk",
+    "Name": "berserk",
+    "Description": "Rage for a few ticks: more damage and Charm/Fear immunity, no armor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 30,
+    "DurationTicks": 3,
+    "Parameters": { "damageBonusPct": 50 },
+    "Tags": ["Active", "Buff"]
+  },
+  {
+    "Id": "counterstrike",
+    "Name": "counterstrike",
+    "Description": "On a successful parry, execute a free out-of-turn main-hand attack.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": ["Passive"]
+  },
+  {
+    "Id": "decapitate",
+    "Name": "decapitate",
+    "Description": "Execute a low-health foe for colossal damage, destroying its gear.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 30,
+    "DamageType": "Physical",
+    "DiceNotation": "10d10",
+    "Parameters": { "executeThresholdPct": 15 },
+    "Tags": ["Active", "Finisher"]
+  },
+  {
+    "Id": "indomitable_will",
+    "Name": "indomitable will",
+    "Description": "Permanent Fear immunity and a flat cut to Magic and Psychic damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": { "magicPsychicReductionPct": 25 },
+    "Tags": ["Passive", "Immunity"]
+  },
+  {
+    "Id": "onslaught",
+    "Name": "onslaught",
+    "Description": "Five consecutive main-hand attacks, each hitting harder than the last.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 120,
+    "DamageType": "Physical",
+    "Parameters": { "hits": 5, "rampPct": 10 },
+    "Tags": ["Active", "Ultimate"]
+  },
+
+  {
+    "Id": "peek",
+    "Name": "peek",
+    "Description": "Automatically glimpse the inventories of NPCs when you look.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": ["Passive", "Utility"]
+  },
+  {
+    "Id": "magic_missile",
+    "Name": "magic missile",
+    "Description": "Bolts of pure arcane force that ignore armor and shields.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "DamageType": "Force",
+    "DiceNotation": "1d4",
+    "Parameters": { "ignoresArmor": 1 },
+    "Tags": ["Active", "Spell"]
+  },
+  {
+    "Id": "minor_heal",
+    "Name": "minor heal",
+    "Description": "Restore a small amount of health to yourself or an ally.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "DiceNotation": "1d8",
+    "AttributeBonus": "Wisdom",
+    "Parameters": { "isHeal": 1 },
+    "Tags": ["Active", "Spell"]
+  },
+  {
+    "Id": "entangle",
+    "Name": "entangle",
+    "Description": "Roots bind a target, preventing flee or movement for a couple of rounds.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 6,
+    "CooldownSeconds": 10,
+    "DurationTicks": 2,
+    "DamageType": "Nature",
+    "Parameters": { "rootRounds": 2 },
+    "Tags": ["Active", "Crowd Control"]
+  },
+  {
+    "Id": "shoot",
+    "Name": "shoot",
+    "Description": "Fire a ranged weapon at a target, even from an adjacent room.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 3,
+    "DamageType": "Physical",
+    "Tags": ["Active", "Ranged"]
+  }
+]
