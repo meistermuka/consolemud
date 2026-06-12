@@ -31,12 +31,29 @@ public abstract class Character
     public Character CombatTarget { get; set; }
     
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-    public List<ActiveEffect> StatusEffects { get; set; } = new();
-    
+    public List<StatusEffect> StatusEffects { get; set; } = new();
+
+    // Species (and later NPC) damage matrix: DamageType -> multiplier. Empty = all 1.0.
+    public Dictionary<DamageType, double> DamageMultipliers { get; set; } = new();
+
     public Dictionary<EquipmentSlot, Item> Equipment { get; set; } = new();
-    // Dynamically calculate total mitigation for all equipped armour items
-    public int TotalArmourRating => Equipment.Values.Sum(i => i.ArmourRating);
-    
+    // Equipped armour plus any active armour-modifying effects.
+    public int TotalArmourRating =>
+        Equipment.Values.Sum(i => i.ArmourRating)
+        + (int)StatusEffects.Where(e => e.Modifier == EffectModifier.ArmorMod).Sum(e => e.Magnitude);
+
+    // Sum of accuracy-modifying effects (percentage points added to to-hit).
+    public double AccuracyBonus =>
+        StatusEffects.Where(e => e.Modifier == EffectModifier.AccuracyMod).Sum(e => e.Magnitude);
+
+    // Base one attack per round, modified by haste/slow effects. Floored at 1.
+    public int AttackRate =>
+        Math.Max(1, 1 + (int)StatusEffects.Where(e => e.Modifier == EffectModifier.AttackRateMod).Sum(e => e.Magnitude));
+
+    // Multiplier on outgoing damage from buffs like berserk (+50% -> 1.5).
+    public double DamageDealtMultiplier =>
+        1.0 + StatusEffects.Where(e => e.Modifier == EffectModifier.DamageDealtMod).Sum(e => e.Magnitude) / 100.0;
+
     public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) && item.IsWeapon ? item : null;
     public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
     
