@@ -17,7 +17,15 @@ public class CommandsCommand : ICommand
         Console.WriteLine("\n=== Available Commands ===");
         Console.ResetColor();
 
-        var verbs = _commands.Keys.OrderBy(k => k).ToList();
+        // Hide short forms: a key shorter than its command's canonical name
+        // (the first token of Usage) is treated as an abbreviation and skipped.
+        // Full-word synonyms like "attack" or "take" are >= canonical length, so
+        // they stay visible.
+        var verbs = _commands
+            .Where(kvp => kvp.Key.Length >= CanonicalName(kvp.Value).Length)
+            .Select(kvp => kvp.Key)
+            .OrderBy(k => k)
+            .ToList();
 
         // Print in tidy columns, 6 per row
         const int perRow = 6;
@@ -29,4 +37,9 @@ public class CommandsCommand : ICommand
 
         Console.WriteLine("\nType 'help <command>' for details on any one.\n");
     }
+
+    private static string CanonicalName(ICommand command) =>
+        string.IsNullOrWhiteSpace(command.Usage)
+            ? ""
+            : command.Usage.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
 }

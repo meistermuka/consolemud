@@ -8,10 +8,14 @@ public abstract class Character
     public string Name { get; set; }
     public string Description { get; set; }
     
+    // Progression
+    public int Level { get; set; } = 1;
+    public long Experience { get; set; }
+
     // Stats
     public int Health { get; set; }
     public int MaxHealth { get; set; }
-    
+
     public int Mana { get; set; }
     public int MaxMana { get; set; }
     
@@ -37,6 +41,16 @@ public abstract class Character
     public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
     
     public CharacterClass Class { get; set; }
+    public Species Species { get; set; }
+    public Form Form { get; set; } = Form.Human;
+    public Position Position { get; set; } = Position.Standing;
+
+    // Skill id -> proficiency (1.0 .. 100.0)
+    public Dictionary<string, double> KnownSkills { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    // Creature classification (Undead, Fiend, Animal, ...). Mostly used by NPCs.
+    public List<Archetype> Archetypes { get; set; } = new();
+
     public int Strength { get; set; }
     public int Dexterity { get; set; }
     public int Constitution { get; set; }

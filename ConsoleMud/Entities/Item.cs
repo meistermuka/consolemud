@@ -16,6 +16,7 @@ public class Item
     
     // Weapon properties
     public bool IsWeapon { get; set; }
+    public WeaponType WeaponType { get; set; } = WeaponType.Unarmed;
     public string? DiceNotation { get; set; } // e.g. "1d6"
     public string[] AttackVerbs { get; set; } = { }; // ["slash", "stab", "slice"]
     
