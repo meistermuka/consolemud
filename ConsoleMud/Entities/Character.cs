@@ -54,6 +54,14 @@ public abstract class Character
     public double DamageDealtMultiplier =>
         1.0 + StatusEffects.Where(e => e.Modifier == EffectModifier.DamageDealtMod).Sum(e => e.Magnitude) / 100.0;
 
+    // % chance to fully avoid an incoming attack (dodge/parry effects feed this).
+    public double AvoidanceChance =>
+        StatusEffects.Where(e => e.Modifier == EffectModifier.AvoidanceMod).Sum(e => e.Magnitude);
+
+    // % chance to land a critical hit from buffs (max-roll crits are handled separately).
+    public double CritChanceBonus =>
+        StatusEffects.Where(e => e.Modifier == EffectModifier.CritChanceMod).Sum(e => e.Magnitude);
+
     public Item MainHandWeapon => Equipment.TryGetValue(EquipmentSlot.MainHand, out var item) && item.IsWeapon ? item : null;
     public Item OffHandWeapon => Equipment.TryGetValue(EquipmentSlot.OffHand, out var item) && item.IsWeapon ? item : null;
     

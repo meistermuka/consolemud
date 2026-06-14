@@ -1,4 +1,6 @@
+using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
+using ConsoleMud.Enums;
 
 namespace ConsoleMud.Core;
 
@@ -31,42 +33,44 @@ public class CombatSystem
     
     private void ExecuteAttack(Character attacker, Character defender)
     {
-        // --- 1. MAIN HAND ATTACK ---
+        // --- MAIN HAND: one swing per attack-rate (haste/slow modify the count) ---
         var mainWeapon = attacker.MainHandWeapon;
-        string mainVerb = mainWeapon?.AttackVerbs[Random.Shared.Next(mainWeapon.AttackVerbs.Length)] ?? DefaultAttackVerb;
         string mainDice = mainWeapon?.DiceNotation ?? DefaultDiceNotation;
 
-        ResolveSingleHit(attacker, defender, mainVerb, mainDice, "Main Hand");
+        int swings = attacker.AttackRate;
+        for (int i = 0; i < swings && defender.Health > 0; i++)
+            ResolveSingleHit(attacker, defender, PickVerb(mainWeapon, DefaultAttackVerb), mainDice, "Main Hand");
 
-        // --- 2. DUAL-WIELD OFF-HAND ATTACK ---
+        // --- OFF HAND: one follow-up swing when dual-wielding ---
         var offWeapon = attacker.OffHandWeapon;
         if (defender.Health > 0 && offWeapon != null)
-        {
-            string offVerb = offWeapon.AttackVerbs[Random.Shared.Next(offWeapon.AttackVerbs.Length)] ?? "strike";
-            string offDice = offWeapon.DiceNotation;
+            ResolveSingleHit(attacker, defender, PickVerb(offWeapon, "strike"), offWeapon.DiceNotation, "Off Hand");
+    }
 
-            // Dual wielding follow up attack round
-            ResolveSingleHit(attacker, defender, offVerb, offDice, "Off Hand");
-        }
+    private static string PickVerb(Item weapon, string fallback)
+    {
+        if (weapon?.AttackVerbs == null || weapon.AttackVerbs.Length == 0)
+            return fallback;
+        return weapon.AttackVerbs[Random.Shared.Next(weapon.AttackVerbs.Length)];
     }
 
     private void ResolveSingleHit(Character attacker, Character defender, string verb, string dice, string handLabel)
     {
-        int rawDamage = DiceRoller.Roll(dice);
+        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical);
 
-        // Grabs the target's new aggregated TotalArmorRating parameter
-        int armorMitigation = defender.TotalArmourRating;
-        int finalDamage = Math.Max(1, rawDamage - armorMitigation);
+        if (!outcome.Hit)
+        {
+            Console.WriteLine($"\n[{handLabel}] {attacker.Name} {verb}s at {defender.Name} but misses!");
+            return;
+        }
 
-        defender.Health -= finalDamage;
-
-        Console.WriteLine($"\n⚔️ [{handLabel}] {attacker.Name} {verb}s {defender.Name} for {finalDamage} damage! " +
-                          $"({dice} rolled {rawDamage}, armor reduced -{armorMitigation}) -> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
+        defender.Health -= outcome.Damage;
+        string critTag = outcome.Crit ? " CRITICAL!" : "";
+        Console.WriteLine($"\n[{handLabel}] {attacker.Name} {verb}s {defender.Name} for {outcome.Damage} damage!{critTag} " +
+                          $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
 
         if (defender.Health <= 0)
-        {
             HandleDeath(defender);
-        }
     }
 
     private void HandleDeath(Character deadCharacter)
@@ -97,7 +101,9 @@ public class CombatSystem
 
             // Spawn dynamic container corpse populated with their gear
             var corpse = new Item { Name = $"corpse of a {npc.Name}", IsContainer = true, Description = $"The cold remains of a {npc.Name}." };
-            if (npc.EquippedWeapon != null) corpse.Contents.Add(npc.EquippedWeapon);
+            foreach (var gear in npc.Equipment.Values)
+                corpse.Contents.Add(gear);
+            corpse.Contents.AddRange(npc.Inventory);
             room.Items.Add(corpse);
         }
         

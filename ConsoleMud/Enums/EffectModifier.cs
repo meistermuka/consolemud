@@ -13,5 +13,7 @@ public enum EffectModifier
     AttackRateMod,       // Magnitude added to attacks-per-round (haste +, ice_storm -)
     DamageDealtMod,      // Magnitude % change to outgoing damage (berserk +50)
     ImmunityOverride,    // grants immunity to DamageType while active
-    FlatDamageReduction  // Magnitude % reduction to incoming DamageType (indomitable_will)
+    FlatDamageReduction, // Magnitude % reduction to incoming DamageType (indomitable_will)
+    AvoidanceMod,        // Magnitude % chance to fully avoid an incoming attack (dodge, parry)
+    CritChanceMod        // Magnitude % chance added to land a critical hit (opportunist)
 }
