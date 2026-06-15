@@ -10,6 +10,10 @@ public class ClassDefinition
     public int HpBonus { get; set; }
     public int ManaBonus { get; set; }
 
+    // Per-level vital growth, applied on level-up (plus the attribute modifier).
+    public int HpPerLevel { get; set; }
+    public int ManaPerLevel { get; set; }
+
     // Which skills this class learns, and at what level.
     public List<ClassSkillEntry> Skills { get; set; } = new();
 }

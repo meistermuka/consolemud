@@ -126,8 +126,11 @@ public static class AreaLoaderService
             Description = bp.Description,
             Health = bp.Health,
             MaxHealth = bp.MaxHealth,
+            Level = bp.Level < 1 ? 1 : bp.Level,
             CurrentRoomId = roomId,
             IsAggressive = bp.IsAggressive,
+            // Fallback reward scales with the NPC's level and toughness.
+            XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,
         };
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically

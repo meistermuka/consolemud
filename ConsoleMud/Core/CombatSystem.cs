@@ -99,6 +99,6 @@ public class CombatSystem
                           $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]", ConsoleColor.Gray);
 
         if (defender.Health <= 0)
-            DeathService.HandleDeath(defender, _world);
+            DeathService.HandleDeath(defender, _world, attacker);
     }
 }

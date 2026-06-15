@@ -11,7 +11,10 @@
       "IsWeapon": true,
       "DiceNotation": "3d4",
       "TargetSlot": "MainHand",
-      "AttackVerbs": ["slash", "slice"]
+      "AttackVerbs": [
+        "slash",
+        "slice"
+      ]
     },
     {
       "VirtualId": "dire_wolf_fangs",
@@ -22,7 +25,9 @@
       "IsWeapon": true,
       "DiceNotation": "3d4",
       "TargetSlot": "MainHand",
-      "AttackVerbs": ["bite"]
+      "AttackVerbs": [
+        "bite"
+      ]
     },
     {
       "VirtualId": "leather_vest",
@@ -42,7 +47,10 @@
       "IsWeapon": true,
       "TargetSlot": "OffHand",
       "DiceNotation": "1d4",
-      "AttackVerbs": ["stab", "pierce"]
+      "AttackVerbs": [
+        "stab",
+        "pierce"
+      ]
     },
     {
       "VirtualId": "iron_helm",
@@ -100,15 +108,35 @@
       "VirtualId": "forest_entrance",
       "Name": "The Forest Edge",
       "Description": "Sunlight filters through a thick canopy. A path winds east.",
-      "Exits": { "East": "deep_woods" },
+      "Exits": {
+        "East": "deep_woods"
+      },
       "Spawns": {
-        "Items": [ 
-          { "TemplateId": "leather_vest", "Count": 1 },
-          { "TemplateId": "bastard_sword", "Count": 1 },
-          { "TemplateId":  "wooden_shield", "Count": 1 },
-          { "TemplateId": "gold_ring_1", "Count": 1 },
-          { "TemplateId": "iron_helm", "Count": 1 },
-          { "TemplateId": "rusty_dagger", "Count": 3 }
+        "Items": [
+          {
+            "TemplateId": "leather_vest",
+            "Count": 1
+          },
+          {
+            "TemplateId": "bastard_sword",
+            "Count": 1
+          },
+          {
+            "TemplateId": "wooden_shield",
+            "Count": 1
+          },
+          {
+            "TemplateId": "gold_ring_1",
+            "Count": 1
+          },
+          {
+            "TemplateId": "iron_helm",
+            "Count": 1
+          },
+          {
+            "TemplateId": "rusty_dagger",
+            "Count": 3
+          }
         ],
         "Npcs": []
       }
@@ -117,12 +145,20 @@
       "VirtualId": "deep_woods",
       "Name": "Deep Whispering Woods",
       "Description": "The shadows deepen. You hear rustling in the brush.",
-      "Exits": { "West": "forest_entrance" },
+      "Exits": {
+        "West": "forest_entrance"
+      },
       "Spawns": {
         "Items": [],
-        "Npcs": [ 
-          { "TemplateId": "street_walker", "Count": 2 },
-          { "TemplateId": "dire_wolf", "Count": 1 }
+        "Npcs": [
+          {
+            "TemplateId": "street_walker",
+            "Count": 2
+          },
+          {
+            "TemplateId": "dire_wolf",
+            "Count": 1
+          }
         ]
       }
     }

@@ -9,7 +9,7 @@ namespace ConsoleMud.Core.Combat;
 /// </summary>
 public static class DeathService
 {
-    public static void HandleDeath(Character deadCharacter, WorldState world)
+    public static void HandleDeath(Character deadCharacter, WorldState world, Character killer = null)
     {
         deadCharacter.CombatTarget = null;
 
@@ -59,6 +59,10 @@ public static class DeathService
             // Break any other combatants still locked onto this corpse.
             foreach (var ch in world.Characters.Values.Where(c => c.CombatTarget == npc))
                 ch.CombatTarget = null;
+
+            // Award experience to the killer.
+            if (killer is Player slayer)
+                Services.LevelingService.AwardXp(slayer, npc.XpReward);
         }
     }
 }

@@ -32,6 +32,6 @@ public class KickHandler : ISkillHandler
         Helpers.ColorConsole.WriteLine($"You kick {target.Name} for {outcome.Damage} damage! -> [{target.Name} HP: {Math.Max(0, target.Health)}]", ConsoleColor.Gray);
 
         if (target.Health <= 0)
-            DeathService.HandleDeath(target, ctx.World);
+            DeathService.HandleDeath(target, ctx.World, ctx.Caster);
     }
 }

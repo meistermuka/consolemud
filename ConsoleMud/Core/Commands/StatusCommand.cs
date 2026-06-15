@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Services;
 using ConsoleMud.Entities;
 
 namespace ConsoleMud.Core.Commands;
@@ -11,6 +12,10 @@ public class StatusCommand : ICommand
     public void Execute(Player player, string[] args, WorldState world)
     {
         Helpers.ColorConsole.WriteLine($"\n================== {player.Name.ToUpper()} THE {player.Class.ToString().ToUpper()} ==================", ConsoleColor.Cyan);
+        string xpLine = player.Level >= LevelingService.MaxLevel
+            ? "MAX"
+            : $"{player.Experience} / {LevelingService.XpForNextLevel(player.Level)}";
+        Helpers.ColorConsole.WriteLine($"  Level: {player.Level,-3}  |  XP: {xpLine}");
         Helpers.ColorConsole.WriteLine($"  Health: {player.Health,3} / {player.MaxHealth,-3}  |  Mana: {player.Mana,3} / {player.MaxMana,-3}");
         Helpers.ColorConsole.WriteLine("---------------------------------------------------------");
         Helpers.ColorConsole.WriteLine("  [CORE ATTRIBUTES]");

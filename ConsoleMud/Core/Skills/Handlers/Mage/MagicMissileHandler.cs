@@ -37,6 +37,6 @@ public class MagicMissileHandler : ISkillHandler
             ConsoleColor.Gray);
 
         if (target.Health <= 0)
-            DeathService.HandleDeath(target, ctx.World);
+            DeathService.HandleDeath(target, ctx.World, ctx.Caster);
     }
 }

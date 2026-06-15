@@ -5,6 +5,7 @@ namespace ConsoleMud.Entities;
 public class NonPlayerCharacter : Character
 {
     public bool IsAggressive { get; set; }
+    public int XpReward { get; set; }
     public string[] Keywords => ColorMarkup.Strip(Name).ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 
     public bool MatchesKeyword(string query)
