@@ -70,9 +70,7 @@ public class TimeEngine
                     if (player.CombatTarget == null)
                         player.CombatTarget = npc;
                     
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n The {npc.Name} attacks {player.Name}!");
-                    Console.ResetColor();
+                    Helpers.ColorConsole.WriteLine($"\nThe {npc.Name} attacks {player.Name}!", ConsoleColor.Red);
                     Console.Write("> ");
                 }
             }

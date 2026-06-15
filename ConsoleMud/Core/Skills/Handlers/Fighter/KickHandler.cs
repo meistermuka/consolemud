@@ -24,12 +24,12 @@ public class KickHandler : ISkillHandler
 
         if (!outcome.Hit)
         {
-            Console.WriteLine($"You swing a kick at {target.Name} but miss!");
+            Helpers.ColorConsole.WriteLine($"You swing a kick at {target.Name} but miss!", ConsoleColor.Gray);
             return;
         }
 
         target.Health -= outcome.Damage;
-        Console.WriteLine($"You kick {target.Name} for {outcome.Damage} damage! -> [{target.Name} HP: {Math.Max(0, target.Health)}]");
+        Helpers.ColorConsole.WriteLine($"You kick {target.Name} for {outcome.Damage} damage! -> [{target.Name} HP: {Math.Max(0, target.Health)}]", ConsoleColor.Gray);
 
         if (target.Health <= 0)
             DeathService.HandleDeath(target, ctx.World);

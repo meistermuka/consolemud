@@ -59,8 +59,6 @@ public class KillCommand : ICommand
             targetNpc.CombatTarget = player;
         }
 
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"\n⚔️ COMBAT ENGAGED: {player.Name} vs {targetNpc.Name} ⚔️");
-        Console.ResetColor();
+        Helpers.ColorConsole.WriteLine($"\nCOMBAT ENGAGED: {player.Name} vs {targetNpc.Name}", ConsoleColor.Red);
     }
 }

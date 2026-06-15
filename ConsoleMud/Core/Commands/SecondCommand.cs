@@ -52,9 +52,9 @@ public class SecondCommand : ICommand
         player.Equipment[EquipmentSlot.OffHand] = item;
 
         if (item.IsWeapon)
-            Console.WriteLine($"You wield the {item.Name} in your off hand! ({item.DiceNotation})");
+            Helpers.ColorConsole.WriteLine($"You wield the {item.Name} in your off hand! ({item.DiceNotation})", ConsoleColor.Gray);
         else
-            Console.WriteLine($"You ready the {item.Name} in your off hand. " +
-                              $"(Armor: +{item.ArmourRating}) [Total Defense: {player.TotalArmourRating}]");
+            Helpers.ColorConsole.WriteLine($"You ready the {item.Name} in your off hand. " +
+                              $"(Armor: +{item.ArmourRating}) [Total Defense: {player.TotalArmourRating}]", ConsoleColor.Gray);
     }
 }

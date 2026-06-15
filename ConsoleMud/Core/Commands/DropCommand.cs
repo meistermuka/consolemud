@@ -32,6 +32,6 @@ public class DropCommand : ICommand
         player.Inventory.Remove(item);
         room.Items.Add(item);
 
-        Console.WriteLine($"You drop the {item.Name} onto the ground.");
+        Helpers.ColorConsole.WriteLine($"You drop the {item.Name} onto the ground.", ConsoleColor.Gray);
     }
 }

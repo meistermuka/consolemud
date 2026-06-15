@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -32,9 +33,7 @@ public class EquipmentCommand : ICommand
                     statBonus = $" [DR: +{item.ArmourRating}]";
 
                 Console.Write($"  <{slotLabel,-15}> ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{item.Name}{statBonus}");
-                Console.ResetColor();
+                ColorConsole.WriteLine($"{item.Name}{statBonus}");
             }
             else
             {

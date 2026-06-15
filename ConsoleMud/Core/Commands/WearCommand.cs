@@ -49,7 +49,7 @@ public class WearCommand : ICommand
         player.Inventory.Remove(item);
         player.Equipment[resolvedSlot] = item;
 
-        Console.WriteLine($"You equip the {item.Name} to your {resolvedSlot}. " +
+        Helpers.ColorConsole.WriteLine($"You equip the {item.Name} to your {resolvedSlot}. " +
                           $"(Armor: +{item.ArmourRating}) [Total Defense: {player.TotalArmourRating}]");
     }
     

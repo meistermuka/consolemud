@@ -23,13 +23,13 @@ public class BashHandler : ISkillHandler
 
         if (!outcome.Hit)
         {
-            Console.WriteLine($"You lunge to bash {target.Name} but miss!");
+            Helpers.ColorConsole.WriteLine($"You lunge to bash {target.Name} but miss!", ConsoleColor.Gray);
             return;
         }
 
         target.Health -= outcome.Damage;
-        Console.WriteLine($"You bash {target.Name} for {outcome.Damage} damage and stagger it! " +
-                          $"-> [{target.Name} HP: {Math.Max(0, target.Health)}]");
+        Helpers.ColorConsole.WriteLine($"You bash {target.Name} for {outcome.Damage} damage and stagger it! " +
+                          $"-> [{target.Name} HP: {Math.Max(0, target.Health)}]", ConsoleColor.Gray);
         // Full stagger (delaying the target's next pulse) lands with the stun state in Phase 6.
 
         if (target.Health <= 0)

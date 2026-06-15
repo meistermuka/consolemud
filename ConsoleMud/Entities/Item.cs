@@ -1,4 +1,5 @@
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Entities;
 
@@ -6,7 +7,7 @@ public class Item
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string[] Keywords => Name?.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+    public string[] Keywords => ColorMarkup.Strip(Name).ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
     public string Description { get; set; } = string.Empty;
     
     // Composition flags instead of deep inheritance
@@ -37,10 +38,10 @@ public class Item
             return false;
 
         string lowerQuery = query.ToLower().Trim();
-        
-        if (Name.Equals(lowerQuery, StringComparison.OrdinalIgnoreCase)) 
+
+        if (ColorMarkup.Strip(Name).Equals(lowerQuery, StringComparison.OrdinalIgnoreCase))
             return true;
-        
+
         return Keywords.Contains(lowerQuery);
     }
 }

@@ -36,10 +36,9 @@ public class LookCommand : ICommand
     private void LookAtRoom(Player player, WorldState world)
     {
         var room = world.Rooms[player.CurrentRoomId];
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"\n[{room.Name}]");
-        Console.ResetColor();
-        Console.WriteLine(room.Description);
+        Console.WriteLine();
+        ColorConsole.WriteLine($"[{room.Name}]", ConsoleColor.Cyan);
+        ColorConsole.WriteLine(room.Description, ConsoleColor.Gray);
 
         // Show exits
         var exits = string.Join(", ", room.Exits.Select(e => e.Key.ToString().ToLower()));
@@ -47,11 +46,11 @@ public class LookCommand : ICommand
 
         // Show items
         foreach (var item in room.Items)
-            Console.WriteLine($"You see a {item.Name} here.");
+            ColorConsole.WriteLine($"You see a {item.Name} here.", ConsoleColor.Gray);
 
         // Show NPCs
         foreach (var character in room.Characters.Where(c => c != player))
-            Console.WriteLine($"{character.Name} here.");
+            ColorConsole.WriteLine($"{character.Name} here.", ConsoleColor.Gray);
 
         Console.WriteLine();
     }
@@ -88,14 +87,13 @@ public class LookCommand : ICommand
         if (!target.IsContainer)
         {
             // Not a container: just describe it
-            Console.WriteLine(target.Description);
+            ColorConsole.WriteLine(target.Description, ConsoleColor.Gray);
             return;
         }
 
         // Describe the container's contents
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"\n[{target.Name}]");
-        Console.ResetColor();
+        Console.WriteLine();
+        ColorConsole.WriteLine($"[{target.Name}]", ConsoleColor.Cyan);
 
         if (target.Contents.Count == 0)
         {
@@ -105,7 +103,7 @@ public class LookCommand : ICommand
         {
             Console.WriteLine("It contains:");
             foreach (var item in target.Contents)
-                Console.WriteLine($"  {item.Name}");
+                ColorConsole.WriteLine($"  {item.Name}", ConsoleColor.Gray);
         }
 
         Console.WriteLine();

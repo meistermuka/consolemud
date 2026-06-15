@@ -24,9 +24,7 @@ public static class DeathService
 
         if (deadCharacter is NonPlayerCharacter npc)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"\nThe {npc.Name} collapses to the ground, dead!");
-            Console.ResetColor();
+            Helpers.ColorConsole.WriteLine($"\nThe {npc.Name} collapses to the ground, dead!", ConsoleColor.Yellow);
 
             if (world.Rooms.TryGetValue(npc.CurrentRoomId, out var room))
             {

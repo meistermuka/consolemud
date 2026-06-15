@@ -46,6 +46,6 @@ public class WieldCommand : ICommand
         player.Inventory.Remove(weapon);
         player.Equipment[targetSlot] = weapon;
 
-        Console.WriteLine($"You wield the {weapon.Name} in your main hand! ({weapon.DiceNotation})");
+        Helpers.ColorConsole.WriteLine($"You wield the {weapon.Name} in your main hand! ({weapon.DiceNotation})", ConsoleColor.Gray);
     }
 }

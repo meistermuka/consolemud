@@ -3,9 +3,9 @@
   "Author": "MUD Builder",
   "ItemTemplates": [
     {
-      "VirtualId": "steel_sword",
-      "Name": "sword",
-      "Description": "A finely forged steel shortsword.",
+      "VirtualId": "bastard_sword",
+      "Name": "=== The Bastard Sword: {wS{dteamy {xet {rR{Rotteux{x ===",
+      "Description": "A long, heavy bastard sword. It's a beautiful weapon, but it's also a bit of a bastard.",
       "IsGetable": true,
       "IsEquippable": true,
       "IsWeapon": true,
@@ -87,8 +87,8 @@
     },
     {
       "VirtualId": "dire_wolf",
-      "Name": "ferocious dire wolf",
-      "Description": "A massive, corrupted beast dripping black saliva",
+      "Name": "ferocious {Rdire wolf{x",
+      "Description": "A massive, {Rcorrupted{x beast dripping {dblack{x saliva",
       "Health": 45,
       "MaxHealth": 45,
       "EquippedWeaponTemplateId": "dire_wolf_fangs",
@@ -104,7 +104,7 @@
       "Spawns": {
         "Items": [ 
           { "TemplateId": "leather_vest", "Count": 1 },
-          { "TemplateId": "steel_sword", "Count": 1 },
+          { "TemplateId": "bastard_sword", "Count": 1 },
           { "TemplateId":  "wooden_shield", "Count": 1 },
           { "TemplateId": "gold_ring_1", "Count": 1 },
           { "TemplateId": "iron_helm", "Count": 1 },

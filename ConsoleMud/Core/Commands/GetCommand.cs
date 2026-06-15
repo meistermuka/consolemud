@@ -58,7 +58,7 @@ public class GetCommand : ICommand
 
         room.Items.Remove(foundItem);
         player.Inventory.Add(foundItem);
-        Console.WriteLine($"You pick up the {foundItem.Name}.");
+        Helpers.ColorConsole.WriteLine($"You pick up the {foundItem.Name}.", ConsoleColor.Gray);
     }
 
     private void HandleContainerGet(Player player, string itemName, string containerName, WorldState world)
@@ -78,6 +78,6 @@ public class GetCommand : ICommand
 
         container.Contents.Remove(item);
         player.Inventory.Add(item);
-        Console.WriteLine($"You pull the {item.Name} out of the {container.Name}.");
+        Helpers.ColorConsole.WriteLine($"You pull the {item.Name} out of the {container.Name}.", ConsoleColor.Gray);
     }
 }

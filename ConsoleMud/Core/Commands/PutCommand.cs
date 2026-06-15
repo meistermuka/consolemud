@@ -36,6 +36,6 @@ public class PutCommand : ICommand
         // 3. Perform transfer
         player.Inventory.Remove(item);
         container.Contents.Add(item);
-        Console.WriteLine($"You slide the {item.Name} safely into the {container.Name}.");
+        Helpers.ColorConsole.WriteLine($"You slide the {item.Name} safely into the {container.Name}.", ConsoleColor.Gray);
     }
 }

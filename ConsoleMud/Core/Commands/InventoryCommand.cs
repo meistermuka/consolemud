@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -11,7 +12,7 @@ public class InventoryCommand : ICommand
     public void Execute(Player player, string[] args, WorldState world)
     {
         Console.WriteLine("\nYou are carrying:");
-        
+
         if (!player.Inventory.Any())
         {
             Console.WriteLine("  Nothing. Your hands are empty.");
@@ -20,7 +21,7 @@ public class InventoryCommand : ICommand
 
         foreach (var item in player.Inventory)
         {
-            Console.WriteLine($"  - {item.Name}: {item.Description}");
+            ColorConsole.WriteLine($"  - {item.Name}: {item.Description}", ConsoleColor.Gray);
         }
         Console.WriteLine();
     }

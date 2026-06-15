@@ -39,12 +39,12 @@ public class CombatSystem
 
         int swings = attacker.AttackRate;
         for (int i = 0; i < swings && defender.Health > 0; i++)
-            ResolveSingleHit(attacker, defender, PickVerb(mainWeapon, DefaultAttackVerb), mainDice, "Main Hand");
+            ResolveSingleHit(attacker, defender, mainWeapon.Name, PickVerb(mainWeapon, DefaultAttackVerb), mainDice, "Main Hand");
 
         // --- OFF HAND: one follow-up swing when dual-wielding ---
         var offWeapon = attacker.OffHandWeapon;
         if (defender.Health > 0 && offWeapon != null)
-            ResolveSingleHit(attacker, defender, PickVerb(offWeapon, "strike"), offWeapon.DiceNotation, "Off Hand");
+            ResolveSingleHit(attacker, defender, mainWeapon.Name, PickVerb(offWeapon, "strike"), offWeapon.DiceNotation, "Off Hand");
     }
 
     private static string PickVerb(Item weapon, string fallback)
@@ -54,20 +54,20 @@ public class CombatSystem
         return weapon.AttackVerbs[Random.Shared.Next(weapon.AttackVerbs.Length)];
     }
 
-    private void ResolveSingleHit(Character attacker, Character defender, string verb, string dice, string handLabel)
+    private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel)
     {
         var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical);
 
         if (!outcome.Hit)
         {
-            Console.WriteLine($"\n[{handLabel}] {attacker.Name} {verb}s at {defender.Name} but misses!");
+            Helpers.ColorConsole.WriteLine($"\n{weaponName} {verb}s at {defender.Name} but misses!", ConsoleColor.Gray);
             return;
         }
 
         defender.Health -= outcome.Damage;
         string critTag = outcome.Crit ? " CRITICAL!" : "";
-        Console.WriteLine($"\n[{handLabel}] {attacker.Name} {verb}s {defender.Name} for {outcome.Damage} damage!{critTag} " +
-                          $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
+        Helpers.ColorConsole.WriteLine($"\n{weaponName} {verb}s {defender.Name} for {outcome.Damage} damage!{critTag} " +
+                          $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]", ConsoleColor.Gray);
 
         if (defender.Health <= 0)
             DeathService.HandleDeath(defender, _world);
