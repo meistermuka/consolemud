@@ -1,4 +1,7 @@
+using ConsoleMud.Core.Skills.Handlers.Cleric;
+using ConsoleMud.Core.Skills.Handlers.Druid;
 using ConsoleMud.Core.Skills.Handlers.Fighter;
+using ConsoleMud.Core.Skills.Handlers.Mage;
 
 namespace ConsoleMud.Core.Skills;
 
@@ -13,9 +16,14 @@ public class SkillHandlerRegistry
 
     public SkillHandlerRegistry()
     {
-        // Vertical-slice handlers proving the pipeline. More arrive in Phase 8.
+        // Fighter
         Register(new KickHandler());
         Register(new BashHandler());
+
+        // Tier-1 actives for the caster classes.
+        Register(new MagicMissileHandler());
+        Register(new MinorHealHandler());
+        Register(new EntangleHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;

@@ -10,7 +10,9 @@
     "DamageType": "Physical",
     "DiceNotation": "1d4",
     "AttributeBonus": "Strength",
-    "Tags": ["Active"]
+    "Tags": [
+      "Active"
+    ]
   },
   {
     "Id": "rescue",
@@ -19,7 +21,10 @@
     "Kind": "Active",
     "IsSpell": false,
     "CooldownSeconds": 0,
-    "Tags": ["Active", "Tactical"]
+    "Tags": [
+      "Active",
+      "Tactical"
+    ]
   },
   {
     "Id": "bash",
@@ -30,8 +35,13 @@
     "CooldownSeconds": 6,
     "DamageType": "Physical",
     "DiceNotation": "1d6",
-    "Parameters": { "staggerPulses": 1 },
-    "Tags": ["Active", "Crowd Control"]
+    "Parameters": {
+      "staggerPulses": 1
+    },
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ]
   },
   {
     "Id": "armor_optimization",
@@ -39,8 +49,12 @@
     "Description": "Wear heavy armor more efficiently, adding to torso and head protection.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Parameters": { "armorBonus": 2 },
-    "Tags": ["Passive"]
+    "Parameters": {
+      "armorBonus": 2
+    },
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "disarm",
@@ -49,8 +63,13 @@
     "Kind": "Active",
     "IsSpell": false,
     "CooldownSeconds": 15,
-    "Parameters": { "dropChance": 0.4 },
-    "Tags": ["Active", "Utility"]
+    "Parameters": {
+      "dropChance": 0.4
+    },
+    "Tags": [
+      "Active",
+      "Utility"
+    ]
   },
   {
     "Id": "second_wind",
@@ -58,8 +77,13 @@
     "Description": "Recover a burst of health once per fight when dropping below a threshold.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Parameters": { "thresholdPct": 25, "healAmount": 30 },
-    "Tags": ["Passive"]
+    "Parameters": {
+      "thresholdPct": 25,
+      "healAmount": 30
+    },
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "dual_wield_specialization",
@@ -67,7 +91,9 @@
     "Description": "Remove the penalty on off-hand strikes.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Tags": ["Passive"]
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "taunt",
@@ -76,7 +102,10 @@
     "Kind": "Active",
     "IsSpell": false,
     "CooldownSeconds": 20,
-    "Tags": ["Active", "Aggro"]
+    "Tags": [
+      "Active",
+      "Aggro"
+    ]
   },
   {
     "Id": "cleave",
@@ -86,8 +115,13 @@
     "IsSpell": false,
     "CooldownSeconds": 15,
     "DamageType": "Physical",
-    "Parameters": { "splashFraction": 0.5 },
-    "Tags": ["Active", "AoE"]
+    "Parameters": {
+      "splashFraction": 0.5
+    },
+    "Tags": [
+      "Active",
+      "AoE"
+    ]
   },
   {
     "Id": "blind_fight",
@@ -95,7 +129,9 @@
     "Description": "Maintain full accuracy and dodge in rooms with environmental blindness.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Tags": ["Passive"]
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "parry",
@@ -103,8 +139,13 @@
     "Description": "A chance each round to fully negate an enemy's main-hand strike.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Parameters": { "baseChance": 0.1 },
-    "Tags": ["Passive", "Defense"]
+    "Parameters": {
+      "baseChance": 0.1
+    },
+    "Tags": [
+      "Passive",
+      "Defense"
+    ]
   },
   {
     "Id": "lunge",
@@ -114,7 +155,10 @@
     "IsSpell": false,
     "CooldownSeconds": 20,
     "DamageType": "Physical",
-    "Tags": ["Active", "Gap Closer"]
+    "Tags": [
+      "Active",
+      "Gap Closer"
+    ]
   },
   {
     "Id": "critical_mastery",
@@ -122,7 +166,9 @@
     "Description": "Maximum natural weapon rolls become critical strikes, doubling damage.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Tags": ["Passive"]
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "berserk",
@@ -132,8 +178,13 @@
     "IsSpell": false,
     "CooldownSeconds": 30,
     "DurationTicks": 3,
-    "Parameters": { "damageBonusPct": 50 },
-    "Tags": ["Active", "Buff"]
+    "Parameters": {
+      "damageBonusPct": 50
+    },
+    "Tags": [
+      "Active",
+      "Buff"
+    ]
   },
   {
     "Id": "counterstrike",
@@ -141,7 +192,9 @@
     "Description": "On a successful parry, execute a free out-of-turn main-hand attack.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Tags": ["Passive"]
+    "Tags": [
+      "Passive"
+    ]
   },
   {
     "Id": "decapitate",
@@ -152,8 +205,13 @@
     "CooldownSeconds": 30,
     "DamageType": "Physical",
     "DiceNotation": "10d10",
-    "Parameters": { "executeThresholdPct": 15 },
-    "Tags": ["Active", "Finisher"]
+    "Parameters": {
+      "executeThresholdPct": 15
+    },
+    "Tags": [
+      "Active",
+      "Finisher"
+    ]
   },
   {
     "Id": "indomitable_will",
@@ -161,8 +219,13 @@
     "Description": "Permanent Fear immunity and a flat cut to Magic and Psychic damage.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Parameters": { "magicPsychicReductionPct": 25 },
-    "Tags": ["Passive", "Immunity"]
+    "Parameters": {
+      "magicPsychicReductionPct": 25
+    },
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ]
   },
   {
     "Id": "onslaught",
@@ -172,17 +235,25 @@
     "IsSpell": false,
     "CooldownSeconds": 120,
     "DamageType": "Physical",
-    "Parameters": { "hits": 5, "rampPct": 10 },
-    "Tags": ["Active", "Ultimate"]
+    "Parameters": {
+      "hits": 5,
+      "rampPct": 10
+    },
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ]
   },
-
   {
     "Id": "peek",
     "Name": "peek",
     "Description": "Automatically glimpse the inventories of NPCs when you look.",
     "Kind": "Passive",
     "IsSpell": false,
-    "Tags": ["Passive", "Utility"]
+    "Tags": [
+      "Passive",
+      "Utility"
+    ]
   },
   {
     "Id": "magic_missile",
@@ -193,8 +264,13 @@
     "ManaCost": 5,
     "DamageType": "Force",
     "DiceNotation": "1d4",
-    "Parameters": { "ignoresArmor": 1 },
-    "Tags": ["Active", "Spell"]
+    "Parameters": {
+      "ignoresArmor": 1
+    },
+    "Tags": [
+      "Active",
+      "Spell"
+    ]
   },
   {
     "Id": "minor_heal",
@@ -205,8 +281,13 @@
     "ManaCost": 5,
     "DiceNotation": "1d8",
     "AttributeBonus": "Wisdom",
-    "Parameters": { "isHeal": 1 },
-    "Tags": ["Active", "Spell"]
+    "Parameters": {
+      "isHeal": 1
+    },
+    "Tags": [
+      "Active",
+      "Spell"
+    ]
   },
   {
     "Id": "entangle",
@@ -218,8 +299,13 @@
     "CooldownSeconds": 10,
     "DurationTicks": 2,
     "DamageType": "Nature",
-    "Parameters": { "rootRounds": 2 },
-    "Tags": ["Active", "Crowd Control"]
+    "Parameters": {
+      "rootRounds": 2
+    },
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ]
   },
   {
     "Id": "shoot",
@@ -230,6 +316,9 @@
     "ManaCost": 0,
     "CooldownSeconds": 3,
     "DamageType": "Physical",
-    "Tags": ["Active", "Ranged"]
+    "Tags": [
+      "Active",
+      "Ranged"
+    ]
   }
 ]
