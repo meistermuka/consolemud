@@ -19,6 +19,16 @@ public class SkillHandlerRegistry
         // Fighter
         Register(new KickHandler());
         Register(new BashHandler());
+        Register(new RescueHandler());
+        Register(new DisarmHandler());
+        Register(new TauntHandler());
+        Register(new CleaveHandler());
+        Register(new LungeHandler());
+        Register(new BerserkHandler());
+        Register(new DecapitateHandler());
+        Register(new OnslaughtHandler());
+        // Fighter passives (armor_optimization, parry, indomitable_will) are applied by
+        // PassiveService; critical_mastery and second_wind are wired into combat.
 
         // Tier-1 actives for the caster classes.
         Register(new MagicMissileHandler());

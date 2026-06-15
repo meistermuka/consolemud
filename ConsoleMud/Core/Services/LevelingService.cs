@@ -80,6 +80,9 @@ public static class LevelingService
             string name = def?.Name ?? entry.SkillId;
             ColorConsole.WriteLine($"You have learned {name}!", ConsoleColor.Green);
         }
+
+        // Reapply static passives (new ones, plus attribute-scaled ones).
+        Skills.PassiveService.Refresh(player);
     }
 
     private static int Modifier(int attribute) => (attribute - 10) / 2;

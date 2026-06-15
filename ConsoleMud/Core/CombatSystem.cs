@@ -28,6 +28,7 @@ public class CombatSystem
             if (defender == null || defender.Health <= 0 || attacker.CurrentRoomId != defender.CurrentRoomId)
             {
                 attacker.CombatTarget = null; // Clear broken combat links
+                attacker.EncounterFlags.Clear(); // combat over: reset once-per-fight passives
                 continue;
             }
 
@@ -40,7 +41,28 @@ public class CombatSystem
 
             // Execute a singular attack round for this character
             ExecuteAttack(attacker, defender);
+
+            // Fighter "second wind": one emergency heal per fight under 25% health.
+            TrySecondWind(attacker);
         }
+    }
+
+    // Mirrors the second_wind skill definition (threshold 25%, heal 30).
+    private const double SecondWindThreshold = 0.25;
+    private const int SecondWindHeal = 30;
+
+    private static void TrySecondWind(Character c)
+    {
+        if (!c.KnownSkills.ContainsKey("second_wind"))
+            return;
+        if (c.Health <= 0 || c.Health > c.MaxHealth * SecondWindThreshold)
+            return;
+        if (!c.EncounterFlags.Add("second_wind")) // already triggered this fight
+            return;
+
+        c.Health = Math.Min(c.MaxHealth, c.Health + SecondWindHeal);
+        Helpers.ColorConsole.WriteLine(
+            $"\n{c.Name} catches a second wind and recovers {SecondWindHeal} health!", ConsoleColor.Green);
     }
 
     private static void AgeControlEffects(Character character)
@@ -85,7 +107,8 @@ public class CombatSystem
 
     private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel)
     {
-        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical);
+        bool critMastery = attacker.KnownSkills.ContainsKey("critical_mastery");
+        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical, critOnMaxRoll: critMastery);
 
         if (!outcome.Hit)
         {

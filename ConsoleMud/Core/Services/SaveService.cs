@@ -95,6 +95,8 @@ public static class SaveService
             CurrentRoomId = roomId
         };
 
+        // Rebuild static passive effects (they are not persisted).
+        Skills.PassiveService.Refresh(player);
         return true;
     }
 

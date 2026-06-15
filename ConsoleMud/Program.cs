@@ -17,6 +17,7 @@ class Program
         var definitions = new DefinitionRegistry();
         definitions.LoadAll("Definitions");
         LevelingService.Initialize(definitions);
+        PassiveService.Initialize(definitions);
 
         var skillHandlers = new SkillHandlerRegistry();
         var skillExecutor = new SkillExecutor(definitions, skillHandlers);

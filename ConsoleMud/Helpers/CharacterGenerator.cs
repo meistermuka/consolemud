@@ -85,6 +85,7 @@ public static class CharacterGenerator
             player.KnownSkills[entry.SkillId] = proficiency;
         }
 
+        Core.Skills.PassiveService.Refresh(player);
         return player;
     }
 

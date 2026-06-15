@@ -105,7 +105,8 @@
     "Tags": [
       "Active",
       "Aggro"
-    ]
+    ],
+    "StartingProficiency": 90
   },
   {
     "Id": "cleave",

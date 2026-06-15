@@ -6,6 +6,16 @@ public static class DiceRoller
 
     public static int Roll(string diceNotation) => Roll(diceNotation, out _);
 
+    /// <summary>The maximum possible total for a dice notation (count * sides).</summary>
+    public static int Max(string diceNotation)
+    {
+        if (string.IsNullOrWhiteSpace(diceNotation)) return 2;
+        var parts = diceNotation.ToLower().Split('d');
+        if (parts.Length != 2 || !int.TryParse(parts[0], out int count) || !int.TryParse(parts[1], out int sides))
+            return 1;
+        return count * sides;
+    }
+
     /// <summary>
     /// Rolls dice notation like "3d4" and also reports the maximum possible total
     /// (count * sides), which combat uses to detect natural max-roll criticals.

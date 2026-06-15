@@ -34,6 +34,9 @@ public abstract class Character
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public List<StatusEffect> StatusEffects { get; set; } = new();
 
+    // Per-combat-encounter flags (e.g. once-per-fight passives). Cleared when combat ends.
+    public HashSet<string> EncounterFlags { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
     // Crowd-control queries, read by combat, movement, and skill gates.
     public bool IsStunned => StatusEffects.Any(e => e.Modifier == EffectModifier.Stun && !e.IsExpired);
     public bool IsRooted => StatusEffects.Any(e => e.Modifier == EffectModifier.Root && !e.IsExpired);
