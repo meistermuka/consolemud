@@ -33,11 +33,13 @@ public static class AreaLoaderService
         {
             var liveRoom = new Room
             {
+                VirtualId = bp.VirtualId,
                 Name = bp.Name,
                 Description = bp.Description
             };
             // Pair the textual VirtualId to this room's permanent memory Guid
             idTranslationTable[bp.VirtualId] = liveRoom.Id;
+            world.RoomsByVirtualId[bp.VirtualId] = liveRoom.Id;
 
             // Hold on to these pairs temporarily so we can wire them up in pass two
             createdRooms.Add((liveRoom, bp));

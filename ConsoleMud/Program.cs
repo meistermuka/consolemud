@@ -4,6 +4,7 @@ using ConsoleMud.Core;
 using ConsoleMud.Core.Commands;
 using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
+using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
 
 class Program
@@ -22,22 +23,24 @@ class Program
 
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
+        world.SafeRoomId = startingRoom.Id;
 
-        var player = CharacterGenerator.CreateNewPlayer(startingRoom.Id, definitions);
-        
-        // Tracking player in the master state
-        startingRoom.Characters.Add(player);
+        var player = SelectCharacter(world, definitions, startingRoom.Id);
+
+        // Track the player in the master state and drop them into their room.
         world.Characters[player.Id] = player;
-        
-        var timeEngine = new  TimeEngine(world);
+        if (world.Rooms.TryGetValue(player.CurrentRoomId, out var room))
+            room.Characters.Add(player);
+
+        var timeEngine = new TimeEngine(world);
         var cts = new CancellationTokenSource();
         Task.Run(() => timeEngine.StartAsync(cts.Token));
-        
+
         Console.WriteLine("=== Welcome to the Sandbox MUD ===");
-        
+
         // Render initial starting room
         new LookCommand().Execute(player, Array.Empty<string>(), world);
-        
+
         // Main loop
         while (true)
         {
@@ -46,11 +49,33 @@ class Program
 
             if (input?.ToLower() == "exit" || input?.ToLower() == "quit")
             {
-                Console.WriteLine("Goodbye!");
+                SaveService.Save(player, world);
+                Console.WriteLine("Your progress has been saved. Goodbye!");
                 break;
             }
-            
+
             parser.ParseAndExecute(input, player, world);
         }
+    }
+
+    // Startup menu: load an existing character or create a new one.
+    private static Player SelectCharacter(WorldState world, DefinitionRegistry definitions, Guid startingRoomId)
+    {
+        Console.Write("Do you want to (l)oad an existing character or create a (n)ew one? [l/n]: ");
+        string choice = (Console.ReadLine() ?? "n").Trim().ToLower();
+
+        if (choice is "l" or "load")
+        {
+            Console.Write("Character name: ");
+            string name = (Console.ReadLine() ?? "").Trim();
+            if (SaveService.TryLoad(name, world, out var loaded))
+            {
+                Console.WriteLine($"Welcome back, {loaded.Name}.");
+                return loaded;
+            }
+            Console.WriteLine($"No saved character named '{name}'. Let's make a new one.");
+        }
+
+        return CharacterGenerator.CreateNewPlayer(startingRoomId, definitions);
     }
 }

@@ -4,7 +4,7 @@
   "ItemTemplates": [
     {
       "VirtualId": "bastard_sword",
-      "Name": "=== The Bastard Sword: {wS{dteamy {xet {rR{Rotteux{x ===",
+      "Name": "=== The Bastard Sword {wS{dteamy {xet {rR{Rotteux{x ===",
       "Description": "A long, heavy bastard sword. It's a beautiful weapon, but it's also a bit of a bastard.",
       "IsGetable": true,
       "IsEquippable": true,

@@ -47,6 +47,7 @@ public class CommandParser
         _commands["sit"] = new SitCommand();
         _commands["rest"] = new RestCommand();
         _commands["stand"] = new StandCommand();
+        _commands["save"] = new SaveCommand();
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();

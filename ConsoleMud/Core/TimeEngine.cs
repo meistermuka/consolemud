@@ -18,6 +18,7 @@ public class TimeEngine
     //private const int WeatherInterval = 240;
 
     private const int HideIdleSeconds = 10; // idle time before a hider slips away
+    private const int AutosaveInterval = 480; // 120 seconds
 
     public TimeEngine(WorldState world)
     {
@@ -45,6 +46,11 @@ public class TimeEngine
                 UpdateStealth();
                 UpdateNpcIntelligence();
             }
+
+            // Periodic autosave of every active player.
+            if (_masterPulseCount % AutosaveInterval == 0)
+                foreach (var p in _world.Characters.Values.OfType<Player>())
+                    Services.SaveService.Save(p, _world);
             
             // 3. Resolve Env (weather, day/night changes)
             /*if (_masterPulseCount % WeatherInterval == 0)

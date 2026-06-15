@@ -5,6 +5,8 @@ namespace ConsoleMud.Entities;
 public class Room
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+    // Stable id from the area file; survives restarts (the runtime Guid does not).
+    public string VirtualId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     // Maps a direction to the GUID of target room

@@ -13,12 +13,22 @@ public static class DeathService
     {
         deadCharacter.CombatTarget = null;
 
-        if (deadCharacter is Player)
+        if (deadCharacter is Player player)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("\n*** YOU HAVE BEEN SLAIN! ***\nGame Over.");
-            Console.ResetColor();
-            Environment.Exit(0);
+            // Break anything fighting the player, then recall to the safe room at 1 HP.
+            foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
+                c.CombatTarget = null;
+
+            player.StatusEffects.Clear();
+            player.Health = 1;
+            player.Position = Enums.Position.Standing;
+            player.IsHidden = false;
+
+            if (world.SafeRoomId is { } safeId && world.Rooms.ContainsKey(safeId))
+                world.MoveCharacter(player, safeId);
+
+            Helpers.ColorConsole.WriteLine(
+                "\nYou collapse... and awaken somewhere safe, clinging to life at 1 HP.", ConsoleColor.DarkRed);
             return;
         }
 

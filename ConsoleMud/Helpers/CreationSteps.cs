@@ -17,9 +17,19 @@ public static class CreationSteps
 
     public static string PromptName()
     {
-        Console.Write("Enter your character's name: ");
-        string name = Console.ReadLine();
-        return string.IsNullOrWhiteSpace(name) ? "Hero" : name.Trim();
+        while (true)
+        {
+            Console.Write("Enter your character's name: ");
+            string name = Console.ReadLine();
+            name = string.IsNullOrWhiteSpace(name) ? "Hero" : name.Trim();
+
+            if (Core.Services.SaveService.Exists(name))
+            {
+                Console.WriteLine($"A character named '{name}' already exists. Choose a different name.");
+                continue;
+            }
+            return name;
+        }
     }
 
     public static SpeciesDefinition PromptSpecies(DefinitionRegistry registry)
@@ -126,6 +136,8 @@ public static class CreationSteps
         {
             Console.Write($"Choose (1-{count}): ");
             string input = Console.ReadLine();
+            if (input == null) // end of input: default to the first option
+                return 0;
             if (int.TryParse(input, out int n) && n >= 1 && n <= count)
                 return n - 1;
             Console.WriteLine("Invalid choice.");
