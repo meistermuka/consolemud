@@ -1,4 +1,5 @@
 using ConsoleMud.Core.Commands;
+using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
@@ -10,7 +11,7 @@ public class CommandParser
     private readonly Dictionary<string, ICommand> _commands = new();
     private readonly SkillExecutor _skillExecutor;
 
-    public CommandParser(SkillExecutor skillExecutor)
+    public CommandParser(SkillExecutor skillExecutor, DefinitionRegistry definitions)
     {
         _skillExecutor = skillExecutor;
         _commands["look"] = new LookCommand();
@@ -48,6 +49,8 @@ public class CommandParser
         _commands["rest"] = new RestCommand();
         _commands["stand"] = new StandCommand();
         _commands["save"] = new SaveCommand();
+        _commands["skills"] = new SkillsCommand(definitions);
+        _commands["skill"] = new SkillsCommand(definitions);
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();

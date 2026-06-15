@@ -19,7 +19,7 @@ class Program
 
         var skillHandlers = new SkillHandlerRegistry();
         var skillExecutor = new SkillExecutor(definitions, skillHandlers);
-        var parser = new CommandParser(skillExecutor);
+        var parser = new CommandParser(skillExecutor, definitions);
 
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
