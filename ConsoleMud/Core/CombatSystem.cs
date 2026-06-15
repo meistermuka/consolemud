@@ -70,44 +70,6 @@ public class CombatSystem
                           $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]");
 
         if (defender.Health <= 0)
-            HandleDeath(defender);
-    }
-
-    private void HandleDeath(Character deadCharacter)
-    {
-        // Break combat engagements immediately
-        deadCharacter.CombatTarget = null;
-
-        if (deadCharacter is Player)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("\n*** YOU HAVE BEEN SLAIN! ***\nGame Over.");
-            Console.ResetColor();
-            Environment.Exit(0);
-        }
-        else if (deadCharacter is NonPlayerCharacter npc)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"\n🎉 The {npc.Name} collapses to the ground, dead!");
-            Console.ResetColor();
-
-            var room = _world.Rooms[npc.CurrentRoomId];
-            room.Characters.Remove(npc);
-            _world.Characters.Remove(npc.Id);
-
-            // Cleanly break targeting loop for anyone else targeting this dead NPC
-            foreach (var ch in _world.Characters.Values.Where(c => c.CombatTarget == npc))
-                ch.CombatTarget = null;
-
-            // Spawn dynamic container corpse populated with their gear
-            var corpse = new Item { Name = $"corpse of a {npc.Name}", IsContainer = true, Description = $"The cold remains of a {npc.Name}." };
-            foreach (var gear in npc.Equipment.Values)
-                corpse.Contents.Add(gear);
-            corpse.Contents.AddRange(npc.Inventory);
-            room.Items.Add(corpse);
-        }
-        
-        // Reprint command line prompt gracefully
-        Console.Write("\n> ");
+            DeathService.HandleDeath(defender, _world);
     }
 }

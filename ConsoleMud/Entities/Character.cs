@@ -25,9 +25,6 @@ public abstract class Character
     // Inventory
     public List<Item> Inventory { get; set; } = new();
     
-    // New eqipment slot
-    public Item EquippedWeapon { get; set; }
-    public Item EquippedArmour { get; set; }
     public Character CombatTarget { get; set; }
     
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);

@@ -1,4 +1,5 @@
 using ConsoleMud.Core.Commands;
+using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
 
@@ -7,9 +8,11 @@ namespace ConsoleMud.Core;
 public class CommandParser
 {
     private readonly Dictionary<string, ICommand> _commands = new();
+    private readonly SkillExecutor _skillExecutor;
 
-    public CommandParser()
+    public CommandParser(SkillExecutor skillExecutor)
     {
+        _skillExecutor = skillExecutor;
         _commands["look"] = new LookCommand();
         _commands["l"] = new LookCommand();
         
@@ -39,11 +42,12 @@ public class CommandParser
         _commands["wear"] = new WearCommand();
         _commands["second"] = new SecondCommand();
         _commands["sec"] = new SecondCommand();
-        _commands["bash"] = new BashCommand();
         _commands["status"] = new StatusCommand();
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();
+
+        _commands["cast"] = new CastCommand(_skillExecutor);
 
         _commands["help"] = new HelpCommand(_commands);
         _commands["commands"] = new CommandsCommand(_commands);
@@ -59,8 +63,15 @@ public class CommandParser
         var args = parts.Skip(1).ToArray();
         
         if (_commands.TryGetValue(verb, out var command))
+        {
             command.Execute(player, args, world);
-        else
-            Console.WriteLine($"Unknown command: {verb}");
+            return;
+        }
+
+        // Not a built-in verb: try it as a learned active skill (e.g. "kick rat").
+        if (_skillExecutor.TryUse(player, verb, args, world))
+            return;
+
+        Console.WriteLine($"Unknown command: {verb}");
     }
 }

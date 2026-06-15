@@ -3,6 +3,7 @@
 using ConsoleMud.Core;
 using ConsoleMud.Core.Commands;
 using ConsoleMud.Core.Services;
+using ConsoleMud.Core.Skills;
 using ConsoleMud.Helpers;
 
 class Program
@@ -11,10 +12,13 @@ class Program
     {
         Console.WriteLine("Booting local world...standby...");
         var world = new WorldState();
-        var parser = new CommandParser();
 
         var definitions = new DefinitionRegistry();
         definitions.LoadAll("Definitions");
+
+        var skillHandlers = new SkillHandlerRegistry();
+        var skillExecutor = new SkillExecutor(definitions, skillHandlers);
+        var parser = new CommandParser(skillExecutor);
 
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
