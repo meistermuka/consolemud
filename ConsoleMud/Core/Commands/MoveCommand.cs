@@ -14,9 +14,19 @@ public class MoveCommand : ICommand
 
     public void Execute(Player player, string[] args, WorldState world)
     {
+        if (player.IsRooted)
+        {
+            Console.WriteLine("You are rooted in place and cannot move!");
+            return;
+        }
+
         var currentRoom = world.Rooms[player.CurrentRoomId];
         if (currentRoom.Exits.TryGetValue(_direction, out var targetRoomId))
         {
+            // Moving rises you to your feet and breaks stealth.
+            player.Position = Position.Standing;
+            player.BreakHidden();
+
             world.MoveCharacter(player, targetRoomId);
             Console.WriteLine($"You move {_direction.ToString().ToLower()}.");
             // Auto-execute a Look command so the player sees what's in the new room'

@@ -26,9 +26,24 @@ public abstract class Character
     public List<Item> Inventory { get; set; } = new();
     
     public Character CombatTarget { get; set; }
-    
+
+    // Stealth: hidden characters dodge NPC aggro and aren't shown to others.
+    public bool IsHidden { get; set; }
+    public DateTime LastActionUtc { get; set; } = DateTime.UtcNow;
+
     public Dictionary<string, DateTime> Cooldowns { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public List<StatusEffect> StatusEffects { get; set; } = new();
+
+    // Crowd-control queries, read by combat, movement, and skill gates.
+    public bool IsStunned => StatusEffects.Any(e => e.Modifier == EffectModifier.Stun && !e.IsExpired);
+    public bool IsRooted => StatusEffects.Any(e => e.Modifier == EffectModifier.Root && !e.IsExpired);
+    public bool IsBlinded => StatusEffects.Any(e => e.Modifier == EffectModifier.Blind && !e.IsExpired);
+
+    public void BreakHidden()
+    {
+        if (IsHidden)
+            IsHidden = false;
+    }
 
     // Species (and later NPC) damage matrix: DamageType -> multiplier. Empty = all 1.0.
     public Dictionary<DamageType, double> DamageMultipliers { get; set; } = new();

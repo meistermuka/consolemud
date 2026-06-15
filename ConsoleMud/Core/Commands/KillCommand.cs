@@ -51,6 +51,9 @@ public class KillCommand : ICommand
             return;
         }
          
+        // Attacking breaks stealth.
+        player.BreakHidden();
+
         // Establish mutual engagement
         player.CombatTarget = targetNpc;
         // If the NPC isn't fighting anyone yet, have them retaliate against the player

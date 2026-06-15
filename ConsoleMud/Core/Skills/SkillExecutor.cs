@@ -40,6 +40,18 @@ public class SkillExecutor
             return true;
         }
 
+        if (caster.IsStunned)
+        {
+            Console.WriteLine("You are stunned and cannot act.");
+            return true;
+        }
+
+        if (def.IsSpell && caster.IsBlinded)
+        {
+            Console.WriteLine("You are blinded and cannot focus a spell.");
+            return true;
+        }
+
         if (IsOnCooldown(caster, skillId, out double secondsLeft))
         {
             Console.WriteLine($"{def.Name} is on cooldown. Wait {secondsLeft:F1}s.");
@@ -58,7 +70,11 @@ public class SkillExecutor
             return true;
         }
 
-        // Attempt committed: spend resources, start cooldown, train proficiency.
+        // Attempt committed: using a skill (other than hiding) breaks stealth.
+        if (!string.Equals(skillId, "hide", StringComparison.OrdinalIgnoreCase))
+            caster.BreakHidden();
+
+        // Spend resources, start cooldown, train proficiency.
         if (def.IsSpell && def.ManaCost > 0)
             caster.Mana -= def.ManaCost;
         if (def.CooldownSeconds > 0)

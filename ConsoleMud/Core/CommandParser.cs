@@ -43,6 +43,10 @@ public class CommandParser
         _commands["second"] = new SecondCommand();
         _commands["sec"] = new SecondCommand();
         _commands["status"] = new StatusCommand();
+        _commands["flee"] = new FleeCommand();
+        _commands["sit"] = new SitCommand();
+        _commands["rest"] = new RestCommand();
+        _commands["stand"] = new StandCommand();
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();
@@ -61,7 +65,10 @@ public class CommandParser
         var parts = input.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var verb = parts[0];
         var args = parts.Skip(1).ToArray();
-        
+
+        // Record activity for the idle-based stealth roll.
+        player.LastActionUtc = DateTime.UtcNow;
+
         if (_commands.TryGetValue(verb, out var command))
         {
             command.Execute(player, args, world);

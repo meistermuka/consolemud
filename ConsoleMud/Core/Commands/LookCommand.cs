@@ -48,8 +48,8 @@ public class LookCommand : ICommand
         foreach (var item in room.Items)
             ColorConsole.WriteLine($"You see a {item.Name} here.", ConsoleColor.Gray);
 
-        // Show NPCs
-        foreach (var character in room.Characters.Where(c => c != player))
+        // Show NPCs and other characters, skipping anyone hidden.
+        foreach (var character in room.Characters.Where(c => c != player && !c.IsHidden))
             ColorConsole.WriteLine($"{character.Name} here.", ConsoleColor.Gray);
 
         Console.WriteLine();

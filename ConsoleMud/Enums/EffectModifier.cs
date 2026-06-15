@@ -15,5 +15,8 @@ public enum EffectModifier
     ImmunityOverride,    // grants immunity to DamageType while active
     FlatDamageReduction, // Magnitude % reduction to incoming DamageType (indomitable_will)
     AvoidanceMod,        // Magnitude % chance to fully avoid an incoming attack (dodge, parry)
-    CritChanceMod        // Magnitude % chance added to land a critical hit (opportunist)
+    CritChanceMod,       // Magnitude % chance added to land a critical hit (opportunist)
+    Stun,                // cannot auto-attack or use active skills
+    Root,                // cannot move or flee
+    Blind                // cannot cast spells (and sight-dependent skills)
 }

@@ -17,6 +17,8 @@ public class TimeEngine
     private const int StatusInterval = 12; // 3 second status effects and regen
     //private const int WeatherInterval = 240;
 
+    private const int HideIdleSeconds = 10; // idle time before a hider slips away
+
     public TimeEngine(WorldState world)
     {
         _world = world;
@@ -39,7 +41,10 @@ public class TimeEngine
                 _statusAndRegenSystem.Tick();
             
             if (_masterPulseCount % AiInterval == 0)
+            {
+                UpdateStealth();
                 UpdateNpcIntelligence();
+            }
             
             // 3. Resolve Env (weather, day/night changes)
             /*if (_masterPulseCount % WeatherInterval == 0)
@@ -56,6 +61,10 @@ public class TimeEngine
             // find if there's a player in the room
             var player = room.Characters.OfType<Player>().FirstOrDefault();
             if (player == null || player.Health <= 0)
+                continue;
+
+            // Hidden players go unnoticed by aggressive NPCs.
+            if (player.IsHidden)
                 continue;
             
             // check if any NPCs in this room want to attack the player
@@ -74,6 +83,32 @@ public class TimeEngine
                     Console.Write("> ");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// A character who knows how to hide slips into stealth after staying idle
+    /// and out of combat long enough. Proficiency gates and trains the attempt.
+    /// </summary>
+    private void UpdateStealth()
+    {
+        foreach (var player in _world.Characters.Values.OfType<Player>())
+        {
+            if (player.IsHidden || player.CombatTarget != null)
+                continue;
+            if (!player.KnownSkills.ContainsKey("hide"))
+                continue;
+            if ((DateTime.UtcNow - player.LastActionUtc).TotalSeconds < HideIdleSeconds)
+                continue;
+
+            double proficiency = player.KnownSkills["hide"];
+            if (Skills.ProficiencyMath.RollSuccess(proficiency))
+            {
+                player.IsHidden = true;
+                Helpers.ColorConsole.WriteLine("\nYou slip into the shadows, hidden from view.", ConsoleColor.DarkGray);
+                Console.Write("> ");
+            }
+            player.KnownSkills["hide"] = Skills.ProficiencyMath.Gain(proficiency);
         }
     }
 }

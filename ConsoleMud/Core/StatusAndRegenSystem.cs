@@ -16,17 +16,36 @@ public class StatusAndRegenSystem
 
         foreach (var character in _world.Characters.Values)
         {
-            // Passive mana regeneration up to maximum limits
+            // Resting and sitting speed recovery; combat suppresses the bonus.
+            int regenFactor = character.CombatTarget != null
+                ? 1
+                : character.Position switch
+                {
+                    Position.Resting => 3,
+                    Position.Sitting => 2,
+                    _ => 1
+                };
+
             if (character.Mana < character.MaxMana)
             {
-                character.Mana = Math.Min(character.MaxMana, character.Mana + 5);
+                character.Mana = Math.Min(character.MaxMana, character.Mana + 5 * regenFactor);
+                stateChanged = true;
+            }
+
+            if (character.Health < character.MaxHealth)
+            {
+                character.Health = Math.Min(character.MaxHealth, character.Health + 2 * regenFactor);
                 stateChanged = true;
             }
 
             // Process active effects: damage/heal over time, then age and expire them.
+            // Crowd-control effects (stun/root/blind) are aged by the combat tick instead.
             for (int i = character.StatusEffects.Count - 1; i >= 0; i--)
             {
                 var effect = character.StatusEffects[i];
+
+                if (effect.Modifier is EffectModifier.Stun or EffectModifier.Root or EffectModifier.Blind)
+                    continue;
 
                 if (effect.Modifier == EffectModifier.DamageOverTime)
                 {

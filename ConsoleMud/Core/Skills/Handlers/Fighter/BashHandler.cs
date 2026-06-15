@@ -30,9 +30,22 @@ public class BashHandler : ISkillHandler
         target.Health -= outcome.Damage;
         Helpers.ColorConsole.WriteLine($"You bash {target.Name} for {outcome.Damage} damage and stagger it! " +
                           $"-> [{target.Name} HP: {Math.Max(0, target.Health)}]", ConsoleColor.Gray);
-        // Full stagger (delaying the target's next pulse) lands with the stun state in Phase 6.
 
         if (target.Health <= 0)
+        {
             DeathService.HandleDeath(target, ctx.World);
+            return;
+        }
+
+        // Stagger: a brief stun measured in combat rounds.
+        int staggerRounds = Math.Max(1, (int)ctx.Param("staggerPulses", 1));
+        target.StatusEffects.Add(new Entities.StatusEffect
+        {
+            Name = "stagger",
+            Modifier = Enums.EffectModifier.Stun,
+            Polarity = Enums.EffectPolarity.Negative,
+            Type = Enums.EffectType.Physical,
+            TicksRemaining = staggerRounds
+        });
     }
 }
