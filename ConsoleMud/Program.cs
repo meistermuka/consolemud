@@ -19,7 +19,7 @@ class Program
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
 
-        var player = CharacterGenerator.CreateNewPlayer(startingRoom.Id);
+        var player = CharacterGenerator.CreateNewPlayer(startingRoom.Id, definitions);
         
         // Tracking player in the master state
         startingRoom.Characters.Add(player);
