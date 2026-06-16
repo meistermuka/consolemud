@@ -62,8 +62,10 @@ public class SkillHandlerRegistry
         Register(new DetectMagicHandler());
         Register(new TeleportHandler());
 
-        // Ranger (traps subsystem; remaining ranger skills land with that class batch).
+        // Ranger (traps + pet subsystems; remaining ranger skills land with that class batch).
         Register(new SetTrapHandler());
+        Register(new TameHandler());
+        Register(new CallCompanionHandler());
 
         // Druid shapeshift forms (rest of the druid lands with that class batch).
         Register(new ShapeshiftHandler("shapeshift_bear", Enums.Form.Bear));

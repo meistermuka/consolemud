@@ -897,5 +897,33 @@
       "Ultimate"
     ],
     "Parameters": {}
+  },
+  {
+    "Id": "tame",
+    "Name": "tame",
+    "Description": "Befriend a wild animal, making it your companion.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Pet"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "call_companion",
+    "Name": "call companion",
+    "Description": "Whistle your companion to your side.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 15,
+    "Tags": [
+      "Active",
+      "Pet"
+    ],
+    "Parameters": {}
   }
 ]

@@ -119,6 +119,16 @@ public static class AreaLoaderService
         };
     }
     
+    private static List<Archetype> ParseArchetypes(string[] names)
+    {
+        var list = new List<Archetype>();
+        if (names == null) return list;
+        foreach (var n in names)
+            if (Enum.TryParse<Archetype>(n, true, out var a))
+                list.Add(a);
+        return list;
+    }
+
     private static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, Dictionary<string, ItemBlueprint> itemTemplates)
     {
         var npc = new NonPlayerCharacter
@@ -130,6 +140,7 @@ public static class AreaLoaderService
             Level = bp.Level < 1 ? 1 : bp.Level,
             CurrentRoomId = roomId,
             IsAggressive = bp.IsAggressive,
+            Archetypes = ParseArchetypes(bp.Archetypes),
             // Fallback reward scales with the NPC's level and toughness.
             XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,
         };

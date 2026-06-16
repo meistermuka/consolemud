@@ -19,6 +19,9 @@ public class CombatSystem
         foreach (var character in _world.Characters.Values)
             AgeControlEffects(character);
 
+        // Companions pick up their owner's target and refresh their link.
+        PetSystem.UpdatePets(_world);
+
         // Loop through all characters globally who are currently targeting someone
         foreach (var attacker in _world.Characters.Values.ToList())
         {

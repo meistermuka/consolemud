@@ -26,7 +26,8 @@ public static class TrapSystem
     /// <summary>Called when a character enters a room (from WorldState.MoveCharacter).</summary>
     public static void OnEnter(Character entrant, Room room, WorldState world)
     {
-        if (entrant is NonPlayerCharacter npc && npc.Health > 0 && room.Traps.Count > 0)
+        // Pets are friendly and don't spring their owner's traps.
+        if (entrant is NonPlayerCharacter npc && !npc.IsPet && npc.Health > 0 && room.Traps.Count > 0)
             Trip(room, npc, world);
     }
 
@@ -37,7 +38,7 @@ public static class TrapSystem
         {
             if (room.Traps.Count == 0)
                 continue;
-            var npc = room.Characters.OfType<NonPlayerCharacter>().FirstOrDefault(n => n.Health > 0);
+            var npc = room.Characters.OfType<NonPlayerCharacter>().FirstOrDefault(n => n.Health > 0 && !n.IsPet);
             if (npc != null)
                 Trip(room, npc, world);
         }

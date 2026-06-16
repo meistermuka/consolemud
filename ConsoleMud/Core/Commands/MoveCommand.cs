@@ -29,6 +29,7 @@ public class MoveCommand : ICommand
             player.LastExit = _direction;
 
             world.MoveCharacter(player, targetRoomId);
+            PetSystem.FollowOwner(player, world);
             Console.WriteLine($"You move {_direction.ToString().ToLower()}.");
             // Auto-execute a Look command so the player sees what's in the new room'
             new LookCommand().Execute(player, args, world);

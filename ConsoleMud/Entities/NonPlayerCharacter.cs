@@ -6,6 +6,10 @@ public class NonPlayerCharacter : Character
 {
     public bool IsAggressive { get; set; }
     public int XpReward { get; set; }
+
+    // Set when this creature is a tamed pet; identifies its owning player.
+    public Guid? OwnerId { get; set; }
+    public bool IsPet => OwnerId.HasValue;
     public string[] Keywords => ColorMarkup.Strip(Name).ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
 
     public bool MatchesKeyword(string query)

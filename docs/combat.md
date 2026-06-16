@@ -103,6 +103,18 @@ and ensure the relevant `Fire` call exists at the event site.
   entering a form routes through the `shapeshift_<form>` skill for mana/cooldown). Dragon
   form unlocks `breath` (un-mitigated elemental AoE).
 
+## Pets / companions
+
+`Core/PetSystem.cs`. A ranger `tame`s a wild animal (an NPC with the `Animal`/`Beast`
+archetype), setting its `OwnerId` and `Player.Pet`. Then:
+
+- **Follow:** `PetSystem.FollowOwner` (wired into move/flee) keeps the pet in the owner's room.
+- **Assist:** `PetSystem.UpdatePets` (each combat tick) points the pet at the owner's target, so it fights through the normal combat loop.
+- **Link:** with `companion_link`, the pet gains 25% of the owner's armor and inherits the owner's damage resistances.
+- **Recall:** `call_companion` teleports the pet to the owner.
+
+Pets don't trip their owner's traps and aren't aggressive. A dead pet is dropped from `Player.Pet` automatically.
+
 ## Traps
 
 `Core/TrapSystem.cs` plus `Entities/Trap.cs` and `Room.Traps`. A character places a

@@ -9,4 +9,7 @@ public class Player : Character
     // Mage elemental specialization (Fire/Cold/Lightning), chosen at its level.
     // The level-up prompt that sets this lands with progression; null until then.
     public DamageType? Specialization { get; set; }
+
+    // The ranger's active tamed companion, if any.
+    public NonPlayerCharacter Pet { get; set; }
 }

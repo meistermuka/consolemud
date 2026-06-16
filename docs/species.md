@@ -55,3 +55,4 @@ selection screen. No code beyond the enum value.
 
 - `DamageType` names in JSON must match the `Enums/DamageType.cs` values: Physical, Poison, Magic, Psychic, Charm, Sleep, Fear, Fire, Cold, Lightning, Force, Holy, Nature.
 - NPCs can carry their own `DamageMultipliers` too (the resolver is identical for any `Character`); populating them from NPC blueprints is future work.
+- NPCs also carry `Archetypes` (set in the NPC blueprint, e.g. `["Animal"]`, `["Undead"]`): the ranger `tame`s `Animal`/`Beast`, and the cleric's `turn_undead`/`smite` key off `Undead`/`Fiend`.

@@ -38,6 +38,7 @@ public class FleeCommand : ICommand
         player.LastExit = chosen.Key;
 
         world.MoveCharacter(player, chosen.Value);
+        PetSystem.FollowOwner(player, world);
         Console.WriteLine($"\nYou flee {chosen.Key.ToString().ToLower()}!");
         new LookCommand().Execute(player, Array.Empty<string>(), world);
     }
