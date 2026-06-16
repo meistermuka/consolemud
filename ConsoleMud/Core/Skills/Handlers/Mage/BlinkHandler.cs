@@ -22,9 +22,11 @@ public class BlinkHandler : ISkillHandler
             c.CombatTarget = null;
         ctx.Caster.Position = Position.Standing;
 
-        var exits = room.Exits.Values.ToList();
-        ctx.World.MoveCharacter(ctx.Caster, exits[Random.Shared.Next(exits.Count)]);
-        Helpers.ColorConsole.WriteLine("\nReality folds — you blink away!", ConsoleColor.Gray);
+        var exits = room.Exits.ToList();
+        var chosen = exits[Random.Shared.Next(exits.Count)];
+        ctx.Caster.LastExit = chosen.Key;
+        ctx.World.MoveCharacter(ctx.Caster, chosen.Value);
+        Helpers.ColorConsole.WriteLine("\nReality folds and you blink away!", ConsoleColor.Gray);
 
         if (ctx.Caster is Player p)
             new LookCommand().Execute(p, Array.Empty<string>(), ctx.World);

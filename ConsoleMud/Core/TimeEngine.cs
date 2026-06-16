@@ -15,7 +15,7 @@ public class TimeEngine
     private const int CombatInterval = 4; // 1 second auto-attacks
     private const int AiInterval = 8; // 2 second AI thinking tick
     private const int StatusInterval = 12; // 3 second status effects and regen
-    //private const int WeatherInterval = 240;
+    private const int WeatherInterval = 240; // 60 second weather change
 
     private const int HideIdleSeconds = 10; // idle time before a hider slips away
     private const int AutosaveInterval = 480; // 120 seconds
@@ -52,10 +52,10 @@ public class TimeEngine
                 foreach (var p in _world.Characters.Values.OfType<Player>())
                     Services.SaveService.Save(p, _world);
             
-            // 3. Resolve Env (weather, day/night changes)
-            /*if (_masterPulseCount % WeatherInterval == 0)
-                UpdateWorldEnvironment();*/
-            
+            // 3. Resolve environment (weather changes)
+            if (_masterPulseCount % WeatherInterval == 0)
+                UpdateWeather();
+
             await Task.Delay(UniversalTickTimeBase, cancellationToken);
         }
     }
@@ -90,6 +90,36 @@ public class TimeEngine
                 }
             }
         }
+    }
+
+    private static readonly Enums.Weather[] WeatherStates =
+        { Enums.Weather.Clear, Enums.Weather.Cloudy, Enums.Weather.Raining, Enums.Weather.Storming, Enums.Weather.Snowing };
+
+    /// <summary>Rolls a new weather state and announces it to players standing outside.</summary>
+    private void UpdateWeather()
+    {
+        var next = WeatherStates[Random.Shared.Next(WeatherStates.Length)];
+        if (next == _world.CurrentWeather)
+            return;
+        _world.CurrentWeather = next;
+
+        string line = next switch
+        {
+            Enums.Weather.Clear => "The skies clear.",
+            Enums.Weather.Cloudy => "Clouds roll in overhead.",
+            Enums.Weather.Raining => "Rain begins to fall.",
+            Enums.Weather.Storming => "A storm breaks, thunder rolling.",
+            Enums.Weather.Snowing => "Snow starts to drift down.",
+            _ => null
+        };
+
+        foreach (var room in _world.Rooms.Values.Where(r => r.IsOutside))
+            if (room.Characters.OfType<Player>().Any())
+            {
+                Helpers.ColorConsole.WriteLine($"\n{line}", ConsoleColor.Blue);
+                Console.Write("> ");
+                break;
+            }
     }
 
     /// <summary>

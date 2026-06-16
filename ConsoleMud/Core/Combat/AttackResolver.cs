@@ -42,6 +42,10 @@ public static class AttackResolver
         // 4. Outgoing damage buffs (berserk, etc.).
         raw = (int)Math.Round(raw * attacker.DamageDealtMultiplier);
 
+        // Hunter's mark: bonus damage against the marked target.
+        if (attacker.MarkedTarget == defender && attacker.KnownSkills.ContainsKey("mark_of_the_hunter"))
+            raw = (int)Math.Round(raw * 1.2);
+
         // 5. Armor mitigates physical unless the attack ignores it.
         int afterArmor = (!ignoresArmor && type == DamageType.Physical)
             ? Math.Max(0, raw - defender.TotalArmourRating)

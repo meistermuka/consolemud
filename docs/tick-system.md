@@ -28,6 +28,7 @@ while (!token.IsCancellationRequested)
 | `CombatInterval` | 4 | 1.0 s | `CombatSystem.Tick` — auto-attacks, CC ageing, second-wind |
 | `AiInterval` | 8 | 2.0 s | `UpdateStealth` (idle auto-hide) + `UpdateNpcIntelligence` (aggro) |
 | `StatusInterval` | 12 | 3.0 s | `StatusAndRegenSystem.Tick` — DoT/HoT, regen, effect expiry |
+| `WeatherInterval` | 240 | 60 s | `UpdateWeather` — rolls `WorldState.CurrentWeather`, announced to players outside |
 | `AutosaveInterval` | 480 | 120 s | `SaveService.Save` for each active player |
 | `HideIdleSeconds` | — | 10 s | idle threshold the stealth check compares against |
 
@@ -46,4 +47,11 @@ This split is why a 2-round root from `entangle` feels like combat rounds while 
 2. In `StartAsync`, add `if (_masterPulseCount % YourInterval == 0) YourTick();`.
 3. Implement `YourTick()` reading/mutating `_world`.
 
-The original roadmap reserved a **weather/environment** tier (`WeatherInterval = 240`, commented out) — that is the slot the Phase 9 environment system will use.
+## Environment (weather + outside)
+
+`Room.IsOutside` (set from the area file's `IsOutside`) marks open-air rooms. The
+weather tier (`WeatherInterval`, 60 s) rolls `WorldState.CurrentWeather` through
+`Weather` (Clear/Cloudy/Raining/Storming/Snowing) and announces changes to players
+in outdoor rooms. `WorldState.IsStormy` is a convenience for skills (e.g. the
+druid's `lightning_strike` hits harder in rain or storms). The `weather` command
+reports the current sky when outdoors.

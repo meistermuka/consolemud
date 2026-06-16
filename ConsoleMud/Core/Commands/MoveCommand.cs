@@ -26,6 +26,7 @@ public class MoveCommand : ICommand
             // Moving rises you to your feet and breaks stealth.
             player.Position = Position.Standing;
             player.BreakHidden();
+            player.LastExit = _direction;
 
             world.MoveCharacter(player, targetRoomId);
             Console.WriteLine($"You move {_direction.ToString().ToLower()}.");

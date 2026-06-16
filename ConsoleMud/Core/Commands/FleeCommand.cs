@@ -35,6 +35,7 @@ public class FleeCommand : ICommand
 
         player.Position = Position.Standing;
         player.BreakHidden();
+        player.LastExit = chosen.Key;
 
         world.MoveCharacter(player, chosen.Value);
         Console.WriteLine($"\nYou flee {chosen.Key.ToString().ToLower()}!");

@@ -27,6 +27,11 @@ public abstract class Character
     
     public Character CombatTarget { get; set; }
 
+    // Last exit this character took (read by the ranger 'track' skill).
+    public Direction? LastExit { get; set; }
+    // Hunter's mark target (mark_of_the_hunter grants bonus damage against it).
+    public Character MarkedTarget { get; set; }
+
     // Stealth: hidden characters dodge NPC aggro and aren't shown to others.
     public bool IsHidden { get; set; }
     public DateTime LastActionUtc { get; set; } = DateTime.UtcNow;

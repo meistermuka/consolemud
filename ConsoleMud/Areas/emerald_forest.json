@@ -139,7 +139,8 @@
           }
         ],
         "Npcs": []
-      }
+      },
+      "IsOutside": true
     },
     {
       "VirtualId": "deep_woods",
@@ -160,7 +161,8 @@
             "Count": 1
           }
         ]
-      }
+      },
+      "IsOutside": true
     }
   ]
 }
