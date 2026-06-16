@@ -53,6 +53,9 @@ public class CommandParser
         _commands["skill"] = new SkillsCommand(definitions);
         _commands["specialize"] = new SpecializeCommand();
         _commands["weather"] = new WeatherCommand();
+        _commands["shapeshift"] = new ShapeshiftCommand(_skillExecutor);
+        _commands["shift"] = new ShapeshiftCommand(_skillExecutor);
+        _commands["breath"] = new BreathCommand();
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();

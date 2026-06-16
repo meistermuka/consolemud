@@ -841,5 +841,61 @@
     "Parameters": {
       "rootRounds": 3
     }
+  },
+  {
+    "Id": "shapeshift_bear",
+    "Name": "shapeshift bear",
+    "Description": "Transform into a grizzly bear (no spellcasting).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_wolf",
+    "Name": "shapeshift wolf",
+    "Description": "Transform into a swift wolf (no spellcasting).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_owl",
+    "Name": "shapeshift owl",
+    "Description": "Transform into a silent owl (no melee).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_dragon",
+    "Name": "shapeshift dragon",
+    "Description": "Become a Nature Dragon with a breath weapon.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 70,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
   }
 ]

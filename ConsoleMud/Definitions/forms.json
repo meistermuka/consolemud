@@ -1,0 +1,51 @@
+[
+  {
+    "Id": "bear",
+    "Name": "grizzly bear",
+    "HpBonus": 50,
+    "ArmorBonus": 10,
+    "AttackDice": "1d10",
+    "AttackVerb": "maul",
+    "AttackAttribute": "Strength",
+    "LocksCasting": true,
+    "LocksPhysical": false,
+    "TransformMessage": "Your body swells into a massive grizzly bear!"
+  },
+  {
+    "Id": "wolf",
+    "Name": "timber wolf",
+    "HpBonus": 10,
+    "ArmorBonus": 0,
+    "AttackDice": "1d8",
+    "AttackVerb": "bite",
+    "AttackAttribute": "Dexterity",
+    "LocksCasting": true,
+    "LocksPhysical": false,
+    "TransformMessage": "You drop onto four legs as a swift timber wolf!"
+  },
+  {
+    "Id": "owl",
+    "Name": "silent owl",
+    "HpBonus": 0,
+    "ArmorBonus": 0,
+    "AttackDice": "",
+    "AttackVerb": "",
+    "AttackAttribute": "",
+    "LocksCasting": false,
+    "LocksPhysical": true,
+    "TransformMessage": "You shrink into a silent owl and take wing."
+  },
+  {
+    "Id": "dragon",
+    "Name": "nature dragon",
+    "HpBonus": 100,
+    "ArmorBonus": 15,
+    "AttackDice": "2d10",
+    "AttackVerb": "rake",
+    "AttackAttribute": "Strength",
+    "LocksCasting": false,
+    "LocksPhysical": false,
+    "BreathDice": "6d8",
+    "TransformMessage": "You become a towering Nature Dragon, scales gleaming!"
+  }
+]

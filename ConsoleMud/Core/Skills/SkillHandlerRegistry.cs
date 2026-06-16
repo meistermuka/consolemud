@@ -64,6 +64,12 @@ public class SkillHandlerRegistry
 
         // Ranger (traps subsystem; remaining ranger skills land with that class batch).
         Register(new SetTrapHandler());
+
+        // Druid shapeshift forms (rest of the druid lands with that class batch).
+        Register(new ShapeshiftHandler("shapeshift_bear", Enums.Form.Bear));
+        Register(new ShapeshiftHandler("shapeshift_wolf", Enums.Form.Wolf));
+        Register(new ShapeshiftHandler("shapeshift_owl", Enums.Form.Owl));
+        Register(new ShapeshiftHandler("shapeshift_dragon", Enums.Form.Dragon));
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;

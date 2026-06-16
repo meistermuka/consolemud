@@ -45,4 +45,6 @@ token, so `attack`/`take` stay visible while `k`/`l`/`n` are hidden.
 | `sit`, `rest`, `stand` | posture | drives regen rate |
 | `status`, `skills`, `save` | info / persistence | level, XP, proficiency |
 | `specialize <element>` | Mage only | sets fire/cold/lightning for `elemental_mastery` |
+| `shapeshift <form>`, `breath` | Druid forms | bear/wolf/owl/dragon/human; `breath` in dragon form |
+| `weather` | environment | current sky when outdoors |
 | `help`, `commands` | discovery | self-describing |

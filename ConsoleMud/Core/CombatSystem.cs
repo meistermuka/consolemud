@@ -83,6 +83,18 @@ public class CombatSystem
 
     private void ExecuteAttack(Character attacker, Character defender)
     {
+        // A shapeshifted attacker uses its natural attack profile instead of weapons.
+        var form = Skills.ShapeshiftService.GetForm(attacker);
+        if (form != null)
+        {
+            if (form.LocksPhysical || string.IsNullOrWhiteSpace(form.AttackDice))
+                return; // e.g. owl cannot melee
+            int beastSwings = attacker.AttackRate;
+            for (int i = 0; i < beastSwings && defender.Health > 0; i++)
+                ResolveSingleHit(attacker, defender, form.Name, form.AttackVerb ?? "strike", form.AttackDice, "Beast", form.AttackAttribute);
+            return;
+        }
+
         // --- MAIN HAND: one swing per attack-rate (haste/slow modify the count) ---
         var mainWeapon = attacker.MainHandWeapon;
         string mainName = mainWeapon?.Name ?? attacker.Name; // unarmed falls back to the attacker
@@ -105,10 +117,10 @@ public class CombatSystem
         return weapon.AttackVerbs[Random.Shared.Next(weapon.AttackVerbs.Length)];
     }
 
-    private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel)
+    private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel, string attributeBonus = null)
     {
         bool critMastery = attacker.KnownSkills.ContainsKey("critical_mastery");
-        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical, critOnMaxRoll: critMastery);
+        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical, attributeBonus: attributeBonus, critOnMaxRoll: critMastery);
 
         if (!outcome.Hit)
         {

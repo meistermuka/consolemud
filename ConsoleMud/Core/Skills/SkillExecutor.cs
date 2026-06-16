@@ -46,6 +46,21 @@ public class SkillExecutor
             return true;
         }
 
+        var form = ShapeshiftService.GetForm(caster);
+        if (form != null)
+        {
+            if (def.IsSpell && form.LocksCasting)
+            {
+                Console.WriteLine($"You can't shape arcane spells as a {form.Name}. (shapeshift human first)");
+                return true;
+            }
+            if (!def.IsSpell && form.LocksPhysical)
+            {
+                Console.WriteLine($"You can't use physical skills as a {form.Name}.");
+                return true;
+            }
+        }
+
         if (def.IsSpell && caster.IsBlinded)
         {
             Console.WriteLine("You are blinded and cannot focus a spell.");

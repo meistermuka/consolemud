@@ -14,12 +14,14 @@ public class DefinitionRegistry
     public Dictionary<string, SpeciesDefinition> Species { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, SkillDefinition> Skills { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, ClassDefinition> Classes { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, FormDefinition> Forms { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public void LoadAll(string definitionsFolder)
     {
         LoadInto(Path.Combine(definitionsFolder, "species.json"), Species, s => s.Id, "species");
         LoadInto(Path.Combine(definitionsFolder, "skills.json"), Skills, s => s.Id, "skills");
         LoadInto(Path.Combine(definitionsFolder, "classes.json"), Classes, c => c.Id, "classes");
+        LoadInto(Path.Combine(definitionsFolder, "forms.json"), Forms, f => f.Id, "forms");
 
         ValidateClassSkillReferences();
     }

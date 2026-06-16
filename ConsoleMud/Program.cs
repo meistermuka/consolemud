@@ -18,6 +18,7 @@ class Program
         definitions.LoadAll("Definitions");
         LevelingService.Initialize(definitions);
         PassiveService.Initialize(definitions);
+        ShapeshiftService.Initialize(definitions);
 
         var skillHandlers = new SkillHandlerRegistry();
         var skillExecutor = new SkillExecutor(definitions, skillHandlers);

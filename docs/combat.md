@@ -87,6 +87,22 @@ A passive only runs for an owner who knows its skill (the `TriggerBus` checks
 passive: implement `IPassiveHandler`, register it in `PassiveService.Initialize`,
 and ensure the relevant `Fire` call exists at the event site.
 
+## Shapeshift forms
+
+`Core/Skills/ShapeshiftService.cs` + `Definitions/forms.json` (`FormDefinition`).
+`ShapeshiftService.Enter`/`Revert` apply a form's armor bonus (a tagged permanent
+`StatusEffect`) and a tracked temporary max-HP bump, restoring cleanly on revert.
+`Character.Form` holds the active form.
+
+- **Combat:** `ExecuteAttack` calls `ShapeshiftService.GetForm`; a form with an attack
+  profile swings its natural attack (dice + verb + scaling attribute) instead of weapons,
+  and a form that `LocksPhysical` (owl) cannot melee.
+- **Skills:** `SkillExecutor` blocks spells when the form `LocksCasting` (bear/wolf) and
+  physical skills when it `LocksPhysical` (owl).
+- **Commands:** `shapeshift <bear|wolf|owl|dragon|human>` (reverting to human is free;
+  entering a form routes through the `shapeshift_<form>` skill for mana/cooldown). Dragon
+  form unlocks `breath` (un-mitigated elemental AoE).
+
 ## Traps
 
 `Core/TrapSystem.cs` plus `Entities/Trap.cs` and `Room.Traps`. A character places a

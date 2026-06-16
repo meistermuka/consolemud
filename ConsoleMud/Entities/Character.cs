@@ -88,6 +88,7 @@ public abstract class Character
     public CharacterClass Class { get; set; }
     public Species Species { get; set; }
     public Form Form { get; set; } = Form.Human;
+    public int FormHpBonus { get; set; } // temp max-HP granted by the current form (for clean revert)
     public Position Position { get; set; } = Position.Standing;
 
     // Skill id -> proficiency (1.0 .. 100.0)
