@@ -125,6 +125,11 @@ public static class PassiveService
             case "toxic_resilience":
                 Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Poison);
                 break;
+
+            // --- Ranger ---
+            case "weather_hardened":
+                Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Cold);
+                break;
         }
     }
 }

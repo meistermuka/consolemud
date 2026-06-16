@@ -65,6 +65,22 @@ public class ShootHandler : ISkillHandler
         }
 
         ctx.Engage(target);
+
+        // Arrow volley: extra projectiles strike other foes in the room.
+        if (ctx.Caster.KnownSkills.ContainsKey("arrow_volley")
+            && ctx.World.Rooms.TryGetValue(ctx.Caster.CurrentRoomId, out var here))
+        {
+            var others = here.Characters.OfType<NonPlayerCharacter>()
+                .Where(n => n != target && n.Health > 0 && !n.IsPet).Take(2).ToList();
+            foreach (var extra in others)
+            {
+                var o = AttackResolver.Resolve(ctx.Caster, extra, bow.DiceNotation ?? "2d4", DamageType.Physical);
+                if (!o.Hit) continue;
+                extra.Health -= o.Damage;
+                ColorConsole.WriteLine($"A second arrow hits {extra.Name} for {o.Damage}!", ConsoleColor.Gray);
+                if (extra.Health <= 0) DeathService.HandleDeath(extra, ctx.World, ctx.Caster);
+            }
+        }
     }
 
     private static NonPlayerCharacter FindAdjacent(SkillContext ctx)

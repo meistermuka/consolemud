@@ -179,6 +179,17 @@ public class CombatSystem
             }
         }
 
+        // Natural attunement: outdoors, the ranger's strikes carry bonus magic damage (scales with Wisdom).
+        if (attacker.KnownSkills.ContainsKey("natural_attunement") && defender.Health > 0
+            && _world.Rooms.TryGetValue(attacker.CurrentRoomId, out var atrm) && atrm.IsOutside)
+        {
+            int bonus = Math.Max(1, (attacker.Wisdom - 10) / 2);
+            int dealt = DamageResolver.Apply(defender, DamageType.Magic, bonus);
+            defender.Health -= dealt;
+            Helpers.ColorConsole.WriteLine($"Nature's power adds {dealt} magic damage!", ConsoleColor.Gray);
+            if (defender.Health <= 0) { DeathService.HandleDeath(defender, _world, attacker); return; }
+        }
+
         // Poison coat: the attacker's coated weapon may poison the defender (charges deplete).
         var coat = attacker.StatusEffects.FirstOrDefault(e => e.Modifier == EffectModifier.WeaponCoat && e.Charges > 0);
         if (coat != null && defender.Health > 0)

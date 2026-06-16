@@ -26,6 +26,11 @@ public class StatusAndRegenSystem
                     _ => 1
                 };
 
+            // Wilderness lore: faster recovery resting/sitting outdoors.
+            if (regenFactor > 1 && character.KnownSkills.ContainsKey("wilderness_lore")
+                && _world.Rooms.TryGetValue(character.CurrentRoomId, out var rm) && rm.IsOutside)
+                regenFactor += 1;
+
             if (character.Mana < character.MaxMana)
             {
                 int manaRegen = 5 * regenFactor;

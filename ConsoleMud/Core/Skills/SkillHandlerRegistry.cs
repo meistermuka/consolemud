@@ -68,6 +68,16 @@ public class SkillHandlerRegistry
         Register(new TameHandler());
         Register(new CallCompanionHandler());
         Register(new ShootHandler());
+        Register(new TrackHandler());
+        Register(new ForestCamouflageHandler());
+        Register(new ScoutHandler());
+        Register(new SnareHandler());
+        Register(new SpiritOfThePackHandler());
+        Register(new ArrowOfSlayingHandler());
+        Register(new AlphaStrikeHandler());
+        // ranger passives: wilderness_lore (regen), point_blank_shot (no-op), arrow_volley (shoot),
+        // companion_link (PetSystem), mark_of_the_hunter (AttackResolver), weather_hardened (PassiveService),
+        // natural_attunement (combat rider).
 
         // Druid: shapeshift forms + nature magic (skin_of_oak/toxic_resilience are passive;
         // adaptive_synergy/natural_herbology are inert no-ops; gaean_embrace is in DeathService).

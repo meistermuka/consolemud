@@ -47,4 +47,8 @@ token, so `attack`/`take` stay visible while `k`/`l`/`n` are hidden.
 | `specialize <element>` | Mage only | sets fire/cold/lightning for `elemental_mastery` |
 | `shapeshift <form>`, `breath` | Druid forms | bear/wolf/owl/dragon/human; `breath` in dragon form |
 | `weather` | environment | current sky when outdoors |
+
+Most class skills are invoked as bare verbs (e.g. `kick rat`, `backstab wolf`, `scout east`,
+`track wolf`, `shapeshift bear`) — the parser falls through unknown verbs to the skill
+executor. Spells use `cast <spell>`. The `skills` command lists what your class learns.
 | `help`, `commands` | discovery | self-describing |

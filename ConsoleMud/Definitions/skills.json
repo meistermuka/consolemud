@@ -1348,5 +1348,195 @@
     "Parameters": {
       "hits": 3
     }
+  },
+  {
+    "Id": "track",
+    "Name": "track",
+    "Description": "Read a creature's trail and mark it as your quarry.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "wilderness_lore",
+    "Name": "wilderness lore",
+    "Description": "Recover faster resting outdoors.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "point_blank_shot",
+    "Name": "point-blank shot",
+    "Description": "No penalty for shooting in melee.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "forest_camouflage",
+    "Name": "forest camouflage",
+    "Description": "Blend into outdoor cover, hiding at once.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stealth"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "scout",
+    "Name": "scout",
+    "Description": "Peek into an adjacent room without entering it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 5,
+    "Tags": [
+      "Active",
+      "Perception"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "arrow_volley",
+    "Name": "arrow volley",
+    "Description": "Your shots strike up to three foes at once.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "targets": 3
+    }
+  },
+  {
+    "Id": "companion_link",
+    "Name": "companion link",
+    "Description": "Your pet shares your armor and resistances.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "snare",
+    "Name": "snare",
+    "Description": "A leg shot that damages and roots a foe.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 15,
+    "DamageType": "Physical",
+    "DiceNotation": "2d6",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {
+      "rootRounds": 4
+    }
+  },
+  {
+    "Id": "mark_of_the_hunter",
+    "Name": "mark of the hunter",
+    "Description": "Your marked quarry takes extra damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "spirit_of_the_pack",
+    "Name": "spirit of the pack",
+    "Description": "You and your pet attack faster for a time.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "attackRate": 1
+    }
+  },
+  {
+    "Id": "weather_hardened",
+    "Name": "weather hardened",
+    "Description": "Immunity to harsh weather (cold).",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "arrow_of_slaying",
+    "Name": "arrow of slaying",
+    "Description": "A focused sniper shot that ignores armor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 90,
+    "DamageType": "Physical",
+    "DiceNotation": "8d8",
+    "Tags": [
+      "Active",
+      "Finisher"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "natural_attunement",
+    "Name": "natural attunement",
+    "Description": "Outdoors, your strikes carry bonus magic damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "alpha_strike",
+    "Name": "alpha strike",
+    "Description": "Your pet pins a foe while you land four critical shots.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 120,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "shots": 4
+    }
   }
 ]
