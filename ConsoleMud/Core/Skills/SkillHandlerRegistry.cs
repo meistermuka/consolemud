@@ -68,11 +68,19 @@ public class SkillHandlerRegistry
         Register(new CallCompanionHandler());
         Register(new ShootHandler());
 
-        // Druid shapeshift forms (rest of the druid lands with that class batch).
+        // Druid: shapeshift forms + nature magic (skin_of_oak/toxic_resilience are passive;
+        // adaptive_synergy/natural_herbology are inert no-ops; gaean_embrace is in DeathService).
         Register(new ShapeshiftHandler("shapeshift_bear", Enums.Form.Bear));
         Register(new ShapeshiftHandler("shapeshift_wolf", Enums.Form.Wolf));
         Register(new ShapeshiftHandler("shapeshift_owl", Enums.Form.Owl));
         Register(new ShapeshiftHandler("shapeshift_dragon", Enums.Form.Dragon));
+        Register(new RejuvenateHandler());
+        Register(new LightningStrikeHandler());
+        Register(new ThornsHandler());
+        Register(new InsectSwarmHandler());
+        Register(new CallLightningHandler());
+        Register(new WrathOfNatureHandler());
+        Register(new NaturesSpeechHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;

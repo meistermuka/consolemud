@@ -34,6 +34,21 @@ public static class DeathService
                 return;
             }
 
+            // Gaean embrace: a lethal blow outdoors reincarnates the druid in place at half
+            // health, once per encounter, instead of recalling.
+            bool outside = world.Rooms.TryGetValue(player.CurrentRoomId, out var here) && here.IsOutside;
+            if (outside && player.KnownSkills.ContainsKey("gaean_embrace") && player.EncounterFlags.Add("gaean_embrace"))
+            {
+                player.StatusEffects.Clear();
+                player.Health = Math.Max(1, player.MaxHealth / 2);
+                foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
+                    c.CombatTarget = null;
+                Helpers.ColorConsole.WriteLine(
+                    "\nYour body dissolves into autumn leaves and reforms — the wild will not let you die here.",
+                    ConsoleColor.Green);
+                return;
+            }
+
             // Break anything fighting the player, then recall to the safe room at 1 HP.
             foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
                 c.CombatTarget = null;

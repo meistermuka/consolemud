@@ -925,5 +925,193 @@
       "Pet"
     ],
     "Parameters": {}
+  },
+  {
+    "Id": "rejuvenate",
+    "Name": "rejuvenate",
+    "Description": "A healing bloom that restores health over time.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 8,
+    "DiceNotation": "1d4",
+    "AttributeBonus": "Wisdom",
+    "DurationTicks": 5,
+    "Tags": [
+      "Active",
+      "Heal"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "natures_speech",
+    "Name": "nature's speech",
+    "Description": "Speak with animals. (Requires hidden-content systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "skin_of_oak",
+    "Name": "skin of oak",
+    "Description": "Bark-like skin grants permanent armor.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "armorBonus": 3
+    }
+  },
+  {
+    "Id": "natural_herbology",
+    "Name": "natural herbology",
+    "Description": "Better foraging. (Requires consumables.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "lightning_strike",
+    "Name": "lightning strike",
+    "Description": "A bolt of nature; doubled in rain or storms.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 18,
+    "CooldownSeconds": 8,
+    "DamageType": "Nature",
+    "DiceNotation": "3d6",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "weatherBonus": 2
+    }
+  },
+  {
+    "Id": "thorns",
+    "Name": "thorns",
+    "Description": "Briars that wound melee attackers of the warded ally.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 30,
+    "DurationTicks": 7,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "eco_location",
+    "Name": "eco-location",
+    "Description": "While outside, sense creatures up to two rooms away.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "insect_swarm",
+    "Name": "insect swarm",
+    "Description": "Biting insects that damage over time and spoil aim.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 25,
+    "CooldownSeconds": 15,
+    "DamageType": "Nature",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Debuff"
+    ],
+    "Parameters": {
+      "tickDamage": 3,
+      "accuracyDebuff": 30
+    }
+  },
+  {
+    "Id": "adaptive_synergy",
+    "Name": "adaptive synergy",
+    "Description": "Retain mana regen while shapeshifted.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "call_lightning",
+    "Name": "call lightning",
+    "Description": "A storm strikes several foes with nature lightning.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 45,
+    "CooldownSeconds": 45,
+    "DamageType": "Nature",
+    "DiceNotation": "4d6",
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {
+      "targets": 4
+    }
+  },
+  {
+    "Id": "toxic_resilience",
+    "Name": "toxic resilience",
+    "Description": "Immunity to poison.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "gaean_embrace",
+    "Name": "gaean embrace",
+    "Description": "A lethal blow outdoors reincarnates you at half health.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "wrath_of_nature",
+    "Name": "wrath of nature",
+    "Description": "Roots, blinds, and blasts every foe in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 85,
+    "CooldownSeconds": 120,
+    "DamageType": "Nature",
+    "DiceNotation": "6d8",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {
+      "rootRounds": 2,
+      "blindRounds": 2
+    }
   }
 ]

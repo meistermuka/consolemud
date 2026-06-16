@@ -47,6 +47,7 @@ decides what it does:
 | `FlatDamageReduction` | % cut to a `DamageType` |
 | `CritChanceMod` | added crit % |
 | `Stun` / `Root` / `Blind` | lose turn / can't move / can't cast |
+| `Thorns` | reflects Magnitude to melee attackers (druid thorns) |
 
 `Character` exposes computed accessors that fold active effects:
 `TotalArmourRating`, `AttackRate`, `AccuracyBonus`, `AvoidanceChance`,

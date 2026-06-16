@@ -145,5 +145,16 @@ public class CombatSystem
         // Event passives fire only when the defender survives the hit.
         Skills.PassiveService.Fire(Skills.SkillTrigger.OnOutgoingHit, attacker, defender, _world);
         Skills.PassiveService.Fire(Skills.SkillTrigger.OnIncomingHit, defender, attacker, _world);
+
+        // Thorns: the defender's briars wound the attacker (works for any warded target).
+        var thorns = defender.StatusEffects.FirstOrDefault(e => e.Modifier == EffectModifier.Thorns && !e.IsExpired);
+        if (thorns != null && attacker.Health > 0)
+        {
+            int reflected = DamageResolver.Apply(attacker, DamageType.Physical, (int)thorns.Magnitude);
+            attacker.Health -= reflected;
+            Helpers.ColorConsole.WriteLine($"{attacker.Name} is pricked by thorns for {reflected}!", ConsoleColor.Gray);
+            if (attacker.Health <= 0)
+                DeathService.HandleDeath(attacker, _world, defender);
+        }
     }
 }

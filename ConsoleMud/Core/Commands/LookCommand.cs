@@ -52,6 +52,14 @@ public class LookCommand : ICommand
         foreach (var character in room.Characters.Where(c => c != player && !c.IsHidden))
             ColorConsole.WriteLine($"{character.Name} here.", ConsoleColor.Gray);
 
+        // Eco-location: a druid outdoors senses creatures up to two rooms away.
+        if (room.IsOutside && player.KnownSkills.ContainsKey("eco_location"))
+        {
+            var nearby = Services.PerceptionService.ScanNearby(world, room, 2);
+            foreach (var line in nearby)
+                ColorConsole.WriteLine($"  (sense) {line}", ConsoleColor.DarkGray);
+        }
+
         Console.WriteLine();
     }
 

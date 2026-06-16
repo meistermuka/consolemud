@@ -18,5 +18,6 @@ public enum EffectModifier
     CritChanceMod,       // Magnitude % chance added to land a critical hit (opportunist)
     Stun,                // cannot auto-attack or use active skills
     Root,                // cannot move or flee
-    Blind                // cannot cast spells (and sight-dependent skills)
+    Blind,               // cannot cast spells (and sight-dependent skills)
+    Thorns               // Magnitude reflected to melee attackers (druid thorns)
 }

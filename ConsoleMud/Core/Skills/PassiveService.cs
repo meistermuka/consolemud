@@ -101,6 +101,14 @@ public static class PassiveService
                 if (c is Player p && p.Specialization is { } spec)
                     Add(c, skillId, EffectModifier.ImmunityOverride, 1, spec);
                 break;
+
+            // --- Druid ---
+            case "skin_of_oak":
+                Add(c, skillId, EffectModifier.ArmorMod, Param(skillId, "armorBonus", 3));
+                break;
+            case "toxic_resilience":
+                Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Poison);
+                break;
         }
     }
 }
