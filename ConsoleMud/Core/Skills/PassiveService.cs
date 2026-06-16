@@ -47,7 +47,14 @@ public static class PassiveService
             ApplyStaticPassive(c, skillId, proficiency);
     }
 
-    private static double Param(string skillId, string key, double fallback)
+    private static double Param(string skillId, string key, double fallback) => SkillParam(skillId, key, fallback);
+
+    /// <summary>
+    /// Reads a numeric parameter from a skill's skills.json definition. Lets
+    /// combat- and death-wired effects use the skill's own data instead of
+    /// hardcoded copies.
+    /// </summary>
+    public static double SkillParam(string skillId, string key, double fallback)
     {
         if (_definitions != null && _definitions.Skills.TryGetValue(skillId, out var def)
             && def.Parameters.TryGetValue(key, out var v))
@@ -79,7 +86,8 @@ public static class PassiveService
                 break;
             case "parry":
                 // Avoidance chance scales with proficiency (capped to a sane band).
-                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Min(40.0, proficiency * 0.4));
+                double parry = proficiency * Services.TuningRegistry.Get("passive.parryProficiencyFactor", 0.4);
+                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Min(Services.TuningRegistry.Get("passive.parryCap", 40), parry));
                 break;
             case "indomitable_will":
                 Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Fear);
@@ -104,13 +112,15 @@ public static class PassiveService
 
             // --- Thief ---
             case "evasion":
-                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Floor(c.Dexterity / 2.0));
+                Add(c, skillId, EffectModifier.AvoidanceMod,
+                    Math.Floor(c.Dexterity / Services.TuningRegistry.Get("passive.evasionDexDivisor", 2)));
                 break;
             case "reflexive_dodge": // simplified: a flat dodge bonus (the ambush-doubling is approximate)
-                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Floor(c.Dexterity / 4.0));
+                Add(c, skillId, EffectModifier.AvoidanceMod,
+                    Math.Floor(c.Dexterity / Services.TuningRegistry.Get("passive.reflexiveDexDivisor", 4)));
                 break;
             case "opportunist": // simplified: a small standing crit bonus
-                Add(c, skillId, EffectModifier.CritChanceMod, 10);
+                Add(c, skillId, EffectModifier.CritChanceMod, Services.TuningRegistry.Get("passive.opportunistCrit", 10));
                 break;
             case "slippery_mind":
                 double sm = Param(skillId, "reductionPct", 50);

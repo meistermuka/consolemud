@@ -15,7 +15,8 @@ public class RetributionAuraPassive : IPassiveHandler
         if (attacker == null || attacker.Health <= 0)
             return;
 
-        int dmg = DamageResolver.Apply(attacker, DamageType.Holy, 2); // mirrors thornsDamage
+        int thorns = (int)PassiveService.SkillParam("retribution_aura", "thornsDamage", 2);
+        int dmg = DamageResolver.Apply(attacker, DamageType.Holy, thorns);
         attacker.Health -= dmg;
         Helpers.ColorConsole.WriteLine(
             $"{attacker.Name} is seared for {dmg} holy damage by your retribution aura!", ConsoleColor.Gray);

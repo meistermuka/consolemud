@@ -9,14 +9,14 @@ namespace ConsoleMud.Core.Services;
 /// </summary>
 public static class LevelingService
 {
-    public const int MaxLevel = 101;
+    public static int MaxLevel => TuningRegistry.GetInt("leveling.maxLevel", 101);
 
     private static DefinitionRegistry _definitions;
 
     public static void Initialize(DefinitionRegistry definitions) => _definitions = definitions;
 
     /// <summary>XP required to advance from the given level to the next.</summary>
-    public static long XpForNextLevel(int level) => 100L * level;
+    public static long XpForNextLevel(int level) => (long)TuningRegistry.GetInt("leveling.xpPerLevel", 100) * level;
 
     public static void AwardXp(Player player, long amount)
     {

@@ -7,9 +7,9 @@ namespace ConsoleMud.Core.Skills;
 /// </summary>
 public static class ProficiencyMath
 {
-    private const double Ceiling = 99.999; // 100% still fails ~0.001%
-    private const double BaseGain = 2.0;
-    private const double MinGain = 0.01;    // keeps the climb to 100 alive
+    private static double Ceiling => Services.TuningRegistry.Get("proficiency.ceiling", 99.999);
+    private static double BaseGain => Services.TuningRegistry.Get("proficiency.baseGain", 2.0);
+    private static double MinGain => Services.TuningRegistry.Get("proficiency.minGain", 0.01);
 
     public static bool RollSuccess(double proficiency)
     {

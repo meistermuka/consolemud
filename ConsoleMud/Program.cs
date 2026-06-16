@@ -14,6 +14,8 @@ class Program
         Console.WriteLine("Booting local world...standby...");
         var world = new WorldState();
 
+        TuningRegistry.Load("Definitions/tuning.json");
+
         var definitions = new DefinitionRegistry();
         definitions.LoadAll("Definitions");
         LevelingService.Initialize(definitions);

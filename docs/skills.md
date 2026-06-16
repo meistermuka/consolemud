@@ -32,6 +32,10 @@ Classes reference skills by id and unlock level in `Definitions/classes.json`.
 The **`Parameters` bag** is the key to keeping numbers out of code: multipliers,
 chances, thresholds, charges, durations-in-rounds all live here and are read by
 the handler via `ctx.Param("key", fallback)`. Tune balance without recompiling.
+Combat- and death-wired effects (second_wind, untouchable, poison proc,
+gaean_embrace) read their params via `PassiveService.SkillParam(skillId, key, fallback)`.
+Engine-wide constants (not owned by one skill) live in `tuning.json` instead — see
+[tuning.md](tuning.md).
 
 ## Proficiency
 

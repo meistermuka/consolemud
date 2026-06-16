@@ -20,6 +20,7 @@ public static class DeathService
             if (player.KnownSkills.ContainsKey("undying_faith") && player.EncounterFlags.Add("undying_faith"))
             {
                 player.Health = 1;
+                int invuln = (int)Skills.PassiveService.SkillParam("undying_faith", "invulnTicks", 3);
                 foreach (var t in new[] { Enums.DamageType.Physical, Enums.DamageType.Magic, Enums.DamageType.Holy, Enums.DamageType.Fire })
                     player.StatusEffects.Add(new Entities.StatusEffect
                     {
@@ -27,7 +28,7 @@ public static class DeathService
                         Modifier = Enums.EffectModifier.ImmunityOverride,
                         DamageType = t,
                         Polarity = Enums.EffectPolarity.Positive,
-                        TicksRemaining = 1
+                        TicksRemaining = invuln
                     });
                 Helpers.ColorConsole.WriteLine(
                     "\nYour faith refuses death! You cling to life at 1 HP, briefly untouchable.", ConsoleColor.Yellow);
@@ -40,7 +41,8 @@ public static class DeathService
             if (outside && player.KnownSkills.ContainsKey("gaean_embrace") && player.EncounterFlags.Add("gaean_embrace"))
             {
                 player.StatusEffects.Clear();
-                player.Health = Math.Max(1, player.MaxHealth / 2);
+                double frac = Skills.PassiveService.SkillParam("gaean_embrace", "healthFraction", 0.5);
+                player.Health = Math.Max(1, (int)(player.MaxHealth * frac));
                 foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
                     c.CombatTarget = null;
                 Helpers.ColorConsole.WriteLine(

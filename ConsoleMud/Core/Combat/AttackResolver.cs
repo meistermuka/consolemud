@@ -10,8 +10,9 @@ namespace ConsoleMud.Core.Combat;
 /// </summary>
 public static class AttackResolver
 {
-    private const int BaseHitChance = 85;
-    private const double CritMultiplier = 2.0;
+    private static int BaseHitChance => Services.TuningRegistry.GetInt("combat.baseHitChance", 85);
+    private static double CritMultiplier => Services.TuningRegistry.Get("combat.critMultiplier", 2.0);
+    private static double MarkBonusMultiplier => Services.TuningRegistry.Get("combat.markBonusMultiplier", 1.2);
 
     public readonly record struct AttackOutcome(bool Hit, bool Crit, int Damage, int Roll, int MaxRoll);
 
@@ -44,7 +45,7 @@ public static class AttackResolver
 
         // Hunter's mark: bonus damage against the marked target.
         if (attacker.MarkedTarget == defender && attacker.KnownSkills.ContainsKey("mark_of_the_hunter"))
-            raw = (int)Math.Round(raw * 1.2);
+            raw = (int)Math.Round(raw * MarkBonusMultiplier);
 
         // 5. Armor mitigates physical unless the attack ignores it.
         int afterArmor = (!ignoresArmor && type == DamageType.Physical)

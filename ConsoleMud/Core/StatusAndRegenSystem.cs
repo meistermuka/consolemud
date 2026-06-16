@@ -21,29 +21,30 @@ public class StatusAndRegenSystem
                 ? 1
                 : character.Position switch
                 {
-                    Position.Resting => 3,
-                    Position.Sitting => 2,
+                    Position.Resting => Core.Services.TuningRegistry.GetInt("regen.restingMultiplier", 3),
+                    Position.Sitting => Core.Services.TuningRegistry.GetInt("regen.sittingMultiplier", 2),
                     _ => 1
                 };
 
             // Wilderness lore: faster recovery resting/sitting outdoors.
             if (regenFactor > 1 && character.KnownSkills.ContainsKey("wilderness_lore")
                 && _world.Rooms.TryGetValue(character.CurrentRoomId, out var rm) && rm.IsOutside)
-                regenFactor += 1;
+                regenFactor += Core.Services.TuningRegistry.GetInt("regen.wildernessLoreBonus", 1);
 
             if (character.Mana < character.MaxMana)
             {
-                int manaRegen = 5 * regenFactor;
-                // Arcane meditation doubles mana recovery while sitting or resting.
+                int manaRegen = Core.Services.TuningRegistry.GetInt("regen.manaBase", 5) * regenFactor;
+                // Arcane meditation speeds mana recovery while sitting or resting.
                 if (character.Position != Position.Standing && character.KnownSkills.ContainsKey("arcane_meditation"))
-                    manaRegen *= 2;
+                    manaRegen *= Core.Services.TuningRegistry.GetInt("regen.arcaneMeditationMultiplier", 2);
                 character.Mana = Math.Min(character.MaxMana, character.Mana + manaRegen);
                 stateChanged = true;
             }
 
             if (character.Health < character.MaxHealth)
             {
-                character.Health = Math.Min(character.MaxHealth, character.Health + 2 * regenFactor);
+                character.Health = Math.Min(character.MaxHealth,
+                    character.Health + Core.Services.TuningRegistry.GetInt("regen.healthBase", 2) * regenFactor);
                 stateChanged = true;
             }
 

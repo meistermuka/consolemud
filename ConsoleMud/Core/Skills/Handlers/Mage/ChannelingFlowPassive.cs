@@ -13,10 +13,10 @@ public class ChannelingFlowPassive : IPassiveHandler
         if (ctx.Payload is not SkillDefinition def || def.ManaCost <= 0)
             return;
 
-        if (Random.Shared.NextDouble() >= 0.20) // refundChance
+        if (Random.Shared.NextDouble() >= PassiveService.SkillParam("channeling_flow", "refundChance", 0.20))
             return;
 
-        int refund = (int)(def.ManaCost * 0.5); // refundFraction
+        int refund = (int)(def.ManaCost * PassiveService.SkillParam("channeling_flow", "refundFraction", 0.5));
         if (refund <= 0)
             return;
 

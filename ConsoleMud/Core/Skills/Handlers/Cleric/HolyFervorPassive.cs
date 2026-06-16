@@ -18,7 +18,7 @@ public class HolyFervorPassive : IPassiveHandler
         if (weapon.WeaponType != WeaponType.Mace && weapon.WeaponType != WeaponType.Club)
             return;
 
-        if (Random.Shared.NextDouble() >= 0.15)
+        if (Random.Shared.NextDouble() >= PassiveService.SkillParam("holy_fervor", "stunChance", 0.15))
             return;
 
         target.StatusEffects.Add(new StatusEffect

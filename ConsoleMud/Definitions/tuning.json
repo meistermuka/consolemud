@@ -1,0 +1,25 @@
+{
+  "combat.baseHitChance":            { "value": 85,     "desc": "Base percent chance an attack lands, before attacker accuracy and defender avoidance." },
+  "combat.critMultiplier":           { "value": 2.0,    "desc": "Damage multiplier applied on a critical hit." },
+  "combat.markBonusMultiplier":      { "value": 1.2,    "desc": "Damage multiplier against a hunter's-marked target (mark_of_the_hunter)." },
+
+  "proficiency.ceiling":             { "value": 99.999, "desc": "Maximum effective success chance; even 100 proficiency fails a tiny fraction of the time." },
+  "proficiency.baseGain":            { "value": 2.0,    "desc": "Proficiency gained per attempt at 0; tapers toward the ceiling as proficiency rises." },
+  "proficiency.minGain":             { "value": 0.01,   "desc": "Minimum proficiency gain per attempt, so the climb to 100 never fully stalls." },
+
+  "leveling.xpPerLevel":             { "value": 100,    "desc": "XP-to-advance coefficient: cost to reach the next level = value * current level." },
+  "leveling.maxLevel":               { "value": 101,    "desc": "Highest attainable level (the HERO tier)." },
+
+  "regen.manaBase":                  { "value": 5,      "desc": "Mana restored per status tick while standing and out of combat." },
+  "regen.healthBase":                { "value": 2,      "desc": "Health restored per status tick while standing and out of combat." },
+  "regen.sittingMultiplier":         { "value": 2,      "desc": "Regen multiplier while sitting (out of combat)." },
+  "regen.restingMultiplier":         { "value": 3,      "desc": "Regen multiplier while resting (out of combat)." },
+  "regen.arcaneMeditationMultiplier":{ "value": 2,      "desc": "Mana-regen multiplier from arcane_meditation while sitting or resting." },
+  "regen.wildernessLoreBonus":       { "value": 1,      "desc": "Extra regen factor from wilderness_lore while resting/sitting outdoors." },
+
+  "passive.parryProficiencyFactor":  { "value": 0.4,    "desc": "Parry avoidance% = parry proficiency * this factor." },
+  "passive.parryCap":                { "value": 40,     "desc": "Maximum avoidance% granted by parry." },
+  "passive.evasionDexDivisor":       { "value": 2,      "desc": "Evasion avoidance% = Dexterity / this divisor." },
+  "passive.reflexiveDexDivisor":     { "value": 4,      "desc": "Reflexive-dodge avoidance% = Dexterity / this divisor." },
+  "passive.opportunistCrit":         { "value": 10,     "desc": "Flat critical-hit% granted by opportunist." }
+}

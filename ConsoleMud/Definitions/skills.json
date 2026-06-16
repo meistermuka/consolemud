@@ -1092,7 +1092,9 @@
     "Tags": [
       "Passive"
     ],
-    "Parameters": {}
+    "Parameters": {
+      "healthFraction": 0.5
+    }
   },
   {
     "Id": "wrath_of_nature",
@@ -1184,7 +1186,8 @@
     "Parameters": {
       "charges": 5,
       "procChance": 0.25,
-      "tickDamage": 2
+      "tickDamage": 2,
+      "dotTicks": 3
     }
   },
   {
@@ -1331,7 +1334,11 @@
     "Tags": [
       "Passive"
     ],
-    "Parameters": {}
+    "Parameters": {
+      "thresholdPct": 20,
+      "durationTicks": 3,
+      "cooldownSeconds": 600
+    }
   },
   {
     "Id": "death_dance",
