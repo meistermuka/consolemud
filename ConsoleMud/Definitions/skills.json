@@ -1113,5 +1113,240 @@
       "rootRounds": 2,
       "blindRounds": 2
     }
+  },
+  {
+    "Id": "steal",
+    "Name": "steal",
+    "Description": "Filch an item from a target; failure may anger it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Economy"
+    ],
+    "Parameters": {
+      "catchChance": 0.5
+    }
+  },
+  {
+    "Id": "hide",
+    "Name": "hide",
+    "Description": "Slip into the shadows when idle and out of combat.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Stealth"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "evasion",
+    "Name": "evasion",
+    "Description": "Dodge chance scaling with Dexterity.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Defense"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "backstab",
+    "Name": "backstab",
+    "Description": "A devastating surprise strike from stealth.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "Tags": [
+      "Active",
+      "Finisher"
+    ],
+    "Parameters": {
+      "multiplier": 3
+    }
+  },
+  {
+    "Id": "poison",
+    "Name": "poison",
+    "Description": "Coat your blade; strikes may poison for a few hits.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 30,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "charges": 5,
+      "procChance": 0.25,
+      "tickDamage": 2
+    }
+  },
+  {
+    "Id": "picklock",
+    "Name": "picklock",
+    "Description": "Open locks without a key. (Requires the lock system.)",
+    "Kind": "Active",
+    "IsSpell": false,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "trip",
+    "Name": "trip",
+    "Description": "Sweep a foe off its feet, stunning and pinning it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 12,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {
+      "stunRounds": 1,
+      "rootRounds": 3
+    }
+  },
+  {
+    "Id": "reflexive_dodge",
+    "Name": "reflexive dodge",
+    "Description": "Heightened reflexes add to your dodge.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shadowstep",
+    "Name": "shadowstep",
+    "Description": "Slip past a blocking foe. (Requires exit-blocking.)",
+    "Kind": "Active",
+    "IsSpell": false,
+    "Tags": [
+      "Active",
+      "Movement"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "opportunist",
+    "Name": "opportunist",
+    "Description": "Openings sharpen your aim for critical strikes.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "smoke_bomb",
+    "Name": "smoke bomb",
+    "Description": "Vanish in a blinding cloud, escaping combat.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Escape"
+    ],
+    "Parameters": {
+      "blindRounds": 2
+    }
+  },
+  {
+    "Id": "anatomic_precision",
+    "Name": "anatomic precision",
+    "Description": "Your backstab multiplier rises to 5x.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "blindside",
+    "Name": "blindside",
+    "Description": "A deceptive feint that stuns for two rounds.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Deception"
+    ],
+    "Parameters": {
+      "stunRounds": 2
+    }
+  },
+  {
+    "Id": "slippery_mind",
+    "Name": "slippery mind",
+    "Description": "Strong resistance to charm and fear.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {
+      "reductionPct": 50
+    }
+  },
+  {
+    "Id": "assassinate",
+    "Name": "assassinate",
+    "Description": "From stealth: slay the weak outright, cripple the strong.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 300,
+    "DiceNotation": "10d8",
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "untouchable",
+    "Name": "untouchable",
+    "Description": "Near death, phase briefly immune to physical harm.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "death_dance",
+    "Name": "death dance",
+    "Description": "Whirl through every foe with your off-hand, unseen.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 120,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "hits": 3
+    }
   }
 ]

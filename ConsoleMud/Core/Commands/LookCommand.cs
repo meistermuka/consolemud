@@ -49,8 +49,19 @@ public class LookCommand : ICommand
             ColorConsole.WriteLine($"You see a {item.Name} here.", ConsoleColor.Gray);
 
         // Show NPCs and other characters, skipping anyone hidden.
+        bool canPeek = player.KnownSkills.ContainsKey("peek");
         foreach (var character in room.Characters.Where(c => c != player && !c.IsHidden))
+        {
             ColorConsole.WriteLine($"{character.Name} here.", ConsoleColor.Gray);
+
+            // Peek: glimpse an NPC's gear/inventory.
+            if (canPeek && character is Entities.NonPlayerCharacter npc)
+            {
+                var carried = npc.Inventory.Concat(npc.Equipment.Values).Select(i => i.Name).ToList();
+                if (carried.Count > 0)
+                    ColorConsole.WriteLine($"    (peek) carrying: {string.Join(", ", carried)}", ConsoleColor.DarkGray);
+            }
+        }
 
         // Eco-location: a druid outdoors senses creatures up to two rooms away.
         if (room.IsOutside && player.KnownSkills.ContainsKey("eco_location"))

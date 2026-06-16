@@ -48,6 +48,7 @@ decides what it does:
 | `CritChanceMod` | added crit % |
 | `Stun` / `Root` / `Blind` | lose turn / can't move / can't cast |
 | `Thorns` | reflects Magnitude to melee attackers (druid thorns) |
+| `WeaponCoat` | charges of a hit-proc coating (thief poison) |
 
 `Character` exposes computed accessors that fold active effects:
 `TotalArmourRating`, `AttackRate`, `AccuracyBonus`, `AvoidanceChance`,

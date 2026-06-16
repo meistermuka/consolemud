@@ -85,8 +85,8 @@ public class SkillExecutor
             return true;
         }
 
-        // Attempt committed: using a skill (other than hiding) breaks stealth.
-        if (!string.Equals(skillId, "hide", StringComparison.OrdinalIgnoreCase))
+        // Attempt committed: using a skill breaks stealth, except those that keep it.
+        if (skillId is not ("hide" or "death_dance"))
             caster.BreakHidden();
 
         // Spend resources, start cooldown, train proficiency.

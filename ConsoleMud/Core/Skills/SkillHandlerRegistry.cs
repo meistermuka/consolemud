@@ -3,6 +3,7 @@ using ConsoleMud.Core.Skills.Handlers.Druid;
 using ConsoleMud.Core.Skills.Handlers.Fighter;
 using ConsoleMud.Core.Skills.Handlers.Mage;
 using ConsoleMud.Core.Skills.Handlers.Ranger;
+using ConsoleMud.Core.Skills.Handlers.Thief;
 
 namespace ConsoleMud.Core.Skills;
 
@@ -81,6 +82,19 @@ public class SkillHandlerRegistry
         Register(new CallLightningHandler());
         Register(new WrathOfNatureHandler());
         Register(new NaturesSpeechHandler());
+
+        // Thief (hide is handled by the idle-stealth tick; evasion/slippery_mind/etc. are passive;
+        // peek augments look; untouchable is combat-wired).
+        Register(new StealHandler());
+        Register(new BackstabHandler());
+        Register(new PoisonHandler());
+        Register(new TripHandler());
+        Register(new SmokeBombHandler());
+        Register(new BlindsideHandler());
+        Register(new AssassinateHandler());
+        Register(new DeathDanceHandler());
+        Register(new PicklockHandler());
+        Register(new ShadowstepHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;

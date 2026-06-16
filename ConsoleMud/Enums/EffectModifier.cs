@@ -19,5 +19,6 @@ public enum EffectModifier
     Stun,                // cannot auto-attack or use active skills
     Root,                // cannot move or flee
     Blind,               // cannot cast spells (and sight-dependent skills)
-    Thorns               // Magnitude reflected to melee attackers (druid thorns)
+    Thorns,              // Magnitude reflected to melee attackers (druid thorns)
+    WeaponCoat           // marker: charges of a coating that procs on the wearer's hits (thief poison)
 }

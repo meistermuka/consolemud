@@ -47,6 +47,7 @@ public class CombatSystem
 
             // Fighter "second wind": one emergency heal per fight under 25% health.
             TrySecondWind(attacker);
+            TryUntouchable(attacker);
         }
     }
 
@@ -66,6 +67,24 @@ public class CombatSystem
         c.Health = Math.Min(c.MaxHealth, c.Health + SecondWindHeal);
         Helpers.ColorConsole.WriteLine(
             $"\n{c.Name} catches a second wind and recovers {SecondWindHeal} health!", ConsoleColor.Green);
+    }
+
+    // Thief "untouchable": near death, phase to physical immunity, once per 10 minutes.
+    private const double UntouchableThreshold = 0.20;
+    private static void TryUntouchable(Character c)
+    {
+        if (!c.KnownSkills.ContainsKey("untouchable") || c.Health <= 0 || c.Health > c.MaxHealth * UntouchableThreshold)
+            return;
+        if (c.Cooldowns.TryGetValue("untouchable", out var ready) && DateTime.UtcNow < ready)
+            return;
+
+        c.Cooldowns["untouchable"] = DateTime.UtcNow.AddMinutes(10);
+        c.StatusEffects.Add(new StatusEffect
+        {
+            Name = "untouchable", Modifier = EffectModifier.ImmunityOverride, DamageType = DamageType.Physical,
+            Polarity = EffectPolarity.Positive, TicksRemaining = 3
+        });
+        Helpers.ColorConsole.WriteLine($"\n{c.Name} phases out of harm's way, briefly untouchable!", ConsoleColor.Cyan);
     }
 
     private static void AgeControlEffects(Character character)
@@ -154,7 +173,29 @@ public class CombatSystem
             attacker.Health -= reflected;
             Helpers.ColorConsole.WriteLine($"{attacker.Name} is pricked by thorns for {reflected}!", ConsoleColor.Gray);
             if (attacker.Health <= 0)
+            {
                 DeathService.HandleDeath(attacker, _world, defender);
+                return;
+            }
+        }
+
+        // Poison coat: the attacker's coated weapon may poison the defender (charges deplete).
+        var coat = attacker.StatusEffects.FirstOrDefault(e => e.Modifier == EffectModifier.WeaponCoat && e.Charges > 0);
+        if (coat != null && defender.Health > 0)
+        {
+            coat.Charges--;
+            if (coat.Charges <= 0)
+                attacker.StatusEffects.Remove(coat);
+            if (Random.Shared.NextDouble() < 0.25) // procChance
+            {
+                defender.StatusEffects.Add(new StatusEffect
+                {
+                    Name = "poison", Modifier = EffectModifier.DamageOverTime, Magnitude = coat.Magnitude,
+                    DamageType = DamageType.Poison, Type = EffectType.Poison,
+                    Polarity = EffectPolarity.Negative, TicksRemaining = 3
+                });
+                Helpers.ColorConsole.WriteLine($"Your venom courses through {defender.Name}!", ConsoleColor.Gray);
+            }
         }
     }
 }

@@ -102,6 +102,22 @@ public static class PassiveService
                     Add(c, skillId, EffectModifier.ImmunityOverride, 1, spec);
                 break;
 
+            // --- Thief ---
+            case "evasion":
+                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Floor(c.Dexterity / 2.0));
+                break;
+            case "reflexive_dodge": // simplified: a flat dodge bonus (the ambush-doubling is approximate)
+                Add(c, skillId, EffectModifier.AvoidanceMod, Math.Floor(c.Dexterity / 4.0));
+                break;
+            case "opportunist": // simplified: a small standing crit bonus
+                Add(c, skillId, EffectModifier.CritChanceMod, 10);
+                break;
+            case "slippery_mind":
+                double sm = Param(skillId, "reductionPct", 50);
+                Add(c, skillId, EffectModifier.FlatDamageReduction, sm, DamageType.Charm);
+                Add(c, skillId, EffectModifier.FlatDamageReduction, sm, DamageType.Fear);
+                break;
+
             // --- Druid ---
             case "skin_of_oak":
                 Add(c, skillId, EffectModifier.ArmorMod, Param(skillId, "armorBonus", 3));
