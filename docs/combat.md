@@ -87,6 +87,16 @@ A passive only runs for an owner who knows its skill (the `TriggerBus` checks
 passive: implement `IPassiveHandler`, register it in `PassiveService.Initialize`,
 and ensure the relevant `Fire` call exists at the event site.
 
+## Traps
+
+`Core/TrapSystem.cs` plus `Entities/Trap.cs` and `Room.Traps`. A character places a
+one-shot trap with `TrapSystem.Place(room, owner, dice, type, rootRounds)` (the
+ranger `set_trap` skill). A hostile NPC springs it for damage + a root, crediting
+the owner for any kill. Two trigger points:
+
+- `WorldState.MoveCharacter` calls `TrapSystem.OnEnter` when a character enters a room.
+- The AI tick calls `TrapSystem.CheckRooms`, springing traps on a hostile NPC already standing in a trapped room.
+
 ## Adding a buff/debuff
 
 Add a `StatusEffect` to the target with the right `EffectModifier`, `Magnitude`,

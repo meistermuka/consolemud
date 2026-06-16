@@ -44,6 +44,7 @@ public class TimeEngine
             if (_masterPulseCount % AiInterval == 0)
             {
                 UpdateStealth();
+                TrapSystem.CheckRooms(_world);
                 UpdateNpcIntelligence();
             }
 

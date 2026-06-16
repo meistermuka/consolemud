@@ -38,6 +38,7 @@ public class WorldState
         {
             newRoom.Characters.Add(character);
             character.CurrentRoomId = targetRoomId;
+            TrapSystem.OnEnter(character, newRoom, this);
         }
     }
 }

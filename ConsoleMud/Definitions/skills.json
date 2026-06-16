@@ -823,5 +823,23 @@
       "AoE"
     ],
     "Parameters": {}
+  },
+  {
+    "Id": "set_trap",
+    "Name": "set trap",
+    "Description": "Conceal a snare; the next hostile NPC trips it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 30,
+    "DamageType": "Physical",
+    "DiceNotation": "2d6",
+    "Tags": [
+      "Active",
+      "Tactical"
+    ],
+    "Parameters": {
+      "rootRounds": 3
+    }
   }
 ]

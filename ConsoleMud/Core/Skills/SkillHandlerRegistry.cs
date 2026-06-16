@@ -2,6 +2,7 @@ using ConsoleMud.Core.Skills.Handlers.Cleric;
 using ConsoleMud.Core.Skills.Handlers.Druid;
 using ConsoleMud.Core.Skills.Handlers.Fighter;
 using ConsoleMud.Core.Skills.Handlers.Mage;
+using ConsoleMud.Core.Skills.Handlers.Ranger;
 
 namespace ConsoleMud.Core.Skills;
 
@@ -60,6 +61,9 @@ public class SkillHandlerRegistry
         Register(new MeteorSwarmHandler());
         Register(new DetectMagicHandler());
         Register(new TeleportHandler());
+
+        // Ranger (traps subsystem; remaining ranger skills land with that class batch).
+        Register(new SetTrapHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;
