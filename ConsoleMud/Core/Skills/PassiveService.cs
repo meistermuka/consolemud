@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills.Handlers.Cleric;
+using ConsoleMud.Core.Skills.Handlers.Mage;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
 
@@ -26,6 +27,7 @@ public static class PassiveService
         // Event-triggered passives subscribe to the bus once.
         _bus.Register(new RetributionAuraPassive());
         _bus.Register(new HolyFervorPassive());
+        _bus.Register(new ChannelingFlowPassive());
     }
 
     /// <summary>Fires a passive trigger for an owner (only runs if they know the skill).</summary>
@@ -92,6 +94,12 @@ public static class PassiveService
                 break;
             case "soul_ward":
                 Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Psychic);
+                break;
+
+            // --- Mage ---
+            case "elemental_mastery":
+                if (c is Player p && p.Specialization is { } spec)
+                    Add(c, skillId, EffectModifier.ImmunityOverride, 1, spec);
                 break;
         }
     }

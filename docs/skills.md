@@ -126,10 +126,11 @@ come in three flavours:
 3. **Event-triggered** (e.g. `retribution_aura`, `holy_fervor`): implement
    `IPassiveHandler` with a `SkillTrigger`, register it in
    `PassiveService.Initialize`, and the bus fires it for owners who know the skill.
-   `OnIncomingHit` and `OnOutgoingHit` are wired into `CombatSystem` today (see
-   [combat.md](combat.md)); the other triggers (`OnCast`, `OnLook`, `OnMaxRoll`,
-   `OnLowHealth`, `OnIncomingSpell`) exist on the bus but need their fire points
-   added at the relevant site.
+   `OnIncomingHit` and `OnOutgoingHit` are wired into `CombatSystem`, and `OnCast`
+   fires from `SkillExecutor` after a spell resolves (used by `channeling_flow`'s
+   mana refund). The remaining triggers (`OnLook`, `OnMaxRoll`, `OnLowHealth`,
+   `OnIncomingSpell`) exist on the bus but need their fire points added at the
+   relevant site (`OnIncomingSpell`, for `spell_mirror`, awaits NPC spellcasters).
 
    ```csharp
    public class RetributionAuraPassive : IPassiveHandler

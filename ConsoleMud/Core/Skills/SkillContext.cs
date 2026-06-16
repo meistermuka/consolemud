@@ -82,6 +82,10 @@ public class SkillContext
     public int HealScaleBonus() =>
         Caster.KnownSkills.ContainsKey("divine_grace") ? Math.Max(0, AttributeModifier("Wisdom")) : 0;
 
+    /// <summary>Extra spell damage from the sage_insight passive (an Intelligence modifier).</summary>
+    public int SpellPowerBonus() =>
+        Caster.KnownSkills.ContainsKey("sage_insight") ? Math.Max(0, AttributeModifier("Intelligence")) : 0;
+
     /// <summary>Standard tabletop attribute modifier for an attribute name.</summary>
     public int AttributeModifier(string attribute)
     {

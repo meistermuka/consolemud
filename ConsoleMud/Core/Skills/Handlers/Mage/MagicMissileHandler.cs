@@ -31,9 +31,10 @@ public class MagicMissileHandler : ISkillHandler
             return;
         }
 
-        target.Health -= outcome.Damage;
+        int dmg = outcome.Damage + ctx.SpellPowerBonus();
+        target.Health -= dmg;
         Helpers.ColorConsole.WriteLine(
-            $"Your magic missile strikes {target.Name} for {outcome.Damage} force damage! -> [{target.Name} HP: {Math.Max(0, target.Health)}]",
+            $"Your magic missile strikes {target.Name} for {dmg} force damage! -> [{target.Name} HP: {Math.Max(0, target.Health)}]",
             ConsoleColor.Gray);
 
         if (target.Health <= 0)

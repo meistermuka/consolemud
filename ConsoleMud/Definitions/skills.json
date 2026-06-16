@@ -574,5 +574,254 @@
     "Parameters": {
       "blindRounds": 3
     }
+  },
+  {
+    "Id": "shield",
+    "Name": "shield",
+    "Description": "A kinetic barrier that adds armor for a short time.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 10,
+    "CooldownSeconds": 30,
+    "DurationTicks": 10,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "armorBonus": 5
+    }
+  },
+  {
+    "Id": "detect_magic",
+    "Name": "detect magic",
+    "Description": "Reveal magical auras. (Requires hidden-content systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "sage_insight",
+    "Name": "sage insight",
+    "Description": "Your offensive spells scale with Intelligence.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shocking_grasp",
+    "Name": "shocking grasp",
+    "Description": "A close electric jolt that briefly locks the target up.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 6,
+    "DamageType": "Lightning",
+    "DiceNotation": "2d6",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "stunRounds": 1
+    }
+  },
+  {
+    "Id": "arcane_meditation",
+    "Name": "arcane meditation",
+    "Description": "Mana recovers faster while sitting or resting.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "fireball",
+    "Name": "fireball",
+    "Description": "An explosion of flame that hits everything in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 25,
+    "CooldownSeconds": 15,
+    "DamageType": "Fire",
+    "DiceNotation": "4d6",
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "blink",
+    "Name": "blink",
+    "Description": "Teleport to a random adjacent room, breaking combat.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Escape"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "haste",
+    "Name": "haste",
+    "Description": "Quicken a target, granting an extra attack each round.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 30,
+    "CooldownSeconds": 45,
+    "DurationTicks": 10,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "attackRate": 1
+    }
+  },
+  {
+    "Id": "spell_mirror",
+    "Name": "spell mirror",
+    "Description": "A chance to reflect incoming spells. (Awaits NPC spellcasters.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "reflectChance": 15
+    }
+  },
+  {
+    "Id": "ice_storm",
+    "Name": "ice storm",
+    "Description": "Freezing shards hit all foes and slow them.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 35,
+    "CooldownSeconds": 20,
+    "DamageType": "Cold",
+    "DiceNotation": "4d6",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {
+      "slow": 1
+    }
+  },
+  {
+    "Id": "teleport",
+    "Name": "teleport",
+    "Description": "Fold space to a known hub. (Requires grouping/recall systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 40,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Movement"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "channeling_flow",
+    "Name": "channeling flow",
+    "Description": "Casting sometimes refunds half its mana.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "refundChance": 0.2,
+      "refundFraction": 0.5
+    }
+  },
+  {
+    "Id": "disintegrate",
+    "Name": "disintegrate",
+    "Description": "A beam of pure force; vaporizes what it slays.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 50,
+    "CooldownSeconds": 60,
+    "DamageType": "Force",
+    "DiceNotation": "8d8",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "elemental_mastery",
+    "Name": "elemental mastery",
+    "Description": "Immunity to your chosen element.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "time_stop",
+    "Name": "time stop",
+    "Description": "Freeze the room's foes for a few rounds.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 80,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "freezeRounds": 3
+    }
+  },
+  {
+    "Id": "arcane_singularity",
+    "Name": "arcane singularity",
+    "Description": "At low mana, spells draw on life. (Partial.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "meteor_swarm",
+    "Name": "meteor swarm",
+    "Description": "Cataclysmic meteors hammer the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 100,
+    "CooldownSeconds": 180,
+    "DamageType": "Fire",
+    "DiceNotation": "8d6",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {}
   }
 ]

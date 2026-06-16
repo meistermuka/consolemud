@@ -52,5 +52,5 @@ table. No code changes beyond the enum value and any genuinely new skill handler
 
 ## Notes
 
-- **Mage specialization** (Fire/Cold/Lightning) is stored on `Player.Specialization`; the level-gated prompt that sets it is part of the progression work.
+- **Mage specialization** (Fire/Cold/Lightning) is stored on `Player.Specialization` and set with the `specialize` command; `elemental_mastery` grants immunity to the chosen element. (A level-gated auto-prompt is still future work.)
 - Class-restricted gear or species/class gating do not exist yet — every species/class combo is legal.

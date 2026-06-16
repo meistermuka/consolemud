@@ -51,6 +51,7 @@ public class CommandParser
         _commands["save"] = new SaveCommand();
         _commands["skills"] = new SkillsCommand(definitions);
         _commands["skill"] = new SkillsCommand(definitions);
+        _commands["specialize"] = new SpecializeCommand();
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();

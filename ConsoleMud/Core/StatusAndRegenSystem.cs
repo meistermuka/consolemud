@@ -28,7 +28,11 @@ public class StatusAndRegenSystem
 
             if (character.Mana < character.MaxMana)
             {
-                character.Mana = Math.Min(character.MaxMana, character.Mana + 5 * regenFactor);
+                int manaRegen = 5 * regenFactor;
+                // Arcane meditation doubles mana recovery while sitting or resting.
+                if (character.Position != Position.Standing && character.KnownSkills.ContainsKey("arcane_meditation"))
+                    manaRegen *= 2;
+                character.Mana = Math.Min(character.MaxMana, character.Mana + manaRegen);
                 stateChanged = true;
             }
 

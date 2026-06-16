@@ -44,4 +44,5 @@ token, so `attack`/`take` stay visible while `k`/`l`/`n` are hidden.
 | `kill`/`attack`, `flee`, `cast` | combat | `cast <spell> [target]` |
 | `sit`, `rest`, `stand` | posture | drives regen rate |
 | `status`, `skills`, `save` | info / persistence | level, XP, proficiency |
+| `specialize <element>` | Mage only | sets fire/cold/lightning for `elemental_mastery` |
 | `help`, `commands` | discovery | self-describing |

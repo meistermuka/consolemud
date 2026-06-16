@@ -91,6 +91,11 @@ public class SkillExecutor
         }
 
         handler.Execute(new SkillContext(caster, world, def, args, _definitions));
+
+        // Notify on-cast passives (e.g. channeling_flow mana refund).
+        if (def.IsSpell)
+            PassiveService.Fire(SkillTrigger.OnCast, caster, null, world, def);
+
         return true;
     }
 

@@ -47,6 +47,19 @@ public class SkillHandlerRegistry
         Register(new DivineInterventionHandler());
         Register(new JudgmentHandler());
         Register(new ResurrectionHandler());
+
+        // Mage actives (sage_insight/channeling_flow/elemental_mastery/arcane_meditation are passive).
+        Register(new ShieldHandler());
+        Register(new ShockingGraspHandler());
+        Register(new FireballHandler());
+        Register(new BlinkHandler());
+        Register(new HasteHandler());
+        Register(new IceStormHandler());
+        Register(new DisintegrateHandler());
+        Register(new TimeStopHandler());
+        Register(new MeteorSwarmHandler());
+        Register(new DetectMagicHandler());
+        Register(new TeleportHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;
