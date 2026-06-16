@@ -66,6 +66,7 @@ public class SkillHandlerRegistry
         Register(new SetTrapHandler());
         Register(new TameHandler());
         Register(new CallCompanionHandler());
+        Register(new ShootHandler());
 
         // Druid shapeshift forms (rest of the druid lands with that class batch).
         Register(new ShapeshiftHandler("shapeshift_bear", Enums.Form.Bear));

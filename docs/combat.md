@@ -103,6 +103,13 @@ and ensure the relevant `Fire` call exists at the event site.
   entering a form routes through the `shapeshift_<form>` skill for mana/cooldown). Dragon
   form unlocks `breath` (un-mitigated elemental AoE).
 
+## Ranged & cross-room attacks
+
+The ranger `shoot` skill requires a `WeaponType.Bow` in the main hand (item blueprints
+carry `WeaponType`). It strikes a target in the current room, or — if the target is one
+exit away — hits it from afar and pulls it into the shooter's room (drawing aggro
+safely). `ShootHandler` searches the current room first, then adjacent rooms.
+
 ## Pets / companions
 
 `Core/PetSystem.cs`. A ranger `tame`s a wild animal (an NPC with the `Animal`/`Beast`

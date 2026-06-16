@@ -102,6 +102,7 @@ public static class AreaLoaderService
     private static Item CreateLiveItem(ItemBlueprint bp)
     {
         Enum.TryParse<EquipmentSlot>(bp.TargetSlot, true, out var targetSlot);
+        Enum.TryParse<WeaponType>(bp.WeaponType, true, out var weaponType);
         return new Item
         {
             Name = bp.Name,
@@ -109,6 +110,7 @@ public static class AreaLoaderService
             IsGetable = bp.IsGetable,
             IsContainer = bp.IsContainer,
             IsWeapon = bp.IsWeapon,
+            WeaponType = weaponType,
             DiceNotation = bp.DiceNotation,
             AttackVerbs = bp.AttackVerbs,
             IsArmour = bp.IsArmor,

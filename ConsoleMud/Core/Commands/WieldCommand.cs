@@ -18,7 +18,7 @@ public class WieldCommand : ICommand
         }
 
         string targetWeaponName = string.Join(" ", args);
-        var weapon = player.Inventory.FirstOrDefault(i => i.Name.Equals(targetWeaponName, StringComparison.OrdinalIgnoreCase));
+        var weapon = player.Inventory.FirstOrDefault(i => i.MatchesKeyword(targetWeaponName));
 
         if (weapon == null)
         {

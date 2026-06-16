@@ -10,6 +10,7 @@ public class ItemBlueprint
     public bool IsGetable { get; set; }
     public bool IsContainer { get; set; }
     public bool IsWeapon { get; set; }
+    public string WeaponType { get; set; } // e.g. "Sword", "Bow"; defaults to Unarmed
     public string DiceNotation { get; set; }
     public string[] AttackVerbs { get; set; }
     public bool IsArmor { get; set; }

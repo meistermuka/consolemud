@@ -81,6 +81,21 @@
       "TargetSlot": "OffHand",
       "IsShield": true,
       "ArmorRating": 4
+    },
+    {
+      "VirtualId": "hunting_bow",
+      "Name": "hunting bow",
+      "Description": "A supple yew longbow.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "WeaponType": "Bow",
+      "DiceNotation": "2d4",
+      "TargetSlot": "MainHand",
+      "AttackVerbs": [
+        "shoot",
+        "loose"
+      ]
     }
   ],
   "NpcTemplates": [
@@ -136,6 +151,10 @@
           {
             "TemplateId": "rusty_dagger",
             "Count": 3
+          },
+          {
+            "TemplateId": "hunting_bow",
+            "Count": 1
           }
         ],
         "Npcs": []
