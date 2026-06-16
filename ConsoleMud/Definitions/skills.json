@@ -105,8 +105,7 @@
     "Tags": [
       "Active",
       "Aggro"
-    ],
-    "StartingProficiency": 90
+    ]
   },
   {
     "Id": "cleave",
@@ -321,5 +320,259 @@
       "Active",
       "Ranged"
     ]
+  },
+  {
+    "Id": "bless",
+    "Name": "bless",
+    "Description": "Fill an ally with divine favor, boosting accuracy.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 8,
+    "CooldownSeconds": 30,
+    "DurationTicks": 15,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "accuracyBonus": 10
+    }
+  },
+  {
+    "Id": "turn_undead",
+    "Name": "turn undead",
+    "Description": "Radiate holy energy that routs undead.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 10,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "divine_grace",
+    "Name": "divine grace",
+    "Description": "Your healing scales with Wisdom.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "cure_poison",
+    "Name": "cure poison",
+    "Description": "Purge poison and damage-over-time from a target.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 6,
+    "CooldownSeconds": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "smite",
+    "Name": "smite",
+    "Description": "A bolt of divine fire; double vs undead and fiends.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 6,
+    "DamageType": "Holy",
+    "DiceNotation": "2d6",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "archetypeBonus": 2
+    }
+  },
+  {
+    "Id": "retribution_aura",
+    "Name": "retribution aura",
+    "Description": "Attackers suffer holy damage when they strike you.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "DamageType": "Holy",
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "thornsDamage": 2
+    }
+  },
+  {
+    "Id": "sanctuary",
+    "Name": "sanctuary",
+    "Description": "Ward a target so foes struggle to land blows.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 30,
+    "DurationTicks": 15,
+    "Tags": [
+      "Active",
+      "Defense"
+    ],
+    "Parameters": {
+      "avoidance": 50
+    }
+  },
+  {
+    "Id": "major_heal",
+    "Name": "major heal",
+    "Description": "A potent restorative invocation.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 5,
+    "DiceNotation": "4d8",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "isHeal": 1
+    }
+  },
+  {
+    "Id": "divine_armor",
+    "Name": "divine armor",
+    "Description": "Faith hardens you; Wisdom adds to armor.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "wisFraction": 0.15
+    }
+  },
+  {
+    "Id": "prayer",
+    "Name": "prayer",
+    "Description": "A pulse of light healing all friendly players in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 30,
+    "CooldownSeconds": 15,
+    "DiceNotation": "2d8",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Area"
+    ],
+    "Parameters": {
+      "manaRestore": 5
+    }
+  },
+  {
+    "Id": "dispel_magic",
+    "Name": "dispel magic",
+    "Description": "Strip negative magical effects from a target.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "holy_fervor",
+    "Name": "holy fervor",
+    "Description": "Mace and club strikes may stun on impact.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "stunChance": 0.15
+    }
+  },
+  {
+    "Id": "divine_intervention",
+    "Name": "divine intervention",
+    "Description": "Heal a target to full and cleanse all ailments.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 60,
+    "CooldownSeconds": 180,
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "soul_ward",
+    "Name": "soul ward",
+    "Description": "Your soul resists psychic harm.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "resurrection",
+    "Name": "resurrection",
+    "Description": "Revive a fallen ally. (Requires the corpse/death model.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 75,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "undying_faith",
+    "Name": "undying faith",
+    "Description": "A lethal blow leaves you at 1 HP, briefly invulnerable.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "invulnTicks": 3
+    }
+  },
+  {
+    "Id": "judgment",
+    "Name": "judgment",
+    "Description": "A pillar of holy light smites and blinds all foes.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 90,
+    "CooldownSeconds": 120,
+    "DamageType": "Holy",
+    "DiceNotation": "6d8",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {
+      "blindRounds": 3
+    }
   }
 ]

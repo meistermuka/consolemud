@@ -11,7 +11,8 @@ public class MinorHealHandler : ISkillHandler
         var target = ctx.ResolveFriendlyTarget();
 
         int amount = DiceRoller.Roll(ctx.Definition.DiceNotation ?? "1d8")
-                     + ctx.AttributeModifier(ctx.Definition.AttributeBonus);
+                     + ctx.AttributeModifier(ctx.Definition.AttributeBonus)
+                     + ctx.HealScaleBonus();
         if (amount < 1) amount = 1;
 
         int healed = Math.Min(amount, target.MaxHealth - target.Health);

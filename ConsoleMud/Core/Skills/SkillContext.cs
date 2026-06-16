@@ -78,6 +78,10 @@ public class SkillContext
             target.CombatTarget = Caster;
     }
 
+    /// <summary>Extra healing from the divine_grace passive (an extra Wisdom modifier).</summary>
+    public int HealScaleBonus() =>
+        Caster.KnownSkills.ContainsKey("divine_grace") ? Math.Max(0, AttributeModifier("Wisdom")) : 0;
+
     /// <summary>Standard tabletop attribute modifier for an attribute name.</summary>
     public int AttributeModifier(string attribute)
     {

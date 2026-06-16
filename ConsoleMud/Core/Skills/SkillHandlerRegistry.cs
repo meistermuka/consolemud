@@ -30,10 +30,23 @@ public class SkillHandlerRegistry
         // Fighter passives (armor_optimization, parry, indomitable_will) are applied by
         // PassiveService; critical_mastery and second_wind are wired into combat.
 
-        // Tier-1 actives for the caster classes.
+        // Caster tier-1 actives.
         Register(new MagicMissileHandler());
         Register(new MinorHealHandler());
         Register(new EntangleHandler());
+
+        // Cleric actives (passives applied by PassiveService / fired via TriggerBus).
+        Register(new BlessHandler());
+        Register(new TurnUndeadHandler());
+        Register(new CurePoisonHandler());
+        Register(new SmiteHandler());
+        Register(new SanctuaryHandler());
+        Register(new MajorHealHandler());
+        Register(new PrayerHandler());
+        Register(new DispelMagicHandler());
+        Register(new DivineInterventionHandler());
+        Register(new JudgmentHandler());
+        Register(new ResurrectionHandler());
     }
 
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;

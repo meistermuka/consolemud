@@ -73,6 +73,20 @@ Immunity yields 0 damage; otherwise the result floors at 1.
 
 Call it from any handler that can reduce a target to 0, passing `ctx.Caster` as the killer so XP is attributed.
 
+## Passive triggers in combat
+
+After a hit lands and the defender survives, `CombatSystem.ResolveSingleHit` fires
+two passive events through `PassiveService.Fire`:
+
+- `OnOutgoingHit` (owner = attacker) — e.g. `holy_fervor` chance-stuns with a mace/club.
+- `OnIncomingHit` (owner = defender) — e.g. `retribution_aura` sears the attacker with holy damage.
+
+A passive only runs for an owner who knows its skill (the `TriggerBus` checks
+`KnownSkills`). Other fire points (`OnCast`, `OnLook`, `OnMaxRoll`, `OnLowHealth`,
+`OnIncomingSpell`) exist on the bus but are not all wired yet. To add an event
+passive: implement `IPassiveHandler`, register it in `PassiveService.Initialize`,
+and ensure the relevant `Fire` call exists at the event site.
+
 ## Adding a buff/debuff
 
 Add a `StatusEffect` to the target with the right `EffectModifier`, `Magnitude`,

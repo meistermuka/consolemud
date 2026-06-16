@@ -123,11 +123,22 @@ come in three flavours:
 2. **Combat-wired** (e.g. `critical_mastery`, `second_wind`): checked directly in
    `CombatSystem` by `KnownSkills.ContainsKey(...)`.
 
-3. **Event-triggered** (e.g. `counterstrike`, `peek`, `retribution_aura`): subscribe
-   to `TriggerBus` (`Core/Skills/TriggerBus.cs`) at one of `OnIncomingHit`,
-   `OnOutgoingHit`, `OnCast`, `OnIncomingSpell`, `OnLook`, `OnMaxRoll`, `OnLowHealth`.
-   The bus only fires for owners who know the skill. (Several fire points are not
-   wired yet — see the build checklist.)
+3. **Event-triggered** (e.g. `retribution_aura`, `holy_fervor`): implement
+   `IPassiveHandler` with a `SkillTrigger`, register it in
+   `PassiveService.Initialize`, and the bus fires it for owners who know the skill.
+   `OnIncomingHit` and `OnOutgoingHit` are wired into `CombatSystem` today (see
+   [combat.md](combat.md)); the other triggers (`OnCast`, `OnLook`, `OnMaxRoll`,
+   `OnLowHealth`, `OnIncomingSpell`) exist on the bus but need their fire points
+   added at the relevant site.
+
+   ```csharp
+   public class RetributionAuraPassive : IPassiveHandler
+   {
+       public string SkillId => "retribution_aura";
+       public SkillTrigger Trigger => SkillTrigger.OnIncomingHit;
+       public void OnTrigger(TriggerContext ctx) { /* sear ctx.Other */ }
+   }
+   ```
 
 ## Checklist to add a skill
 

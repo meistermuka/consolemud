@@ -88,11 +88,10 @@
       "VirtualId": "street_walker",
       "Name": "walker",
       "Description": "A lean gray street walker with predatory yellow eyes.",
-      "Health": 3,
-      "MaxHealth": 3,
+      "Health": 25,
+      "MaxHealth": 25,
       "EquippedWeaponTemplateId": "rusty_dagger",
-      "IsAggressive": false,
-      "XpReward": 600000
+      "IsAggressive": false
     },
     {
       "VirtualId": "dire_wolf",

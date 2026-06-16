@@ -122,6 +122,13 @@ public class CombatSystem
                           $"-> [{defender.Name} HP: {Math.Max(0, defender.Health)}]", ConsoleColor.Gray);
 
         if (defender.Health <= 0)
+        {
             DeathService.HandleDeath(defender, _world, attacker);
+            return;
+        }
+
+        // Event passives fire only when the defender survives the hit.
+        Skills.PassiveService.Fire(Skills.SkillTrigger.OnOutgoingHit, attacker, defender, _world);
+        Skills.PassiveService.Fire(Skills.SkillTrigger.OnIncomingHit, defender, attacker, _world);
     }
 }

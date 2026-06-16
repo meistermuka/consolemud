@@ -1,4 +1,5 @@
 using ConsoleMud.Core.Services;
+using ConsoleMud.Core.Skills.Handlers.Cleric;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
 
@@ -16,8 +17,24 @@ public static class PassiveService
 {
     private const string Tag = "passive:";
     private static DefinitionRegistry _definitions;
+    private static readonly TriggerBus _bus = new();
 
-    public static void Initialize(DefinitionRegistry definitions) => _definitions = definitions;
+    public static void Initialize(DefinitionRegistry definitions)
+    {
+        _definitions = definitions;
+
+        // Event-triggered passives subscribe to the bus once.
+        _bus.Register(new RetributionAuraPassive());
+        _bus.Register(new HolyFervorPassive());
+    }
+
+    /// <summary>Fires a passive trigger for an owner (only runs if they know the skill).</summary>
+    public static void Fire(SkillTrigger trigger, Character owner, Character other, WorldState world, object payload = null)
+    {
+        if (owner == null)
+            return;
+        _bus.Fire(trigger, new TriggerContext { Owner = owner, Other = other, World = world, Payload = payload });
+    }
 
     public static void Refresh(Character c)
     {
@@ -67,6 +84,14 @@ public static class PassiveService
                 double red = Param(skillId, "magicPsychicReductionPct", 25);
                 Add(c, skillId, EffectModifier.FlatDamageReduction, red, DamageType.Magic);
                 Add(c, skillId, EffectModifier.FlatDamageReduction, red, DamageType.Psychic);
+                break;
+
+            // --- Cleric ---
+            case "divine_armor":
+                Add(c, skillId, EffectModifier.ArmorMod, Math.Floor(c.Wisdom * Param(skillId, "wisFraction", 0.15)));
+                break;
+            case "soul_ward":
+                Add(c, skillId, EffectModifier.ImmunityOverride, 1, DamageType.Psychic);
                 break;
         }
     }

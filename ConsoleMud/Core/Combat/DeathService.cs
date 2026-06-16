@@ -15,6 +15,25 @@ public static class DeathService
 
         if (deadCharacter is Player player)
         {
+            // Undying faith: a lethal blow leaves the cleric at 1 HP, briefly invulnerable,
+            // once per encounter, instead of dying.
+            if (player.KnownSkills.ContainsKey("undying_faith") && player.EncounterFlags.Add("undying_faith"))
+            {
+                player.Health = 1;
+                foreach (var t in new[] { Enums.DamageType.Physical, Enums.DamageType.Magic, Enums.DamageType.Holy, Enums.DamageType.Fire })
+                    player.StatusEffects.Add(new Entities.StatusEffect
+                    {
+                        Name = "undying faith",
+                        Modifier = Enums.EffectModifier.ImmunityOverride,
+                        DamageType = t,
+                        Polarity = Enums.EffectPolarity.Positive,
+                        TicksRemaining = 1
+                    });
+                Helpers.ColorConsole.WriteLine(
+                    "\nYour faith refuses death! You cling to life at 1 HP, briefly untouchable.", ConsoleColor.Yellow);
+                return;
+            }
+
             // Break anything fighting the player, then recall to the safe room at 1 HP.
             foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
                 c.CombatTarget = null;
