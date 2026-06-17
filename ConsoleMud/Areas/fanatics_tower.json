@@ -1,0 +1,169 @@
+{
+  "Name": "fanatics_tower",
+  "Description": "A tower to test your skills",
+  "Rooms": [
+    {
+      "VirtualId": "tower_entrance",
+      "Name": "The tower entrance",
+      "Description": "The Threshold of Infiltration",
+      "Exits": {},
+      "IsOutside": false,
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 3
+          }
+        ]
+      }
+    }
+  ],
+  "ItemTemplates": [
+    {
+      "VirtualId": "bastard_sword",
+      "Name": "The Bastard Sword Beginners Luck",
+      "Description": "A simple bastard sword",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": true,
+      "WeaponType": "Sword",
+      "DiceNotation": "1d10",
+      "AttackVerbs": [
+        "slash",
+        "slice"
+      ],
+      "IsArmor": false,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 0,
+      "TargetSlot": "MainHand"
+    },
+    {
+      "VirtualId": "wood_shield",
+      "Name": "A wooden shield",
+      "Description": "A simple wooden shield",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": true,
+      "ArmorRating": 2,
+      "TargetSlot": "OffHand"
+    },
+    {
+      "VirtualId": "worn_leather_cap",
+      "Name": "A worn leather cap",
+      "Description": "A simpe cap of boiled leather",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Head"
+    },
+    {
+      "VirtualId": "wool_scarf",
+      "Name": "A frayed wool scarf",
+      "Description": "A thick, rough-woven scarf wrapped tightly against the elements",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Necklace"
+    },
+    {
+      "VirtualId": "copper_amulet",
+      "Name": "A copper amulet",
+      "Description": "A dull copper disc hanging from a thin leather cord",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Necklace"
+    },
+    {
+      "VirtualId": "copper_stud",
+      "Name": "A copper stud",
+      "Description": "A small, tarnished bit of copper wire bent into a loop.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Earring1"
+    },
+    {
+      "VirtualId": "scout_leather_vest",
+      "Name": "Leather vest of the scout",
+      "Description": "A stiff jerkin made of thin leather pieces stitched together with thick twine.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Torso"
+    },
+    {
+      "VirtualId": "leather_shoulderguard",
+      "Name": "A worn leather shoulderguard",
+      "Description": "A pair of light leather spaulders that strap over the shoulders.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "LeftArm"
+    }
+  ],
+  "NpcTemplates": [
+    {
+      "VirtualId": "blind_novice",
+      "Name": "A blind novice",
+      "Description": "A frantic, newly recruited cultist wearing a starch-white blindfold.",
+      "Health": 20,
+      "MaxHealth": 20,
+      "Level": 5,
+      "XpReward": 10,
+      "EquippedWeaponTemplateId": "bastard_sword",
+      "IsAggressive": false,
+      "Archetypes": []
+    }
+  ]
+}

@@ -11,6 +11,13 @@ class Program
 {
     static void Main(string[] args)
     {
+        // Offline tool: build an area file interactively, then exit.
+        if (args.Length > 0 && args[0].Equals("build-area", StringComparison.OrdinalIgnoreCase))
+        {
+            AreaBuilder.Run();
+            return;
+        }
+
         Console.WriteLine("Booting local world...standby...");
         var world = new WorldState();
 
