@@ -68,7 +68,7 @@
       "Description": "A shiny signet ring.",
       "IsEquippable": true,
       "IsGetable": true,
-      "TargetSlot": "Ring1",
+      "TargetSlot": "Ring",
       "ArmorRating": 0
     },
     {

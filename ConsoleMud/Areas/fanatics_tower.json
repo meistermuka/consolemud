@@ -117,7 +117,7 @@
       "IsEquippable": true,
       "IsShield": false,
       "ArmorRating": 1,
-      "TargetSlot": "Earring1"
+      "TargetSlot": "Earring"
     },
     {
       "VirtualId": "scout_leather_vest",
@@ -149,7 +149,7 @@
       "IsEquippable": true,
       "IsShield": false,
       "ArmorRating": 1,
-      "TargetSlot": "LeftArm"
+      "TargetSlot": "Arm"
     }
   ],
   "NpcTemplates": [

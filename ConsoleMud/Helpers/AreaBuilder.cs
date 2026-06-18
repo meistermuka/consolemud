@@ -18,6 +18,13 @@ public static class AreaBuilder
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
     private static readonly string[] Directions = { "North", "South", "East", "West", "Up", "Down" };
 
+    // Declared (generic) slots authors choose from; physical pair slots are internal.
+    private static readonly string[] DeclaredSlots =
+    {
+        "Head", "Mask", "Necklace", "Torso", "Gloves", "Belt", "Pants", "Shins", "Boots",
+        "Ring", "Earring", "Arm", "Forearm", "OffHand"
+    };
+
     public static void Run()
     {
         Console.WriteLine("=== Area Builder ===");
@@ -88,7 +95,7 @@ public static class AreaBuilder
             {
                 item.IsEquippable = true;
                 item.ArmorRating = AskInt("  Armor rating", 1);
-                item.TargetSlot = AskEnum<EquipmentSlot>("  Armor slot");
+                item.TargetSlot = AskFromArray("  Armor slot", DeclaredSlots);
                 item.IsShield = AskBool("  Is it a shield (off-hand)?", false);
             }
 
