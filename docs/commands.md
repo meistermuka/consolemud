@@ -40,7 +40,7 @@ token, so `attack`/`take` stay visible while `k`/`l`/`n` are hidden.
 |---|---|---|
 | `look`, `l` | `LookCommand` | room, item, or inside a container |
 | `get`/`take`, `drop`, `put`, `inventory` | item handling | keyword + `2.dagger` index; `get all [<kw>] [from <container>]` |
-| `wield`, `second`, `wear`, `equipment` | gear | main hand / off hand / armour |
+| `wield`, `second`, `wear`, `equipment` | gear | main hand / off hand / armour; `wear all` dresses all armor/accessories |
 | `kill`/`attack`, `flee`, `cast` | combat | `cast <spell> [target]` |
 | `sit`, `rest`, `stand` | posture | drives regen rate |
 | `status`, `skills`, `save` | info / persistence | level, XP, proficiency |

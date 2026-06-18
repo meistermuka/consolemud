@@ -30,6 +30,7 @@ still shows the physical slots (Ring (L)/(R), etc.).
 ## Commands
 
 - `wear <item>` — armor/accessories to their slot (replace-oldest on a full family).
+- `wear all` — wears every armor/accessory in inventory into a free slot; fills empty slots only (skips occupied), and ignores weapons and shields (those are wielded).
 - `wield <weapon>` — main hand. `second <weapon|shield>` — off hand.
 - `equipment` / `eq` — show every slot.
 
