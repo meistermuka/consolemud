@@ -39,7 +39,7 @@ token, so `attack`/`take` stay visible while `k`/`l`/`n` are hidden.
 | Verb(s) | Command | Notes |
 |---|---|---|
 | `look`, `l` | `LookCommand` | room, item, or inside a container |
-| `get`/`take`, `drop`, `put`, `inventory` | item handling | keyword + `2.dagger` index matching |
+| `get`/`take`, `drop`, `put`, `inventory` | item handling | keyword + `2.dagger` index; `get all [<kw>] [from <container>]` |
 | `wield`, `second`, `wear`, `equipment` | gear | main hand / off hand / armour |
 | `kill`/`attack`, `flee`, `cast` | combat | `cast <spell> [target]` |
 | `sit`, `rest`, `stand` | posture | drives regen rate |
