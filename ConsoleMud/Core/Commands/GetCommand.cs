@@ -66,6 +66,7 @@ public class GetCommand : ICommand
         var container = FindContainer(player, room, containerName);
         if (container == null) { Console.WriteLine($"You don't see a '{containerName}' here."); return; }
         if (!container.IsContainer) { Console.WriteLine($"The {container.Name} cannot hold items."); return; }
+        if (!container.IsOpen) { Console.WriteLine($"The {container.Name} is closed."); return; }
 
         var item = container.Contents.FirstOrDefault(i => i.MatchesKeyword(itemName));
         if (item == null) { Console.WriteLine($"There is no '{itemName}' inside the {container.Name}."); return; }
@@ -80,6 +81,7 @@ public class GetCommand : ICommand
         var container = FindContainer(player, room, containerName);
         if (container == null) { Console.WriteLine($"You don't see a '{containerName}' here."); return; }
         if (!container.IsContainer) { Console.WriteLine($"The {container.Name} cannot hold items."); return; }
+        if (!container.IsOpen) { Console.WriteLine($"The {container.Name} is closed."); return; }
         BulkGet(player, container.Contents, keyword, container.Name, container.Name);
     }
 

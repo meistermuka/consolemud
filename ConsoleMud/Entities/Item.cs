@@ -14,6 +14,15 @@ public class Item
     public bool IsGetable { get; set; } = true;
     public bool IsContainer { get; set; }
     public List<Item> Contents { get; set; } = new(); // Used if IsContainer is True
+
+    // Container open/lock state (containers start open by default).
+    public bool IsCloseable { get; set; }
+    public bool IsOpen { get; set; } = true;
+    public bool IsLocked { get; set; }
+    public string? LockKeyId { get; set; } // a lock accepts a key whose KeyId matches this
+
+    // If set, this item IS a key that opens locks with this id.
+    public string? KeyId { get; set; }
     
     // Weapon properties
     public bool IsWeapon { get; set; }

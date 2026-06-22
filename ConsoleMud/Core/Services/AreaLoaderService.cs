@@ -117,7 +117,12 @@ public static class AreaLoaderService
             IsEquippable = bp.IsEquippable,
             IsShield = bp.IsShield,
             TargetSlot = targetSlot,
-            ArmourRating = bp.ArmorRating
+            ArmourRating = bp.ArmorRating,
+            IsCloseable = bp.IsCloseable,
+            IsLocked = bp.StartsLocked,
+            IsOpen = !bp.StartsLocked, // locked containers start closed
+            LockKeyId = bp.LockKeyId,
+            KeyId = bp.KeyId
         };
     }
     

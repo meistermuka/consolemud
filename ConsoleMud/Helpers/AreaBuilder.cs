@@ -99,7 +99,19 @@ public static class AreaBuilder
                 item.IsShield = AskBool("  Is it a shield (off-hand)?", false);
             }
 
-            item.IsContainer = AskBool("  Is it a container?", false);
+            if (item.IsContainer = AskBool("  Is it a container?", false))
+            {
+                item.IsCloseable = AskBool("    Can it be closed?", false);
+                if (item.IsCloseable && AskBool("    Does it start locked?", false))
+                {
+                    item.StartsLocked = true;
+                    item.LockKeyId = Ask("    Lock key id (a key with this id opens it)");
+                }
+            }
+
+            if (AskBool("  Is it a key?", false))
+                item.KeyId = Ask("    Key id (matches a lock's key id)");
+
             area.ItemTemplates.Add(item);
             Console.WriteLine($"  Added item '{item.VirtualId}'.");
         }

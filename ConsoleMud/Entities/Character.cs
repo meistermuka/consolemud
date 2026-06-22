@@ -24,6 +24,10 @@ public abstract class Character
     
     // Inventory
     public List<Item> Inventory { get; set; } = new();
+
+    /// <summary>True if a carried item is a key matching the given lock id.</summary>
+    public bool HasKey(string keyId) =>
+        !string.IsNullOrEmpty(keyId) && Inventory.Any(i => i.KeyId == keyId);
     
     public Character CombatTarget { get; set; }
 

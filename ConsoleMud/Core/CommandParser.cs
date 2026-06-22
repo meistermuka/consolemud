@@ -34,6 +34,10 @@ public class CommandParser
         _commands["drop"] = new DropCommand();
         _commands["d"] = new DropCommand();
         _commands["put"] = new PutCommand();
+        _commands["open"] = new OpenCommand();
+        _commands["close"] = new CloseCommand();
+        _commands["lock"] = new LockCommand();
+        _commands["unlock"] = new UnlockCommand();
         
         _commands["kill"] = new KillCommand();
         _commands["k"] = new KillCommand();

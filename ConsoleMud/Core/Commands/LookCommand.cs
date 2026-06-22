@@ -110,6 +110,12 @@ public class LookCommand : ICommand
             return;
         }
 
+        if (!target.IsOpen)
+        {
+            ColorConsole.WriteLine($"The {target.Name} is closed.", ConsoleColor.Gray);
+            return;
+        }
+
         // Describe the container's contents
         Console.WriteLine();
         ColorConsole.WriteLine($"[{target.Name}]", ConsoleColor.Cyan);

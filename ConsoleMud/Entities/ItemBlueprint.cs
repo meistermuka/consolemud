@@ -9,6 +9,10 @@ public class ItemBlueprint
     public string Description { get; set; }
     public bool IsGetable { get; set; }
     public bool IsContainer { get; set; }
+    public bool IsCloseable { get; set; }
+    public bool StartsLocked { get; set; } // locked implies it starts closed
+    public string LockKeyId { get; set; }
+    public string KeyId { get; set; }      // marks this item as a key
     public bool IsWeapon { get; set; }
     public string WeaponType { get; set; } // e.g. "Sword", "Bow"; defaults to Unarmed
     public string DiceNotation { get; set; }
