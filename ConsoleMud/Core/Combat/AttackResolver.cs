@@ -23,10 +23,11 @@ public static class AttackResolver
         DamageType type,
         string attributeBonus = null,
         bool ignoresArmor = false,
-        bool critOnMaxRoll = false)
+        bool critOnMaxRoll = false,
+        double hitModifier = 0)
     {
-        // 1. To-hit: base, plus attacker accuracy, minus defender avoidance.
-        double hitChance = BaseHitChance + attacker.AccuracyBonus - defender.AvoidanceChance;
+        // 1. To-hit: base, plus attacker accuracy, minus defender avoidance, plus situational modifiers.
+        double hitChance = BaseHitChance + attacker.AccuracyBonus - defender.AvoidanceChance + hitModifier;
         if (Random.Shared.Next(1, 101) > hitChance)
             return new AttackOutcome(false, false, 0, 0, 0);
 

@@ -23,6 +23,10 @@ public class Item
 
     // If set, this item IS a key that opens locks with this id.
     public string? KeyId { get; set; }
+
+    // Light & vision.
+    public bool IsLightSource { get; set; }   // lights a dark room while held or on the floor
+    public bool GrantsDarkvision { get; set; } // grants darkvision while held/worn
     
     // Weapon properties
     public bool IsWeapon { get; set; }

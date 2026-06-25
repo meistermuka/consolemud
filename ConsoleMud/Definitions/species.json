@@ -3,42 +3,101 @@
     "Id": "human",
     "Name": "Human",
     "Description": "Versatile and well-rounded, humans bend a little toward everything.",
-    "Modifiers": { "Str": 1, "Dex": 1, "Con": 1, "Int": 1, "Wis": 1, "Cha": 1 },
-    "DamageMultipliers": {}
+    "Modifiers": {
+      "Str": 1,
+      "Dex": 1,
+      "Con": 1,
+      "Int": 1,
+      "Wis": 1,
+      "Cha": 1
+    },
+    "DamageMultipliers": {},
+    "HasDarkvision": false
   },
   {
     "Id": "elf",
     "Name": "Elf",
     "Description": "Graceful and keen-minded, but slight of frame.",
-    "Modifiers": { "Str": 0, "Dex": 2, "Con": -2, "Int": 1, "Wis": 0, "Cha": 0 },
-    "DamageMultipliers": { "Charm": 0.5, "Sleep": 0.5 }
+    "Modifiers": {
+      "Str": 0,
+      "Dex": 2,
+      "Con": -2,
+      "Int": 1,
+      "Wis": 0,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Charm": 0.5,
+      "Sleep": 0.5
+    },
+    "HasDarkvision": true
   },
   {
     "Id": "dwarf",
     "Name": "Dwarf",
     "Description": "Hardy and stubborn, raised in stone and resistant to toxins.",
-    "Modifiers": { "Str": 0, "Dex": -2, "Con": 2, "Int": 0, "Wis": 1, "Cha": 0 },
-    "DamageMultipliers": { "Poison": 0.5 }
+    "Modifiers": {
+      "Str": 0,
+      "Dex": -2,
+      "Con": 2,
+      "Int": 0,
+      "Wis": 1,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Poison": 0.5
+    },
+    "HasDarkvision": true
   },
   {
     "Id": "halfling",
     "Name": "Halfling",
     "Description": "Small, nimble, and stout of heart.",
-    "Modifiers": { "Str": -2, "Dex": 2, "Con": 0, "Int": 0, "Wis": 0, "Cha": 1 },
-    "DamageMultipliers": { "Fear": 0.5 }
+    "Modifiers": {
+      "Str": -2,
+      "Dex": 2,
+      "Con": 0,
+      "Int": 0,
+      "Wis": 0,
+      "Cha": 1
+    },
+    "DamageMultipliers": {
+      "Fear": 0.5
+    },
+    "HasDarkvision": false
   },
   {
     "Id": "gnome",
     "Name": "Gnome",
     "Description": "Clever tinkerers steeped in arcane study.",
-    "Modifiers": { "Str": -2, "Dex": 0, "Con": 0, "Int": 2, "Wis": 1, "Cha": 0 },
-    "DamageMultipliers": { "Magic": 0.5 }
+    "Modifiers": {
+      "Str": -2,
+      "Dex": 0,
+      "Con": 0,
+      "Int": 2,
+      "Wis": 1,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Magic": 0.5
+    },
+    "HasDarkvision": false
   },
   {
     "Id": "orc",
     "Name": "Orc",
     "Description": "Brutally strong and tough, but slow to reason and easily rattled in mind.",
-    "Modifiers": { "Str": 2, "Dex": 0, "Con": 1, "Int": -2, "Wis": 0, "Cha": 0 },
-    "DamageMultipliers": { "Psychic": 2.0 }
+    "Modifiers": {
+      "Str": 2,
+      "Dex": 0,
+      "Con": 1,
+      "Int": -2,
+      "Wis": 0,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Psychic": 2.0
+    },
+    "HasDarkvision": true
   }
 ]

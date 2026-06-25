@@ -2,6 +2,9 @@
   "combat.baseHitChance":            { "value": 85,     "desc": "Base percent chance an attack lands, before attacker accuracy and defender avoidance." },
   "combat.critMultiplier":           { "value": 2.0,    "desc": "Damage multiplier applied on a critical hit." },
   "combat.markBonusMultiplier":      { "value": 1.2,    "desc": "Damage multiplier against a hunter's-marked target (mark_of_the_hunter)." },
+  "combat.darkMissPenalty":          { "value": 50,     "desc": "Initial to-hit penalty (percentage points) when attacking a target you can't see in the dark." },
+  "combat.darkAdaptationPerRound":   { "value": 5,      "desc": "Percentage points the dark to-hit penalty eases each combat round as eyes adjust." },
+  "combat.darkAdaptationCap":        { "value": 30,     "desc": "Maximum the dark to-hit penalty can ease over a single fight." },
 
   "proficiency.ceiling":             { "value": 99.999, "desc": "Maximum effective success chance; even 100 proficiency fails a tiny fraction of the time." },
   "proficiency.baseGain":            { "value": 2.0,    "desc": "Proficiency gained per attempt at 0; tapers toward the ceiling as proficiency rises." },

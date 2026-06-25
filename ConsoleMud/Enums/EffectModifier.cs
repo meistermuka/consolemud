@@ -20,5 +20,6 @@ public enum EffectModifier
     Root,                // cannot move or flee
     Blind,               // cannot cast spells (and sight-dependent skills)
     Thorns,              // Magnitude reflected to melee attackers (druid thorns)
-    WeaponCoat           // marker: charges of a coating that procs on the wearer's hits (thief poison)
+    WeaponCoat,          // marker: charges of a coating that procs on the wearer's hits (thief poison)
+    Darkvision           // marker: grants sight in the dark while active (darkvision spell)
 }

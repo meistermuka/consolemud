@@ -36,6 +36,13 @@ public class LookCommand : ICommand
     private void LookAtRoom(Player player, WorldState world)
     {
         var room = world.Rooms[player.CurrentRoomId];
+
+        if (!player.CanSee(room))
+        {
+            ColorConsole.WriteLine("\nIt is pitch black. You can't see a thing.", ConsoleColor.DarkGray);
+            return;
+        }
+
         Console.WriteLine();
         ColorConsole.WriteLine($"[{room.Name}]", ConsoleColor.Cyan);
         ColorConsole.WriteLine(room.Description, ConsoleColor.Gray);
@@ -78,6 +85,12 @@ public class LookCommand : ICommand
     {
         var (targetIndex, cleanKeyword) = KeywordParser.ExtractIndex(rawInput);
         var room = world.Rooms[player.CurrentRoomId];
+
+        if (!player.CanSee(room))
+        {
+            ColorConsole.WriteLine("It is too dark to make anything out.", ConsoleColor.DarkGray);
+            return;
+        }
 
         // Search the room floor first, then the player's own inventory
         var candidates = room.Items.Concat(player.Inventory);

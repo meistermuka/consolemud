@@ -1,4 +1,5 @@
 using ConsoleMud.Core.Skills.Handlers.Cleric;
+using ConsoleMud.Core.Skills.Handlers.Common;
 using ConsoleMud.Core.Skills.Handlers.Druid;
 using ConsoleMud.Core.Skills.Handlers.Fighter;
 using ConsoleMud.Core.Skills.Handlers.Mage;
@@ -31,6 +32,9 @@ public class SkillHandlerRegistry
         Register(new OnslaughtHandler());
         // Fighter passives (armor_optimization, parry, indomitable_will) are applied by
         // PassiveService; critical_mastery and second_wind are wired into combat.
+
+        // Shared across classes.
+        Register(new DarkvisionHandler());
 
         // Caster tier-1 actives.
         Register(new MagicMissileHandler());

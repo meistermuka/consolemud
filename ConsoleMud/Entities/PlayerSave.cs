@@ -29,6 +29,7 @@ public class PlayerSave
     public int MaxMana { get; set; }
 
     public DamageType? Specialization { get; set; }
+    public bool InnateDarkvision { get; set; }
 
     public Dictionary<string, double> KnownSkills { get; set; } = new();
     public Dictionary<DamageType, double> DamageMultipliers { get; set; } = new();

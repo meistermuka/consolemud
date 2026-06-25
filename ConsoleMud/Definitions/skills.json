@@ -1545,5 +1545,20 @@
     "Parameters": {
       "shots": 4
     }
+  },
+  {
+    "Id": "darkvision",
+    "Name": "darkvision",
+    "Description": "Grant a target sight in the dark for a long while.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 0,
+    "DurationTicks": 40,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {}
   }
 ]

@@ -284,6 +284,10 @@
         "Level": 20
       },
       {
+        "SkillId": "darkvision",
+        "Level": 22
+      },
+      {
         "SkillId": "sanctuary",
         "Level": 25
       },
@@ -361,6 +365,10 @@
       {
         "SkillId": "arcane_meditation",
         "Level": 15
+      },
+      {
+        "SkillId": "darkvision",
+        "Level": 18
       },
       {
         "SkillId": "fireball",

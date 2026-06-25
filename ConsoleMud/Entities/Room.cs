@@ -17,4 +17,5 @@ public class Room
     public List<Trap> Traps { get; set; } = new();
 
     public bool IsOutside { get; set; }
+    public bool IsDark { get; set; } // a light source or darkvision is needed to see here
 }

@@ -6,6 +6,8 @@ public class SpeciesDefinition
     public string Name { get; set; }
     public string Description { get; set; }
 
+    public bool HasDarkvision { get; set; }
+
     // Flat attribute modifiers applied after the player assigns rolled values.
     public AttributeModifiers Modifiers { get; set; } = new();
 

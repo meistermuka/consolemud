@@ -32,6 +32,7 @@ public class CombatSystem
             {
                 attacker.CombatTarget = null; // Clear broken combat links
                 attacker.EncounterFlags.Clear(); // combat over: reset once-per-fight passives
+                attacker.DarknessAdaptation = 0; // eyes re-adjust between fights
                 continue;
             }
 
@@ -108,6 +109,9 @@ public class CombatSystem
 
     private void ExecuteAttack(Character attacker, Character defender)
     {
+        // Fighting blind in the dark: a large hit penalty that eases as eyes adjust.
+        double hitMod = DarknessHitModifier(attacker);
+
         // A shapeshifted attacker uses its natural attack profile instead of weapons.
         var form = Skills.ShapeshiftService.GetForm(attacker);
         if (form != null)
@@ -116,7 +120,7 @@ public class CombatSystem
                 return; // e.g. owl cannot melee
             int beastSwings = attacker.AttackRate;
             for (int i = 0; i < beastSwings && defender.Health > 0; i++)
-                ResolveSingleHit(attacker, defender, form.Name, form.AttackVerb ?? "strike", form.AttackDice, "Beast", form.AttackAttribute);
+                ResolveSingleHit(attacker, defender, form.Name, form.AttackVerb ?? "strike", form.AttackDice, "Beast", form.AttackAttribute, hitMod);
             return;
         }
 
@@ -127,12 +131,27 @@ public class CombatSystem
 
         int swings = attacker.AttackRate;
         for (int i = 0; i < swings && defender.Health > 0; i++)
-            ResolveSingleHit(attacker, defender, mainName, PickVerb(mainWeapon, DefaultAttackVerb), mainDice, "Main Hand");
+            ResolveSingleHit(attacker, defender, mainName, PickVerb(mainWeapon, DefaultAttackVerb), mainDice, "Main Hand", null, hitMod);
 
         // --- OFF HAND: one follow-up swing when dual-wielding ---
         var offWeapon = attacker.OffHandWeapon;
         if (defender.Health > 0 && offWeapon != null)
-            ResolveSingleHit(attacker, defender, offWeapon.Name, PickVerb(offWeapon, "strike"), offWeapon.DiceNotation, "Off Hand");
+            ResolveSingleHit(attacker, defender, offWeapon.Name, PickVerb(offWeapon, "strike"), offWeapon.DiceNotation, "Off Hand", null, hitMod);
+    }
+
+    // Negative to-hit modifier when the attacker can't see its target; eases with adaptation.
+    private double DarknessHitModifier(Character attacker)
+    {
+        if (!_world.Rooms.TryGetValue(attacker.CurrentRoomId, out var room) || attacker.CanSee(room))
+            return 0;
+
+        int per = Services.TuningRegistry.GetInt("combat.darkAdaptationPerRound", 5);
+        int cap = Services.TuningRegistry.GetInt("combat.darkAdaptationCap", 30);
+        double penalty = Services.TuningRegistry.Get("combat.darkMissPenalty", 50);
+
+        attacker.DarknessAdaptation = Math.Min(cap, attacker.DarknessAdaptation + per);
+        double net = penalty - attacker.DarknessAdaptation;
+        return net > 0 ? -net : 0;
     }
 
     private static string PickVerb(Item weapon, string fallback)
@@ -142,10 +161,10 @@ public class CombatSystem
         return weapon.AttackVerbs[Random.Shared.Next(weapon.AttackVerbs.Length)];
     }
 
-    private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel, string attributeBonus = null)
+    private void ResolveSingleHit(Character attacker, Character defender, string weaponName, string verb, string dice, string handLabel, string attributeBonus = null, double hitModifier = 0)
     {
         bool critMastery = attacker.KnownSkills.ContainsKey("critical_mastery");
-        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical, attributeBonus: attributeBonus, critOnMaxRoll: critMastery);
+        var outcome = AttackResolver.Resolve(attacker, defender, dice, DamageType.Physical, attributeBonus: attributeBonus, critOnMaxRoll: critMastery, hitModifier: hitModifier);
 
         if (!outcome.Hit)
         {

@@ -10,6 +10,9 @@ Per-skill numbers (dice, charges, proc chances, durations) live with each skill 
 |---|---|---|
 | `combat.baseHitChance` | 85 | Base percent chance an attack lands, before attacker accuracy and defender avoidance. |
 | `combat.critMultiplier` | 2.0 | Damage multiplier applied on a critical hit. |
+| `combat.darkAdaptationCap` | 30 | Maximum the dark to-hit penalty can ease over a single fight. |
+| `combat.darkAdaptationPerRound` | 5 | Percentage points the dark to-hit penalty eases each combat round as eyes adjust. |
+| `combat.darkMissPenalty` | 50 | Initial to-hit penalty (percentage points) when attacking a target you can't see in the dark. |
 | `combat.markBonusMultiplier` | 1.2 | Damage multiplier against a hunter's-marked target (mark_of_the_hunter). |
 
 ## leveling

@@ -44,6 +44,10 @@ public class SkillContext
         if (!World.Rooms.TryGetValue(Caster.CurrentRoomId, out var room))
             return null;
 
+        // Can't pick out a target you can't see.
+        if (!Caster.CanSee(room))
+            return null;
+
         var (index, keyword) = KeywordParser.ExtractIndex(string.Join(" ", Args));
         int matches = 0;
         foreach (var npc in room.Characters.OfType<NonPlayerCharacter>())

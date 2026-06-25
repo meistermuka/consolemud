@@ -13,6 +13,8 @@ public class ItemBlueprint
     public bool StartsLocked { get; set; } // locked implies it starts closed
     public string LockKeyId { get; set; }
     public string KeyId { get; set; }      // marks this item as a key
+    public bool IsLightSource { get; set; }
+    public bool GrantsDarkvision { get; set; }
     public bool IsWeapon { get; set; }
     public string WeaponType { get; set; } // e.g. "Sword", "Bow"; defaults to Unarmed
     public string DiceNotation { get; set; }

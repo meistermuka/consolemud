@@ -112,6 +112,9 @@ public static class AreaBuilder
             if (AskBool("  Is it a key?", false))
                 item.KeyId = Ask("    Key id (matches a lock's key id)");
 
+            item.IsLightSource = AskBool("  Is it a light source?", false);
+            item.GrantsDarkvision = AskBool("  Does it grant darkvision when carried?", false);
+
             area.ItemTemplates.Add(item);
             Console.WriteLine($"  Added item '{item.VirtualId}'.");
         }
@@ -133,6 +136,7 @@ public static class AreaBuilder
                 Level = AskInt("  Level", 1),
                 XpReward = AskInt("  XP reward (0 = auto)", 0),
                 IsAggressive = AskBool("  Aggressive (attacks on sight)?", false),
+                HasDarkvision = AskBool("  Has darkvision?", false),
                 Archetypes = AskArchetypes()
             };
 
@@ -156,7 +160,8 @@ public static class AreaBuilder
                 VirtualId = Ask("  VirtualId (e.g. forest_entrance)"),
                 Name = Ask("  Name"),
                 Description = Ask("  Description", ""),
-                IsOutside = AskBool("  Is it outdoors?", false)
+                IsOutside = AskBool("  Is it outdoors?", false),
+                IsDark = AskBool("  Is it dark (needs light/darkvision)?", false)
             };
 
             // Item spawns

@@ -46,6 +46,30 @@ public abstract class Character
     // Per-combat-encounter flags (e.g. once-per-fight passives). Cleared when combat ends.
     public HashSet<string> EncounterFlags { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    // Vision: innate darkvision (species for players, blueprint flag for NPCs).
+    public bool InnateDarkvision { get; set; }
+
+    // How long this character has been fighting blind (rounds), for dark-adaptation.
+    public int DarknessAdaptation { get; set; }
+
+    /// <summary>Darkvision from species, a carried/worn item, or an active spell effect.</summary>
+    public bool HasDarkvision =>
+        InnateDarkvision
+        || Inventory.Any(i => i.GrantsDarkvision)
+        || Equipment.Values.Any(i => i.GrantsDarkvision)
+        || StatusEffects.Any(e => e.Modifier == EffectModifier.Darkvision && !e.IsExpired);
+
+    /// <summary>Whether this character can see in the given room right now.</summary>
+    public bool CanSee(Room room)
+    {
+        if (room == null || !room.IsDark || HasDarkvision)
+            return true;
+        // A light source held or on the floor (never from inside a container).
+        return room.Items.Any(i => i.IsLightSource)
+               || Inventory.Any(i => i.IsLightSource)
+               || Equipment.Values.Any(i => i.IsLightSource);
+    }
+
     // Crowd-control queries, read by combat, movement, and skill gates.
     public bool IsStunned => StatusEffects.Any(e => e.Modifier == EffectModifier.Stun && !e.IsExpired);
     public bool IsRooted => StatusEffects.Any(e => e.Modifier == EffectModifier.Root && !e.IsExpired);

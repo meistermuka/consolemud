@@ -68,6 +68,7 @@ public static class CharacterGenerator
             Health = maxHp,
             MaxMana = maxMana,
             Mana = maxMana,
+            InnateDarkvision = species.HasDarkvision,
             CurrentRoomId = startingRoomId
         };
 

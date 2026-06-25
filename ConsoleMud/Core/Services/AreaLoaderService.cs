@@ -36,7 +36,8 @@ public static class AreaLoaderService
                 VirtualId = bp.VirtualId,
                 Name = bp.Name,
                 Description = bp.Description,
-                IsOutside = bp.IsOutside
+                IsOutside = bp.IsOutside,
+                IsDark = bp.IsDark
             };
             // Pair the textual VirtualId to this room's permanent memory Guid
             idTranslationTable[bp.VirtualId] = liveRoom.Id;
@@ -122,7 +123,9 @@ public static class AreaLoaderService
             IsLocked = bp.StartsLocked,
             IsOpen = !bp.StartsLocked, // locked containers start closed
             LockKeyId = bp.LockKeyId,
-            KeyId = bp.KeyId
+            KeyId = bp.KeyId,
+            IsLightSource = bp.IsLightSource,
+            GrantsDarkvision = bp.GrantsDarkvision
         };
     }
     
@@ -147,6 +150,7 @@ public static class AreaLoaderService
             Level = bp.Level < 1 ? 1 : bp.Level,
             CurrentRoomId = roomId,
             IsAggressive = bp.IsAggressive,
+            InnateDarkvision = bp.HasDarkvision,
             Archetypes = ParseArchetypes(bp.Archetypes),
             // Fallback reward scales with the NPC's level and toughness.
             XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,

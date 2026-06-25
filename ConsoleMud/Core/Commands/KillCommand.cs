@@ -23,6 +23,12 @@ public class KillCommand : ICommand
         var (targetIndex, cleanKeyword) = KeywordParser.ExtractIndex(rawInput);
         var room = world.Rooms[player.CurrentRoomId];
 
+        if (!player.CanSee(room))
+        {
+            Console.WriteLine("It's too dark to make out anything to attack.");
+            return;
+        }
+
         // Locate the target NPC
         NonPlayerCharacter targetNpc = null;
         int matchCount = 0;
