@@ -77,8 +77,8 @@ public class TimeEngine
             // check if any NPCs in this room want to attack the player
             foreach (var npc in room.Characters.OfType<NonPlayerCharacter>())
             {
-                // if the NPC is aggressive, alive and not fighting anyone
-                if (npc.IsAggressive && npc.Health > 0 && npc.CombatTarget == null)
+                // if the NPC is aggressive, alive, not fighting anyone, and can see the player
+                if (npc.IsAggressive && npc.Health > 0 && npc.CombatTarget == null && npc.CanSee(room))
                 {
                     npc.CombatTarget = player;
                     

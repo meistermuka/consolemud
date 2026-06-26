@@ -96,6 +96,23 @@
         "shoot",
         "loose"
       ]
+    },
+    {
+      "VirtualId": "torch",
+      "Name": "{ytorch{x",
+      "Description": "A rough pine torch wrapped in oil-soaked rags. It casts a warm circle of light.",
+      "IsGetable": true,
+      "IsLightSource": true
+    },
+    {
+      "VirtualId": "goggles_of_night",
+      "Name": "{Dgoggles of night{x",
+      "Description": "Smoked-glass goggles etched with a faint silver rune. Wearing them grants sight in total darkness.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": false,
+      "TargetSlot": "Head",
+      "GrantsDarkvision": true
     }
   ],
   "NpcTemplates": [
@@ -116,6 +133,18 @@
       "MaxHealth": 45,
       "EquippedWeaponTemplateId": "dire_wolf_fangs",
       "IsAggressive": true
+    },
+    {
+      "VirtualId": "cave_bat",
+      "Name": "{Dgiant cave bat{x",
+      "Description": "A huge bat with leathery wings and needle-sharp fangs. Its eyes glow faintly red — it sees perfectly in the dark.",
+      "Health": 15,
+      "MaxHealth": 15,
+      "Level": 2,
+      "XpReward": 30,
+      "HasDarkvision": true,
+      "IsAggressive": true,
+      "Archetypes": [ "Animal" ]
     }
   ],
   "Rooms": [
@@ -164,9 +193,10 @@
     {
       "VirtualId": "deep_woods",
       "Name": "Deep Whispering Woods",
-      "Description": "The shadows deepen. You hear rustling in the brush.",
+      "Description": "The shadows deepen. You hear rustling in the brush. A dark cave mouth yawns to the north.",
       "Exits": {
-        "West": "forest_entrance"
+        "West": "forest_entrance",
+        "North": "cave_entrance"
       },
       "Spawns": {
         "Items": [],
@@ -182,6 +212,34 @@
         ]
       },
       "IsOutside": true
+    },
+    {
+      "VirtualId": "cave_entrance",
+      "Name": "Cave Entrance",
+      "Description": "The mouth of a shallow cave carved into the hillside. Without a light source or darkvision, you cannot see your hand in front of your face.",
+      "IsDark": true,
+      "IsOutside": false,
+      "Exits": {
+        "South": "deep_woods"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "torch",
+            "Count": 1
+          },
+          {
+            "TemplateId": "goggles_of_night",
+            "Count": 1
+          }
+        ],
+        "Npcs": [
+          {
+            "TemplateId": "cave_bat",
+            "Count": 1
+          }
+        ]
+      }
     }
   ]
 }
