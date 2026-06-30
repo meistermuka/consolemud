@@ -1,4 +1,3 @@
-using System.Xml;
 using ConsoleMud.Entities;
 
 namespace ConsoleMud.Core;
@@ -87,7 +86,6 @@ public class TimeEngine
                         player.CombatTarget = npc;
                     
                     Helpers.ColorConsole.WriteLine($"\nThe {npc.Name} attacks {player.Name}!", ConsoleColor.Red);
-                    Console.Write("> ");
                 }
             }
         }
@@ -118,7 +116,6 @@ public class TimeEngine
             if (room.Characters.OfType<Player>().Any())
             {
                 Helpers.ColorConsole.WriteLine($"\n{line}", ConsoleColor.Blue);
-                Console.Write("> ");
                 break;
             }
     }
@@ -143,7 +140,6 @@ public class TimeEngine
             {
                 player.IsHidden = true;
                 Helpers.ColorConsole.WriteLine("\nYou slip into the shadows, hidden from view.", ConsoleColor.DarkGray);
-                Console.Write("> ");
             }
             player.KnownSkills["hide"] = Skills.ProficiencyMath.Gain(proficiency);
         }

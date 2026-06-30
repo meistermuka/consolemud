@@ -15,5 +15,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Terminal.Gui" Version="2.4.16" />
+    </ItemGroup>
 
 </Project>

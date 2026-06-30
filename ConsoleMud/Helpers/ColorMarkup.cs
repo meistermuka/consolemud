@@ -51,6 +51,46 @@ public static class ColorMarkup
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Parses markup into a list of (text, color) segments for TUI rendering.
+    /// No Console calls are made; this is the data-producing equivalent of Render().
+    /// </summary>
+    public static IReadOnlyList<(string Text, ConsoleColor Color)> ParseSegments(
+        string text, ConsoleColor baseColor)
+    {
+        var result = new List<(string, ConsoleColor)>();
+        if (string.IsNullOrEmpty(text))
+            return result;
+
+        var current = baseColor;
+        var sb = new System.Text.StringBuilder(text.Length);
+
+        void Flush()
+        {
+            if (sb.Length > 0)
+            {
+                result.Add((sb.ToString(), current));
+                sb.Clear();
+            }
+        }
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+            if (c == Marker && i + 1 < text.Length)
+            {
+                char next = text[i + 1];
+                if (next == Marker) { sb.Append(Marker); i++; continue; }
+                if (next == ResetCode) { Flush(); current = baseColor; i++; continue; }
+                if (Codes.TryGetValue(next, out var color)) { Flush(); current = color; i++; continue; }
+            }
+            sb.Append(c);
+        }
+
+        Flush();
+        return result;
+    }
+
     /// <summary>Writes coloured text to the console, restoring colour afterward.</summary>
     public static void Render(string text, ConsoleColor baseColor)
     {
