@@ -57,6 +57,13 @@ class Program
         var app = Application.Create();
         app.Init();
 
+        // Force the 16-color palette. The default driver emits true-color (24-bit)
+        // SGR sequences, which many terminals render as monochrome; our output
+        // attributes target ColorName16, so the standard 16-color codes render
+        // reliably everywhere.
+        if (app.Driver != null)
+            app.Driver.Force16Colors = true;
+
         // Output pane: fills everything except the bottom two rows.
         var outputView = new GameOutputView
         {
