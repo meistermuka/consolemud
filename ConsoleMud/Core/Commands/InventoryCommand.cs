@@ -11,11 +11,11 @@ public class InventoryCommand : ICommand
 
     public void Execute(Player player, string[] args, WorldState world)
     {
-        Console.WriteLine("\nYou are carrying:");
+        ColorConsole.WriteLine("\nYou are carrying:");
 
         if (!player.Inventory.Any())
         {
-            Console.WriteLine("  Nothing. Your hands are empty.");
+            ColorConsole.WriteLine("  Nothing. Your hands are empty.");
             return;
         }
 
@@ -23,6 +23,6 @@ public class InventoryCommand : ICommand
         {
             ColorConsole.WriteLine($"  - {item.Name}: {item.Description}", ConsoleColor.Gray);
         }
-        Console.WriteLine();
+        ColorConsole.WriteLine();
     }
 }

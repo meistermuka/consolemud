@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -12,7 +13,7 @@ public class KickHandler : ISkillHandler
         var target = ctx.Caster.CombatTarget;
         if (target == null)
         {
-            Console.WriteLine("You have nothing to kick. Engage a target first.");
+            ColorConsole.WriteLine("You have nothing to kick. Engage a target first.");
             return;
         }
 

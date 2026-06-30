@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,11 +14,11 @@ public class StandCommand : ICommand
     {
         if (player.Position == Position.Standing)
         {
-            Console.WriteLine("You are already standing.");
+            ColorConsole.WriteLine("You are already standing.");
             return;
         }
 
         player.Position = Position.Standing;
-        Console.WriteLine("You get to your feet.");
+        ColorConsole.WriteLine("You get to your feet.");
     }
 }

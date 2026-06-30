@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,22 +14,20 @@ public class FleeCommand : ICommand
     {
         if (player.IsRooted)
         {
-            Console.WriteLine("You are rooted in place and cannot flee!");
+            ColorConsole.WriteLine("You are rooted in place and cannot flee!");
             return;
         }
 
         var room = world.Rooms[player.CurrentRoomId];
         if (room.Exits.Count == 0)
         {
-            Console.WriteLine("There is nowhere to flee!");
+            ColorConsole.WriteLine("There is nowhere to flee!");
             return;
         }
 
-        // Pick a random available exit.
         var exits = room.Exits.ToList();
         var chosen = exits[Random.Shared.Next(exits.Count)];
 
-        // Break combat both ways before bolting.
         player.CombatTarget = null;
         foreach (var c in world.Characters.Values.Where(c => c.CombatTarget == player))
             c.CombatTarget = null;
@@ -39,7 +38,7 @@ public class FleeCommand : ICommand
 
         world.MoveCharacter(player, chosen.Value);
         PetSystem.FollowOwner(player, world);
-        Console.WriteLine($"\nYou flee {chosen.Key.ToString().ToLower()}!");
+        ColorConsole.WriteLine($"\nYou flee {chosen.Key.ToString().ToLower()}!");
         new LookCommand().Execute(player, Array.Empty<string>(), world);
     }
 }

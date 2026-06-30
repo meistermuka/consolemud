@@ -1,6 +1,7 @@
 using ConsoleMud.Core;
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -13,7 +14,7 @@ public class DecapitateHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Decapitate what?");
+            ColorConsole.WriteLine("Decapitate what?");
             return;
         }
 

@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Cleric;
 
@@ -12,7 +13,7 @@ public class SmiteHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Smite what?");
+            ColorConsole.WriteLine("Smite what?");
             return;
         }
 

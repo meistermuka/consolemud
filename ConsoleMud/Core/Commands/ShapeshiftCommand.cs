@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -18,25 +19,24 @@ public class ShapeshiftCommand : ICommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine($"You are currently in {player.Form} form. Usage: {Usage}");
+            ColorConsole.WriteLine($"You are currently in {player.Form} form. Usage: {Usage}");
             return;
         }
 
         string what = args[0].ToLower();
         if (what is "human" or "normal")
         {
-            ShapeshiftService.Revert(player); // reverting is always free
+            ShapeshiftService.Revert(player);
             return;
         }
 
         if (!Enum.TryParse<Form>(what, true, out var form) || form == Form.Human)
         {
-            Console.WriteLine("Shapeshift into what? (bear, wolf, owl, dragon, human)");
+            ColorConsole.WriteLine("Shapeshift into what? (bear, wolf, owl, dragon, human)");
             return;
         }
 
-        // Routes through the skill so knowledge/mana/cooldown/proficiency apply.
         if (!_executor.TryUse(player, "shapeshift_" + what, Array.Empty<string>(), world))
-            Console.WriteLine($"You don't know how to take {what} form.");
+            ColorConsole.WriteLine($"You don't know how to take {what} form.");
     }
 }

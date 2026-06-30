@@ -2,6 +2,7 @@ using ConsoleMud.Core;
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Ranger;
 
@@ -13,18 +14,18 @@ public class AlphaStrikeHandler : ISkillHandler
     {
         if (ctx.Caster is not Player ranger || ranger.Pet is not { Health: > 0 } pet)
         {
-            Console.WriteLine("You need a living companion to pin the target.");
+            ColorConsole.WriteLine("You need a living companion to pin the target.");
             return;
         }
         var bow = ctx.Caster.MainHandWeapon;
         if (bow == null || bow.WeaponType != WeaponType.Bow)
         {
-            Console.WriteLine("You need a bow for the alpha strike.");
+            ColorConsole.WriteLine("You need a bow for the alpha strike.");
             return;
         }
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Alpha strike on what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Alpha strike on what?"); return; }
 
         ctx.Engage(target);
 

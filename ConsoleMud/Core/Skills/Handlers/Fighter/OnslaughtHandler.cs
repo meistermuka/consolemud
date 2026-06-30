@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -12,7 +13,7 @@ public class OnslaughtHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Unleash your onslaught on what?");
+            ColorConsole.WriteLine("Unleash your onslaught on what?");
             return;
         }
 

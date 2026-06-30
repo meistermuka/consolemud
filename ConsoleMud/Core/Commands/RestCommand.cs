@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,17 +14,17 @@ public class RestCommand : ICommand
     {
         if (player.CombatTarget != null)
         {
-            Console.WriteLine("You can't rest while fighting!");
+            ColorConsole.WriteLine("You can't rest while fighting!");
             return;
         }
 
         if (player.Position == Position.Resting)
         {
-            Console.WriteLine("You are already resting.");
+            ColorConsole.WriteLine("You are already resting.");
             return;
         }
 
         player.Position = Position.Resting;
-        Console.WriteLine("You lie back and rest.");
+        ColorConsole.WriteLine("You lie back and rest.");
     }
 }

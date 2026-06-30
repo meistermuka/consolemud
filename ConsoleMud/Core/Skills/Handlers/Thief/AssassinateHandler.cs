@@ -1,6 +1,7 @@
 using ConsoleMud.Core;
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 
@@ -12,12 +13,12 @@ public class AssassinateHandler : ISkillHandler
     {
         if (!ctx.Caster.IsHidden)
         {
-            Console.WriteLine("You must be hidden and unseen to assassinate.");
+            ColorConsole.WriteLine("You must be hidden and unseen to assassinate.");
             return;
         }
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Assassinate whom?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Assassinate whom?"); return; }
 
         ctx.Caster.BreakHidden();
 

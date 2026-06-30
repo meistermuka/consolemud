@@ -13,7 +13,7 @@ public class TrackHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget() ?? FindAdjacent(ctx);
         if (target == null)
         {
-            Console.WriteLine($"You find no trail for '{ctx.TargetName}'.");
+            ColorConsole.WriteLine($"You find no trail for '{ctx.TargetName}'.");
             return;
         }
 

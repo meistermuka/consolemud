@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Commands;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Mage;
 
@@ -12,7 +13,7 @@ public class BlinkHandler : ISkillHandler
     {
         if (!ctx.World.Rooms.TryGetValue(ctx.Caster.CurrentRoomId, out var room) || room.Exits.Count == 0)
         {
-            Console.WriteLine("There is nowhere to blink to.");
+            ColorConsole.WriteLine("There is nowhere to blink to.");
             return;
         }
 

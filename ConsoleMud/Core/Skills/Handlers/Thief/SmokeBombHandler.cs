@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Commands;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 

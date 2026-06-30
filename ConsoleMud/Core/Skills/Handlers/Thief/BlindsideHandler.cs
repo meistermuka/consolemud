@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 
@@ -10,7 +11,7 @@ public class BlindsideHandler : ISkillHandler
     public void Execute(SkillContext ctx)
     {
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Blindside what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Blindside what?"); return; }
 
         ctx.Engage(target);
         target.StatusEffects.Add(new StatusEffect

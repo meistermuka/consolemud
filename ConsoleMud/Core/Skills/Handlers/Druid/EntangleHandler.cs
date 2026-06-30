@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Druid;
 
@@ -12,7 +13,7 @@ public class EntangleHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Entangle what?");
+            ColorConsole.WriteLine("Entangle what?");
             return;
         }
 

@@ -1,6 +1,7 @@
 using ConsoleMud.Core;
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Ranger;
 
@@ -13,12 +14,12 @@ public class ArrowOfSlayingHandler : ISkillHandler
         var bow = ctx.Caster.MainHandWeapon;
         if (bow == null || bow.WeaponType != WeaponType.Bow)
         {
-            Console.WriteLine("You need a bow to loose an arrow of slaying.");
+            ColorConsole.WriteLine("You need a bow to loose an arrow of slaying.");
             return;
         }
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Loose your arrow at what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Loose your arrow at what?"); return; }
 
         ctx.Engage(target);
 

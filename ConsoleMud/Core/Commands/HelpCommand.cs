@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -15,23 +16,21 @@ public class HelpCommand : ICommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Usage: help <command>   (try 'commands' to see them all)");
+            ColorConsole.WriteLine("Usage: help <command>   (try 'commands' to see them all)");
             return;
         }
 
         string verb = args[0];
         if (!_commands.TryGetValue(verb, out var command))
         {
-            Console.WriteLine($"There is no help for '{verb}'. Type 'commands' to see what's available.");
+            ColorConsole.WriteLine($"There is no help for '{verb}'. Type 'commands' to see what's available.");
             return;
         }
 
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"\n=== {verb} ===");
-        Console.ResetColor();
-        Console.WriteLine(command.Description);
-        if (!string.IsNullOrEmpty(command.Usage))   Console.WriteLine($"Usage:   {command.Usage}");
-        if (!string.IsNullOrEmpty(command.Example))  Console.WriteLine($"Example: {command.Example}");
-        Console.WriteLine();
+        ColorConsole.WriteLine($"\n=== {verb} ===", ConsoleColor.Cyan);
+        ColorConsole.WriteLine(command.Description);
+        if (!string.IsNullOrEmpty(command.Usage))   ColorConsole.WriteLine($"Usage:   {command.Usage}");
+        if (!string.IsNullOrEmpty(command.Example))  ColorConsole.WriteLine($"Example: {command.Example}");
+        ColorConsole.WriteLine();
     }
 }

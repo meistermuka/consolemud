@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Services;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -14,14 +15,14 @@ public class SpecializeCommand : ICommand
     {
         if (player.Class != CharacterClass.Mage)
         {
-            Console.WriteLine("Only mages can specialize in an element.");
+            ColorConsole.WriteLine("Only mages can specialize in an element.");
             return;
         }
 
         if (args.Length == 0)
         {
             string current = player.Specialization?.ToString() ?? "none";
-            Console.WriteLine($"Specialize in what? (fire / cold / lightning). Current: {current}");
+            ColorConsole.WriteLine($"Specialize in what? (fire / cold / lightning). Current: {current}");
             return;
         }
 
@@ -35,12 +36,12 @@ public class SpecializeCommand : ICommand
 
         if (chosen == DamageType.Physical)
         {
-            Console.WriteLine("Choose one of: fire, cold, lightning.");
+            ColorConsole.WriteLine("Choose one of: fire, cold, lightning.");
             return;
         }
 
         player.Specialization = chosen;
-        Skills.PassiveService.Refresh(player); // (re)applies elemental_mastery immunity if known
-        Console.WriteLine($"You attune yourself to {chosen}.");
+        Skills.PassiveService.Refresh(player);
+        ColorConsole.WriteLine($"You attune yourself to {chosen}.");
     }
 }

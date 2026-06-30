@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Ranger;
 
@@ -15,12 +16,12 @@ public class TameHandler : ISkillHandler
         var beast = ctx.ResolveNpcTarget();
         if (beast == null)
         {
-            Console.WriteLine("Tame what?");
+            ColorConsole.WriteLine("Tame what?");
             return;
         }
         if (beast.IsPet)
         {
-            Console.WriteLine($"{beast.Name} is already a companion.");
+            ColorConsole.WriteLine($"{beast.Name} is already a companion.");
             return;
         }
         if (!beast.Archetypes.Contains(Archetype.Animal) && !beast.Archetypes.Contains(Archetype.Beast))

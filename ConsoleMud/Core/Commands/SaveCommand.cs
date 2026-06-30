@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Services;
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -12,6 +13,6 @@ public class SaveCommand : ICommand
     public void Execute(Player player, string[] args, WorldState world)
     {
         SaveService.Save(player, world);
-        Console.WriteLine("Your progress has been saved.");
+        ColorConsole.WriteLine("Your progress has been saved.");
     }
 }

@@ -1,6 +1,7 @@
 using ConsoleMud.Core;
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 
@@ -12,15 +13,15 @@ public class BackstabHandler : ISkillHandler
     {
         if (!ctx.Caster.IsHidden)
         {
-            Console.WriteLine("You must be hidden to backstab.");
+            ColorConsole.WriteLine("You must be hidden to backstab.");
             return;
         }
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Backstab what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Backstab what?"); return; }
 
         var weapon = ctx.Caster.MainHandWeapon;
-        if (weapon == null) { Console.WriteLine("You need a weapon to backstab."); return; }
+        if (weapon == null) { ColorConsole.WriteLine("You need a weapon to backstab."); return; }
 
         double mult = ctx.Caster.KnownSkills.ContainsKey("anatomic_precision") ? 5.0 : ctx.Param("multiplier", 3);
 

@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,29 +14,22 @@ public class CommandsCommand : ICommand
 
     public void Execute(Player player, string[] args, WorldState world)
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("\n=== Available Commands ===");
-        Console.ResetColor();
+        ColorConsole.WriteLine("\n=== Available Commands ===", ConsoleColor.Cyan);
 
-        // Hide short forms: a key shorter than its command's canonical name
-        // (the first token of Usage) is treated as an abbreviation and skipped.
-        // Full-word synonyms like "attack" or "take" are >= canonical length, so
-        // they stay visible.
         var verbs = _commands
             .Where(kvp => kvp.Key.Length >= CanonicalName(kvp.Value).Length)
             .Select(kvp => kvp.Key)
             .OrderBy(k => k)
             .ToList();
 
-        // Print in tidy columns, 6 per row
         const int perRow = 6;
         for (int i = 0; i < verbs.Count; i += perRow)
         {
             var row = verbs.Skip(i).Take(perRow).Select(v => v.PadRight(12));
-            Console.WriteLine("  " + string.Join("", row));
+            ColorConsole.WriteLine("  " + string.Join("", row));
         }
 
-        Console.WriteLine("\nType 'help <command>' for details on any one.\n");
+        ColorConsole.WriteLine("\nType 'help <command>' for details on any one.\n");
     }
 
     private static string CanonicalName(ICommand command) =>

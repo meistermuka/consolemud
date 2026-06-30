@@ -15,21 +15,20 @@ public class KillCommand : ICommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Kill what?");
+            ColorConsole.WriteLine("Kill what?");
             return;
         }
-        
+
         string rawInput = string.Join(" ", args);
         var (targetIndex, cleanKeyword) = KeywordParser.ExtractIndex(rawInput);
         var room = world.Rooms[player.CurrentRoomId];
 
         if (!player.CanSee(room))
         {
-            Console.WriteLine("It's too dark to make out anything to attack.");
+            ColorConsole.WriteLine("It's too dark to make out anything to attack.");
             return;
         }
 
-        // Locate the target NPC
         NonPlayerCharacter targetNpc = null;
         int matchCount = 0;
         foreach (var npc in room.Characters.OfType<NonPlayerCharacter>())
@@ -47,27 +46,24 @@ public class KillCommand : ICommand
 
         if (targetNpc == null)
         {
-            Console.WriteLine($"There is no '{rawInput}' here to attack.");
+            ColorConsole.WriteLine($"There is no '{rawInput}' here to attack.");
             return;
         }
 
         if (player.CombatTarget == targetNpc)
         {
-            Console.WriteLine($"You are already engaged in combat with {targetNpc.Name}.");
+            ColorConsole.WriteLine($"You are already engaged in combat with {targetNpc.Name}.");
             return;
         }
-         
-        // Attacking breaks stealth.
+
         player.BreakHidden();
 
-        // Establish mutual engagement
         player.CombatTarget = targetNpc;
-        // If the NPC isn't fighting anyone yet, have them retaliate against the player
         if (targetNpc.CombatTarget == null)
         {
             targetNpc.CombatTarget = player;
         }
 
-        Helpers.ColorConsole.WriteLine($"\nCOMBAT ENGAGED: {player.Name} vs {targetNpc.Name}", ConsoleColor.Red);
+        ColorConsole.WriteLine($"\nCOMBAT ENGAGED: {player.Name} vs {targetNpc.Name}", ConsoleColor.Red);
     }
 }

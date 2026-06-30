@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 
@@ -11,7 +12,7 @@ public class PoisonHandler : ISkillHandler
     {
         if (ctx.Caster.CombatTarget != null)
         {
-            Console.WriteLine("You can't carefully coat your blade mid-fight.");
+            ColorConsole.WriteLine("You can't carefully coat your blade mid-fight.");
             return;
         }
 

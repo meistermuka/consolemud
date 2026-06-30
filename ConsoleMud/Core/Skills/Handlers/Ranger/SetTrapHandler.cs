@@ -1,4 +1,5 @@
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Ranger;
 
@@ -10,7 +11,7 @@ public class SetTrapHandler : ISkillHandler
     {
         if (ctx.Caster.CombatTarget != null)
         {
-            Console.WriteLine("You can't set a trap in the middle of a fight.");
+            ColorConsole.WriteLine("You can't set a trap in the middle of a fight.");
             return;
         }
 

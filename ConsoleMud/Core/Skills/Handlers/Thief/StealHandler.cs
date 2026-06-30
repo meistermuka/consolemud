@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Thief;
 
@@ -11,7 +12,7 @@ public class StealHandler : ISkillHandler
         if (ctx.Caster is not Player thief) return;
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Steal from whom?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Steal from whom?"); return; }
 
         var loot = target.Inventory.FirstOrDefault(i => i.IsGetable)
                    ?? target.Equipment.Values.FirstOrDefault(i => i.IsGetable);

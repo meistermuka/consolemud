@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -13,7 +14,7 @@ public class CleaveHandler : ISkillHandler
         var primary = ctx.ResolveNpcTarget();
         if (primary == null)
         {
-            Console.WriteLine("Cleave what?");
+            ColorConsole.WriteLine("Cleave what?");
             return;
         }
 

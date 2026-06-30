@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Mage;
 
@@ -10,7 +11,7 @@ public class DisintegrateHandler : ISkillHandler
     public void Execute(SkillContext ctx)
     {
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Disintegrate what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Disintegrate what?"); return; }
 
         ctx.Engage(target);
         var outcome = AttackResolver.Resolve(ctx.Caster, target, ctx.Definition.DiceNotation ?? "8d8",

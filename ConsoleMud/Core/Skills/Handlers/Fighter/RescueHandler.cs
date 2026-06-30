@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -17,7 +18,7 @@ public class RescueHandler : ISkillHandler
 
         if (attacker == null)
         {
-            Console.WriteLine("There is no one here who needs rescuing.");
+            ColorConsole.WriteLine("There is no one here who needs rescuing.");
             return;
         }
 

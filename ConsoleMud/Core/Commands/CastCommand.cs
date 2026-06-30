@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -17,7 +18,7 @@ public class CastCommand : ICommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Cast what?");
+            ColorConsole.WriteLine("Cast what?");
             return;
         }
 
@@ -25,6 +26,6 @@ public class CastCommand : ICommand
         var targetArgs = args.Skip(1).ToArray();
 
         if (!_executor.TryUse(player, skillId, targetArgs, world))
-            Console.WriteLine($"You don't know a spell called '{skillId}'.");
+            ColorConsole.WriteLine($"You don't know a spell called '{skillId}'.");
     }
 }

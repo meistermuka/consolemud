@@ -40,7 +40,7 @@ public static class PetSystem
     {
         if (owner.Pet == null || owner.Pet.Health <= 0)
         {
-            Console.WriteLine("You have no companion to call.");
+            ColorConsole.WriteLine("You have no companion to call.");
             return;
         }
         world.MoveCharacter(owner.Pet, owner.CurrentRoomId);

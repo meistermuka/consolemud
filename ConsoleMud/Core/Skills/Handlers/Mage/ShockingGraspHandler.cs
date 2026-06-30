@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Mage;
 
@@ -11,7 +12,7 @@ public class ShockingGraspHandler : ISkillHandler
     public void Execute(SkillContext ctx)
     {
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Shock what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Shock what?"); return; }
 
         ctx.Engage(target);
         var outcome = AttackResolver.Resolve(ctx.Caster, target, ctx.Definition.DiceNotation ?? "2d6", DamageType.Lightning);

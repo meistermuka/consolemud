@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core;
 
@@ -61,7 +62,7 @@ public class StatusAndRegenSystem
                 {
                     int dealt = DamageResolver.Apply(character, effect.DamageType, (int)effect.Magnitude);
                     character.Health -= dealt;
-                    Console.WriteLine($"\n[STATUS] {character.Name} takes {dealt} {effect.DamageType} damage from {effect.Name}!");
+                    ColorConsole.WriteLine($"\n[STATUS] {character.Name} takes {dealt} {effect.DamageType} damage from {effect.Name}!");
                     stateChanged = true;
                 }
                 else if (effect.Modifier == EffectModifier.HealOverTime)
@@ -70,7 +71,7 @@ public class StatusAndRegenSystem
                     if (healed > 0)
                     {
                         character.Health += healed;
-                        Console.WriteLine($"\n[STATUS] {character.Name} recovers {healed} health from {effect.Name}.");
+                        ColorConsole.WriteLine($"\n[STATUS] {character.Name} recovers {healed} health from {effect.Name}.");
                         stateChanged = true;
                     }
                 }
@@ -82,21 +83,13 @@ public class StatusAndRegenSystem
                 if (effect.IsExpired)
                 {
                     character.StatusEffects.RemoveAt(i);
-                    Console.WriteLine($"The effects of {effect.Name} fade from {character.Name}.");
+                    ColorConsole.WriteLine($"The effects of {effect.Name} fade from {character.Name}.");
                     stateChanged = true;
                 }
             }
         }
 
-        // If something displayed while the player is fighting, clean up the command prompt view
-        if (stateChanged && _world.Characters.Values.Any(c => c.CombatTarget != null))
-        {
-            var p = _world.Characters.Values.OfType<Player>().FirstOrDefault();
-            if (p != null)
-            {
-                Console.Write($"[HP: {p.Health}/{p.MaxHealth} | Mana: {p.Mana}/{p.MaxMana}]\n> ");
-            }
-        }
+        // The TUI status bar updates itself automatically; no prompt redraw needed here.
+        _ = stateChanged;
     }
-    
 }

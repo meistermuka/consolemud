@@ -1,6 +1,7 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Ranger;
 
@@ -13,12 +14,12 @@ public class SnareHandler : ISkillHandler
         var bow = ctx.Caster.MainHandWeapon;
         if (bow == null || bow.WeaponType != WeaponType.Bow)
         {
-            Console.WriteLine("You need a bow to fire a snaring shot.");
+            ColorConsole.WriteLine("You need a bow to fire a snaring shot.");
             return;
         }
 
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Snare what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Snare what?"); return; }
 
         ctx.Engage(target);
         var outcome = AttackResolver.Resolve(ctx.Caster, target, ctx.Definition.DiceNotation ?? "2d6", DamageType.Physical);

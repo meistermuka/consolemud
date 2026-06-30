@@ -13,7 +13,7 @@ public class GetCommand : ICommand
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Get what?");
+            ColorConsole.WriteLine("Get what?");
             return;
         }
 
@@ -23,7 +23,6 @@ public class GetCommand : ICommand
 
         var room = world.Rooms[player.CurrentRoomId];
 
-        // Bulk: "get all", "get all <keyword>", "get all [<keyword>] from <container>".
         if (whatTokens.Length > 0 && whatTokens[0].Equals("all", StringComparison.OrdinalIgnoreCase))
         {
             string keyword = string.Join(" ", whatTokens.Skip(1)).Trim();
@@ -53,8 +52,8 @@ public class GetCommand : ICommand
                 break;
             }
 
-        if (foundItem == null) { Console.WriteLine($"You don't see a '{itemName}' here."); return; }
-        if (!foundItem.IsGetable) { Console.WriteLine($"The {foundItem.Name} is too heavy."); return; }
+        if (foundItem == null) { ColorConsole.WriteLine($"You don't see a '{itemName}' here."); return; }
+        if (!foundItem.IsGetable) { ColorConsole.WriteLine($"The {foundItem.Name} is too heavy."); return; }
 
         room.Items.Remove(foundItem);
         player.Inventory.Add(foundItem);
@@ -64,12 +63,12 @@ public class GetCommand : ICommand
     private void HandleContainerGet(Player player, Room room, string itemName, string containerName)
     {
         var container = FindContainer(player, room, containerName);
-        if (container == null) { Console.WriteLine($"You don't see a '{containerName}' here."); return; }
-        if (!container.IsContainer) { Console.WriteLine($"The {container.Name} cannot hold items."); return; }
-        if (!container.IsOpen) { Console.WriteLine($"The {container.Name} is closed."); return; }
+        if (container == null) { ColorConsole.WriteLine($"You don't see a '{containerName}' here."); return; }
+        if (!container.IsContainer) { ColorConsole.WriteLine($"The {container.Name} cannot hold items."); return; }
+        if (!container.IsOpen) { ColorConsole.WriteLine($"The {container.Name} is closed."); return; }
 
         var item = container.Contents.FirstOrDefault(i => i.MatchesKeyword(itemName));
-        if (item == null) { Console.WriteLine($"There is no '{itemName}' inside the {container.Name}."); return; }
+        if (item == null) { ColorConsole.WriteLine($"There is no '{itemName}' inside the {container.Name}."); return; }
 
         container.Contents.Remove(item);
         player.Inventory.Add(item);
@@ -79,13 +78,12 @@ public class GetCommand : ICommand
     private void BulkGetFromContainer(Player player, Room room, string containerName, string keyword)
     {
         var container = FindContainer(player, room, containerName);
-        if (container == null) { Console.WriteLine($"You don't see a '{containerName}' here."); return; }
-        if (!container.IsContainer) { Console.WriteLine($"The {container.Name} cannot hold items."); return; }
-        if (!container.IsOpen) { Console.WriteLine($"The {container.Name} is closed."); return; }
+        if (container == null) { ColorConsole.WriteLine($"You don't see a '{containerName}' here."); return; }
+        if (!container.IsContainer) { ColorConsole.WriteLine($"The {container.Name} cannot hold items."); return; }
+        if (!container.IsOpen) { ColorConsole.WriteLine($"The {container.Name} is closed."); return; }
         BulkGet(player, container.Contents, keyword, container.Name, container.Name);
     }
 
-    /// <summary>Moves every getable, keyword-matching item from a source list into the player.</summary>
     private void BulkGet(Player player, List<Item> source, string keyword, string sourceLabel, string fromContainer)
     {
         var taken = source
@@ -95,7 +93,7 @@ public class GetCommand : ICommand
         if (taken.Count == 0)
         {
             string what = keyword.Length == 0 ? "nothing you can take" : $"no '{keyword}'";
-            Console.WriteLine($"There is {what} {(fromContainer == null ? "here" : $"in the {sourceLabel}")}.");
+            ColorConsole.WriteLine($"There is {what} {(fromContainer == null ? "here" : $"in the {sourceLabel}")}.");
             return;
         }
 
@@ -107,7 +105,7 @@ public class GetCommand : ICommand
             ColorConsole.WriteLine($"You {verb} the {item.Name}.", ConsoleColor.Gray);
         }
 
-        Console.WriteLine($"({taken.Count} item{(taken.Count == 1 ? "" : "s")} taken.)");
+        ColorConsole.WriteLine($"({taken.Count} item{(taken.Count == 1 ? "" : "s")} taken.)");
     }
 
     private static Item FindContainer(Player player, Room room, string name) =>

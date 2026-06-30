@@ -29,10 +29,10 @@ public static class ShapeshiftService
     public static void Enter(Character c, Form form, WorldState world)
     {
         if (form == Form.Human) { Revert(c); return; }
-        if (c.Form == form) { Console.WriteLine("You are already in that form."); return; }
+        if (c.Form == form) { ColorConsole.WriteLine("You are already in that form."); return; }
         if (_definitions == null || !_definitions.Forms.TryGetValue(form.ToString(), out var fd))
         {
-            Console.WriteLine("You don't know that form.");
+            ColorConsole.WriteLine("You don't know that form.");
             return;
         }
 

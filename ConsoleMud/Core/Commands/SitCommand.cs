@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -13,17 +14,17 @@ public class SitCommand : ICommand
     {
         if (player.CombatTarget != null)
         {
-            Console.WriteLine("You can't sit down while fighting!");
+            ColorConsole.WriteLine("You can't sit down while fighting!");
             return;
         }
 
         if (player.Position == Position.Sitting)
         {
-            Console.WriteLine("You are already sitting.");
+            ColorConsole.WriteLine("You are already sitting.");
             return;
         }
 
         player.Position = Position.Sitting;
-        Console.WriteLine("You sit down and catch your breath.");
+        ColorConsole.WriteLine("You sit down and catch your breath.");
     }
 }

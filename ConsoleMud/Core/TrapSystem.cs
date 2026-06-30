@@ -58,7 +58,6 @@ public static class TrapSystem
         });
 
         ColorConsole.WriteLine($"\n{npc.Name} springs a hidden trap! {dmg} damage and snared in place!", ConsoleColor.DarkYellow);
-        Console.Write("> ");
 
         if (npc.Health <= 0)
         {

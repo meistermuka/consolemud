@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Mage;
 
@@ -12,7 +13,7 @@ public class MagicMissileHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Fire your missile at what?");
+            ColorConsole.WriteLine("Fire your missile at what?");
             return;
         }
 

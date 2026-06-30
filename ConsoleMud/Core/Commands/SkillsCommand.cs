@@ -18,7 +18,7 @@ public class SkillsCommand : ICommand
     {
         if (!_definitions.Classes.TryGetValue(player.Class.ToString(), out var cls))
         {
-            Console.WriteLine("You have no class skills.");
+            ColorConsole.WriteLine("You have no class skills.");
             return;
         }
 
@@ -39,6 +39,6 @@ public class SkillsCommand : ICommand
             }
         }
 
-        Console.WriteLine();
+        ColorConsole.WriteLine();
     }
 }

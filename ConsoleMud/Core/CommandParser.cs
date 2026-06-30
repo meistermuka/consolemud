@@ -3,6 +3,7 @@ using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core;
 
@@ -92,6 +93,6 @@ public class CommandParser
         if (_skillExecutor.TryUse(player, verb, args, world))
             return;
 
-        Console.WriteLine($"Unknown command: {verb}");
+        ColorConsole.WriteLine($"Unknown command: {verb}");
     }
 }

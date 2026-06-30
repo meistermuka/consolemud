@@ -1,5 +1,6 @@
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Druid;
 
@@ -10,7 +11,7 @@ public class InsectSwarmHandler : ISkillHandler
     public void Execute(SkillContext ctx)
     {
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Swarm what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Swarm what?"); return; }
 
         ctx.Engage(target);
         int duration = ctx.Definition.DurationTicks > 0 ? ctx.Definition.DurationTicks : 4;

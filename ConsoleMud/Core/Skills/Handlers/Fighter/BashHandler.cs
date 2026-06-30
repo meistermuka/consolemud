@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -12,7 +13,7 @@ public class BashHandler : ISkillHandler
         var target = ctx.Caster.CombatTarget;
         if (target == null)
         {
-            Console.WriteLine("You can only bash a foe you are fighting.");
+            ColorConsole.WriteLine("You can only bash a foe you are fighting.");
             return;
         }
 

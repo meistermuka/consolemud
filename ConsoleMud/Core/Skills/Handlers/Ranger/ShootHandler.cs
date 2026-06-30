@@ -14,12 +14,12 @@ public class ShootHandler : ISkillHandler
         var bow = ctx.Caster.MainHandWeapon;
         if (bow == null || bow.WeaponType != WeaponType.Bow)
         {
-            Console.WriteLine("You need a bow equipped to shoot.");
+            ColorConsole.WriteLine("You need a bow equipped to shoot.");
             return;
         }
         if (ctx.Args.Length == 0)
         {
-            Console.WriteLine("Shoot what?");
+            ColorConsole.WriteLine("Shoot what?");
             return;
         }
 
@@ -34,7 +34,7 @@ public class ShootHandler : ISkillHandler
 
         if (target == null)
         {
-            Console.WriteLine($"You don't see a '{ctx.TargetName}' to shoot.");
+            ColorConsole.WriteLine($"You don't see a '{ctx.TargetName}' to shoot.");
             return;
         }
 

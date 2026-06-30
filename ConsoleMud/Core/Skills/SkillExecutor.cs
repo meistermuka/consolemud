@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Services;
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills;
 
@@ -30,19 +31,19 @@ public class SkillExecutor
 
         if (!string.Equals(def.Kind, "Active", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"{def.Name} is a passive skill; it works on its own.");
+            ColorConsole.WriteLine($"{def.Name} is a passive skill; it works on its own.");
             return true;
         }
 
         if (!caster.KnownSkills.ContainsKey(skillId))
         {
-            Console.WriteLine($"You haven't learned {def.Name}.");
+            ColorConsole.WriteLine($"You haven't learned {def.Name}.");
             return true;
         }
 
         if (caster.IsStunned)
         {
-            Console.WriteLine("You are stunned and cannot act.");
+            ColorConsole.WriteLine("You are stunned and cannot act.");
             return true;
         }
 
@@ -51,37 +52,37 @@ public class SkillExecutor
         {
             if (def.IsSpell && form.LocksCasting)
             {
-                Console.WriteLine($"You can't shape arcane spells as a {form.Name}. (shapeshift human first)");
+                ColorConsole.WriteLine($"You can't shape arcane spells as a {form.Name}. (shapeshift human first)");
                 return true;
             }
             if (!def.IsSpell && form.LocksPhysical)
             {
-                Console.WriteLine($"You can't use physical skills as a {form.Name}.");
+                ColorConsole.WriteLine($"You can't use physical skills as a {form.Name}.");
                 return true;
             }
         }
 
         if (def.IsSpell && caster.IsBlinded)
         {
-            Console.WriteLine("You are blinded and cannot focus a spell.");
+            ColorConsole.WriteLine("You are blinded and cannot focus a spell.");
             return true;
         }
 
         if (IsOnCooldown(caster, skillId, out double secondsLeft))
         {
-            Console.WriteLine($"{def.Name} is on cooldown. Wait {secondsLeft:F1}s.");
+            ColorConsole.WriteLine($"{def.Name} is on cooldown. Wait {secondsLeft:F1}s.");
             return true;
         }
 
         if (def.IsSpell && caster.Mana < def.ManaCost)
         {
-            Console.WriteLine($"You don't have enough mana for {def.Name} ({def.ManaCost} needed, {caster.Mana} available).");
+            ColorConsole.WriteLine($"You don't have enough mana for {def.Name} ({def.ManaCost} needed, {caster.Mana} available).");
             return true;
         }
 
         if (!_handlers.TryGet(skillId, out var handler))
         {
-            Console.WriteLine($"You know of {def.Name}, but haven't learned to wield its full effect yet.");
+            ColorConsole.WriteLine($"You know of {def.Name}, but haven't learned to wield its full effect yet.");
             return true;
         }
 
@@ -101,7 +102,7 @@ public class SkillExecutor
 
         if (!success)
         {
-            Console.WriteLine($"You fail to execute {def.Name}.");
+            ColorConsole.WriteLine($"You fail to execute {def.Name}.");
             return true;
         }
 

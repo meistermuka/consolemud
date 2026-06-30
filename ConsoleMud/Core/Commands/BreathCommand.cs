@@ -2,6 +2,7 @@ using ConsoleMud.Core.Combat;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -17,7 +18,7 @@ public class BreathCommand : ICommand
         var form = ShapeshiftService.GetForm(player);
         if (form == null || string.IsNullOrWhiteSpace(form.BreathDice))
         {
-            Console.WriteLine("You have no breath weapon in this form.");
+            ColorConsole.WriteLine("You have no breath weapon in this form.");
             return;
         }
 
@@ -27,16 +28,16 @@ public class BreathCommand : ICommand
         var foes = room.Characters.OfType<NonPlayerCharacter>().Where(n => n.Health > 0).ToList();
         if (foes.Count == 0)
         {
-            Console.WriteLine("You breathe, but there is nothing here to scorch.");
+            ColorConsole.WriteLine("You breathe, but there is nothing here to scorch.");
             return;
         }
 
-        Helpers.ColorConsole.WriteLine("You unleash a searing torrent of elemental breath!", ConsoleColor.Red);
+        ColorConsole.WriteLine("You unleash a searing torrent of elemental breath!", ConsoleColor.Red);
         foreach (var foe in foes)
         {
             int dmg = DamageResolver.Apply(foe, DamageType.Fire, DiceRoller.Roll(form.BreathDice));
             foe.Health -= dmg;
-            Helpers.ColorConsole.WriteLine($"  {foe.Name} is engulfed for {dmg}! -> [HP: {Math.Max(0, foe.Health)}]", ConsoleColor.Gray);
+            ColorConsole.WriteLine($"  {foe.Name} is engulfed for {dmg}! -> [HP: {Math.Max(0, foe.Health)}]", ConsoleColor.Gray);
             if (foe.Health <= 0)
                 DeathService.HandleDeath(foe, world, player);
         }

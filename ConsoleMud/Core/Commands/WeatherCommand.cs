@@ -1,4 +1,5 @@
 using ConsoleMud.Entities;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Commands;
 
@@ -12,7 +13,7 @@ public class WeatherCommand : ICommand
     {
         if (!world.Rooms.TryGetValue(player.CurrentRoomId, out var room) || !room.IsOutside)
         {
-            Console.WriteLine("You can't see the sky from in here.");
+            ColorConsole.WriteLine("You can't see the sky from in here.");
             return;
         }
 
@@ -25,6 +26,6 @@ public class WeatherCommand : ICommand
             Enums.Weather.Snowing => "Snow is falling.",
             _ => $"The weather is {world.CurrentWeather}."
         };
-        Helpers.ColorConsole.WriteLine(line, ConsoleColor.Blue);
+        ColorConsole.WriteLine(line, ConsoleColor.Blue);
     }
 }

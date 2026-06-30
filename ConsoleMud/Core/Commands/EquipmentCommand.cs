@@ -12,52 +12,37 @@ public class EquipmentCommand : ICommand
 
     public void Execute(Player player, string[] args, WorldState world)
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("\n================== YOUR EQUIPPED GEAR ==================");
-        Console.ResetColor();
+        ColorConsole.WriteLine("\n================== YOUR EQUIPPED GEAR ==================", ConsoleColor.Cyan);
 
-        // Loop through every possible slot defined in the enum
         foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)))
         {
-            // Format the enum name slightly for prettier printing (e.g., "LeftForearm" -> "Left Forearm")
             string slotLabel = FormatSlotLabel(slot.ToString());
 
-            // Check if the character actually has something equipped in this slot
             if (player.Equipment.TryGetValue(slot, out var item))
             {
-                // Determine item attributes for display
                 string statBonus = "";
-                if (item.IsWeapon) 
+                if (item.IsWeapon)
                     statBonus = $" ({item.DiceNotation})";
-                else if (item.ArmourRating > 0) 
+                else if (item.ArmourRating > 0)
                     statBonus = $" [DR: +{item.ArmourRating}]";
 
-                Console.Write($"  <{slotLabel,-15}> ");
+                ColorConsole.Write($"  <{slotLabel,-15}> ");
                 ColorConsole.WriteLine($"{item.Name}{statBonus}");
             }
             else
             {
-                // Print a clean, empty placeholder
-                Console.Write($"  <{slotLabel,-15}> ");
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("empty");
-                Console.ResetColor();
+                ColorConsole.Write($"  <{slotLabel,-15}> ");
+                ColorConsole.WriteLine("empty", ConsoleColor.DarkGray);
             }
         }
 
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("--------------------------------------------------------");
-        Console.ResetColor();
-        Console.WriteLine($"  Total Armor Mitigation: {player.TotalArmourRating}");
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("========================================================\n");
-        Console.ResetColor();
+        ColorConsole.WriteLine("--------------------------------------------------------", ConsoleColor.Cyan);
+        ColorConsole.WriteLine($"  Total Armor Mitigation: {player.TotalArmourRating}");
+        ColorConsole.WriteLine("========================================================\n", ConsoleColor.Cyan);
     }
 
-    // Helper to add clean spacing into camelCase enum strings for display
     private string FormatSlotLabel(string slotName)
     {
-        // Simple replacements for readable spacing
         return slotName
             .Replace("Earring1", "Earring (L)")
             .Replace("Earring2", "Earring (R)")

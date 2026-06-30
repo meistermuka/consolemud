@@ -1,4 +1,5 @@
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Fighter;
 
@@ -11,7 +12,7 @@ public class DisarmHandler : ISkillHandler
         var target = ctx.ResolveNpcTarget();
         if (target == null)
         {
-            Console.WriteLine("Disarm what?");
+            ColorConsole.WriteLine("Disarm what?");
             return;
         }
 

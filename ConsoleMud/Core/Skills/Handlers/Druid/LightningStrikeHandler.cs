@@ -1,5 +1,6 @@
 using ConsoleMud.Core.Combat;
 using ConsoleMud.Enums;
+using ConsoleMud.Helpers;
 
 namespace ConsoleMud.Core.Skills.Handlers.Druid;
 
@@ -10,7 +11,7 @@ public class LightningStrikeHandler : ISkillHandler
     public void Execute(SkillContext ctx)
     {
         var target = ctx.ResolveNpcTarget();
-        if (target == null) { Console.WriteLine("Call lightning down on what?"); return; }
+        if (target == null) { ColorConsole.WriteLine("Call lightning down on what?"); return; }
 
         ctx.Engage(target);
         var outcome = AttackResolver.Resolve(ctx.Caster, target, ctx.Definition.DiceNotation ?? "3d6", DamageType.Nature);
