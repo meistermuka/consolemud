@@ -1,0 +1,3232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ConsoleMud - Definitions Editor</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel-2: #1f2430;
+    --border: #2a3140;
+    --text: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #4f9cff;
+    --accent-2: #3a7bd5;
+    --danger: #ff5d5d;
+    --ok: #4fd18b;
+    --warn: #ffcc66;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  header h1 .sub { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  .tabs { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
+  .tab {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .tab:hover { color: var(--text); background: var(--panel-2); }
+  .tab.active { color: #fff; background: var(--accent-2); border-color: var(--accent); }
+  .header-actions { display: flex; gap: 8px; }
+  button.btn {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  button.btn:hover { border-color: var(--accent); }
+  button.btn.primary { background: var(--accent-2); border-color: var(--accent); color: #fff; }
+  button.btn.danger { color: var(--danger); }
+  button.btn.danger:hover { border-color: var(--danger); }
+  button.btn.small { padding: 3px 8px; font-size: 12px; }
+
+  #warnings {
+    background: #2a2410;
+    border-bottom: 1px solid #4a3f18;
+    color: var(--warn);
+    padding: 8px 16px;
+    font-size: 12.5px;
+    display: none;
+  }
+  #warnings.show { display: block; }
+  #warnings ul { margin: 6px 0 0; padding-left: 20px; }
+  #warnings .ok { color: var(--ok); }
+
+  main { flex: 1; overflow: hidden; display: flex; }
+  .layout { display: flex; width: 100%; height: 100%; }
+
+  .list-panel {
+    width: 280px;
+    min-width: 220px;
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+  }
+  .list-panel .list-head {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .list-panel .list-head .count { color: var(--muted); font-size: 12px; }
+  .entry-list { overflow-y: auto; flex: 1; padding: 6px; }
+  .entry {
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid transparent;
+  }
+  .entry:hover { background: var(--panel-2); }
+  .entry.active { background: var(--panel-2); border-color: var(--accent); }
+  .entry .e-name { font-weight: 600; }
+  .entry .e-id { color: var(--muted); font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .form-panel { flex: 1; overflow-y: auto; padding: 18px 22px; }
+  .form-panel .form-actions { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .empty-hint { color: var(--muted); padding: 40px; text-align: center; }
+
+  .field { margin-bottom: 14px; max-width: 720px; }
+  .field > label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+  .field input[type="text"],
+  .field input[type="number"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+  }
+  .field textarea { min-height: 64px; resize: vertical; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); }
+  .field.inline { display: flex; align-items: center; gap: 10px; }
+  .field.inline > label { margin: 0; }
+  .field.checkbox { display: flex; align-items: center; gap: 8px; }
+  .field.checkbox input { width: 16px; height: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; max-width: 720px; }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 0 16px;
+    max-width: 720px;
+  }
+  fieldset legend { padding: 0 6px; color: var(--accent); font-size: 12px; font-weight: 600; }
+
+  .row-list { display: flex; flex-direction: column; gap: 8px; }
+  .kv-row, .obj-row, .tag-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .kv-row input, .kv-row select, .obj-row input, .obj-row select { flex: 1; }
+  .kv-row .v, .obj-row .lvl { max-width: 130px; }
+  .tag-row input { flex: 1; }
+  .add-row { margin-top: 8px; }
+  .ref-bad { border-color: var(--danger) !important; }
+  .section-title { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+
+  /* Tuning view */
+  .tuning-wrap { padding: 16px 22px; overflow-y: auto; width: 100%; }
+  table.tuning { width: 100%; border-collapse: collapse; max-width: 1100px; }
+  table.tuning th, table.tuning td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.tuning th { color: var(--muted); font-size: 12px; font-weight: 600; }
+  table.tuning input[type="text"], table.tuning input[type="number"] {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font: inherit;
+  }
+  table.tuning .k { width: 280px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  table.tuning .v { width: 110px; }
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel-2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px var(--shadow);
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  input[type="file"] { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Definitions Editor <span class="sub">ConsoleMud</span></h1>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="header-actions">
+      <button class="btn" id="btn-revalidate">Validate</button>
+      <button class="btn primary" id="btn-download-all">Download all</button>
+    </div>
+  </header>
+
+  <div id="warnings"></div>
+
+  <main id="main"></main>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Embedded snapshot of the current Definitions files (static; will not auto-update). -->
+  <script type="application/json" id="seed-classes">[
+  {
+    "Id": "fighter",
+    "Name": "Fighter",
+    "Description": "A martial specialist. High health, negligible mana.",
+    "HpBonus": 30,
+    "ManaBonus": 0,
+    "Skills": [
+      {
+        "SkillId": "kick",
+        "Level": 1
+      },
+      {
+        "SkillId": "rescue",
+        "Level": 3
+      },
+      {
+        "SkillId": "bash",
+        "Level": 5
+      },
+      {
+        "SkillId": "armor_optimization",
+        "Level": 8
+      },
+      {
+        "SkillId": "disarm",
+        "Level": 12
+      },
+      {
+        "SkillId": "second_wind",
+        "Level": 15
+      },
+      {
+        "SkillId": "dual_wield_specialization",
+        "Level": 20
+      },
+      {
+        "SkillId": "taunt",
+        "Level": 25
+      },
+      {
+        "SkillId": "cleave",
+        "Level": 32
+      },
+      {
+        "SkillId": "blind_fight",
+        "Level": 40
+      },
+      {
+        "SkillId": "parry",
+        "Level": 45
+      },
+      {
+        "SkillId": "lunge",
+        "Level": 55
+      },
+      {
+        "SkillId": "critical_mastery",
+        "Level": 65
+      },
+      {
+        "SkillId": "berserk",
+        "Level": 75
+      },
+      {
+        "SkillId": "counterstrike",
+        "Level": 85
+      },
+      {
+        "SkillId": "decapitate",
+        "Level": 95
+      },
+      {
+        "SkillId": "indomitable_will",
+        "Level": 100
+      },
+      {
+        "SkillId": "onslaught",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 12,
+    "ManaPerLevel": 1
+  },
+  {
+    "Id": "thief",
+    "Name": "Thief",
+    "Description": "A stealthy opportunist. Modest health and utility resources.",
+    "HpBonus": 5,
+    "ManaBonus": 10,
+    "Skills": [
+      {
+        "SkillId": "peek",
+        "Level": 1
+      },
+      {
+        "SkillId": "steal",
+        "Level": 3
+      },
+      {
+        "SkillId": "hide",
+        "Level": 5
+      },
+      {
+        "SkillId": "evasion",
+        "Level": 8
+      },
+      {
+        "SkillId": "backstab",
+        "Level": 12
+      },
+      {
+        "SkillId": "poison",
+        "Level": 15
+      },
+      {
+        "SkillId": "picklock",
+        "Level": 20
+      },
+      {
+        "SkillId": "trip",
+        "Level": 25
+      },
+      {
+        "SkillId": "reflexive_dodge",
+        "Level": 32
+      },
+      {
+        "SkillId": "shadowstep",
+        "Level": 40
+      },
+      {
+        "SkillId": "opportunist",
+        "Level": 45
+      },
+      {
+        "SkillId": "smoke_bomb",
+        "Level": 55
+      },
+      {
+        "SkillId": "anatomic_precision",
+        "Level": 65
+      },
+      {
+        "SkillId": "blindside",
+        "Level": 75
+      },
+      {
+        "SkillId": "slippery_mind",
+        "Level": 85
+      },
+      {
+        "SkillId": "assassinate",
+        "Level": 95
+      },
+      {
+        "SkillId": "untouchable",
+        "Level": 100
+      },
+      {
+        "SkillId": "death_dance",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 8,
+    "ManaPerLevel": 3
+  },
+  {
+    "Id": "ranger",
+    "Name": "Ranger",
+    "Description": "A wilderness hunter with a beast companion. Balanced vitals.",
+    "HpBonus": 15,
+    "ManaBonus": 10,
+    "Skills": [
+      {
+        "SkillId": "shoot",
+        "Level": 1
+      },
+      {
+        "SkillId": "track",
+        "Level": 3
+      },
+      {
+        "SkillId": "wilderness_lore",
+        "Level": 5
+      },
+      {
+        "SkillId": "tame",
+        "Level": 8
+      },
+      {
+        "SkillId": "call_companion",
+        "Level": 12
+      },
+      {
+        "SkillId": "point_blank_shot",
+        "Level": 15
+      },
+      {
+        "SkillId": "forest_camouflage",
+        "Level": 20
+      },
+      {
+        "SkillId": "set_trap",
+        "Level": 25
+      },
+      {
+        "SkillId": "scout",
+        "Level": 32
+      },
+      {
+        "SkillId": "arrow_volley",
+        "Level": 40
+      },
+      {
+        "SkillId": "companion_link",
+        "Level": 45
+      },
+      {
+        "SkillId": "snare",
+        "Level": 55
+      },
+      {
+        "SkillId": "mark_of_the_hunter",
+        "Level": 65
+      },
+      {
+        "SkillId": "spirit_of_the_pack",
+        "Level": 75
+      },
+      {
+        "SkillId": "weather_hardened",
+        "Level": 85
+      },
+      {
+        "SkillId": "arrow_of_slaying",
+        "Level": 95
+      },
+      {
+        "SkillId": "natural_attunement",
+        "Level": 100
+      },
+      {
+        "SkillId": "alpha_strike",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 10,
+    "ManaPerLevel": 3
+  },
+  {
+    "Id": "cleric",
+    "Name": "Cleric",
+    "Description": "A divine healer and support caster. Solid mana pool.",
+    "HpBonus": 10,
+    "ManaBonus": 20,
+    "Skills": [
+      {
+        "SkillId": "minor_heal",
+        "Level": 1
+      },
+      {
+        "SkillId": "bless",
+        "Level": 3
+      },
+      {
+        "SkillId": "turn_undead",
+        "Level": 5
+      },
+      {
+        "SkillId": "divine_grace",
+        "Level": 8
+      },
+      {
+        "SkillId": "cure_poison",
+        "Level": 12
+      },
+      {
+        "SkillId": "smite",
+        "Level": 15
+      },
+      {
+        "SkillId": "retribution_aura",
+        "Level": 20
+      },
+      {
+        "SkillId": "darkvision",
+        "Level": 22
+      },
+      {
+        "SkillId": "sanctuary",
+        "Level": 25
+      },
+      {
+        "SkillId": "major_heal",
+        "Level": 32
+      },
+      {
+        "SkillId": "divine_armor",
+        "Level": 40
+      },
+      {
+        "SkillId": "prayer",
+        "Level": 45
+      },
+      {
+        "SkillId": "dispel_magic",
+        "Level": 55
+      },
+      {
+        "SkillId": "holy_fervor",
+        "Level": 65
+      },
+      {
+        "SkillId": "divine_intervention",
+        "Level": 75
+      },
+      {
+        "SkillId": "soul_ward",
+        "Level": 85
+      },
+      {
+        "SkillId": "resurrection",
+        "Level": 95
+      },
+      {
+        "SkillId": "undying_faith",
+        "Level": 100
+      },
+      {
+        "SkillId": "judgment",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 7,
+    "ManaPerLevel": 6
+  },
+  {
+    "Id": "mage",
+    "Name": "Mage",
+    "Description": "A fragile arcane artillery class. Largest mana pool, lowest health.",
+    "HpBonus": -10,
+    "ManaBonus": 40,
+    "Skills": [
+      {
+        "SkillId": "magic_missile",
+        "Level": 1
+      },
+      {
+        "SkillId": "shield",
+        "Level": 3
+      },
+      {
+        "SkillId": "detect_magic",
+        "Level": 5
+      },
+      {
+        "SkillId": "sage_insight",
+        "Level": 8
+      },
+      {
+        "SkillId": "shocking_grasp",
+        "Level": 12
+      },
+      {
+        "SkillId": "arcane_meditation",
+        "Level": 15
+      },
+      {
+        "SkillId": "darkvision",
+        "Level": 18
+      },
+      {
+        "SkillId": "fireball",
+        "Level": 20
+      },
+      {
+        "SkillId": "blink",
+        "Level": 25
+      },
+      {
+        "SkillId": "haste",
+        "Level": 32
+      },
+      {
+        "SkillId": "spell_mirror",
+        "Level": 40
+      },
+      {
+        "SkillId": "ice_storm",
+        "Level": 45
+      },
+      {
+        "SkillId": "teleport",
+        "Level": 55
+      },
+      {
+        "SkillId": "channeling_flow",
+        "Level": 65
+      },
+      {
+        "SkillId": "disintegrate",
+        "Level": 75
+      },
+      {
+        "SkillId": "elemental_mastery",
+        "Level": 85
+      },
+      {
+        "SkillId": "time_stop",
+        "Level": 95
+      },
+      {
+        "SkillId": "arcane_singularity",
+        "Level": 100
+      },
+      {
+        "SkillId": "meteor_swarm",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 5,
+    "ManaPerLevel": 8
+  },
+  {
+    "Id": "druid",
+    "Name": "Druid",
+    "Description": "A shapeshifting nature caster. Healthy mana, flexible roles.",
+    "HpBonus": 5,
+    "ManaBonus": 25,
+    "Skills": [
+      {
+        "SkillId": "entangle",
+        "Level": 1
+      },
+      {
+        "SkillId": "rejuvenate",
+        "Level": 3
+      },
+      {
+        "SkillId": "natures_speech",
+        "Level": 5
+      },
+      {
+        "SkillId": "skin_of_oak",
+        "Level": 8
+      },
+      {
+        "SkillId": "shapeshift_bear",
+        "Level": 12
+      },
+      {
+        "SkillId": "natural_herbology",
+        "Level": 15
+      },
+      {
+        "SkillId": "shapeshift_wolf",
+        "Level": 20
+      },
+      {
+        "SkillId": "lightning_strike",
+        "Level": 25
+      },
+      {
+        "SkillId": "thorns",
+        "Level": 32
+      },
+      {
+        "SkillId": "eco_location",
+        "Level": 40
+      },
+      {
+        "SkillId": "shapeshift_owl",
+        "Level": 45
+      },
+      {
+        "SkillId": "insect_swarm",
+        "Level": 55
+      },
+      {
+        "SkillId": "adaptive_synergy",
+        "Level": 65
+      },
+      {
+        "SkillId": "call_lightning",
+        "Level": 75
+      },
+      {
+        "SkillId": "toxic_resilience",
+        "Level": 85
+      },
+      {
+        "SkillId": "shapeshift_dragon",
+        "Level": 95
+      },
+      {
+        "SkillId": "gaean_embrace",
+        "Level": 100
+      },
+      {
+        "SkillId": "wrath_of_nature",
+        "Level": 101
+      }
+    ],
+    "HpPerLevel": 7,
+    "ManaPerLevel": 6
+  }
+]</script>
+  <script type="application/json" id="seed-skills">[
+  {
+    "Id": "kick",
+    "Name": "kick",
+    "Description": "A swift low strike that lands while your weapon recovers.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 3,
+    "DamageType": "Physical",
+    "DiceNotation": "1d4",
+    "AttributeBonus": "Strength",
+    "Tags": [
+      "Active"
+    ]
+  },
+  {
+    "Id": "rescue",
+    "Name": "rescue",
+    "Description": "Intercept an enemy attacking a weaker ally, forcing it to target you.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 0,
+    "Tags": [
+      "Active",
+      "Tactical"
+    ]
+  },
+  {
+    "Id": "bash",
+    "Name": "bash",
+    "Description": "Slam a target, dealing minor damage and staggering its next pulse.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 6,
+    "DamageType": "Physical",
+    "DiceNotation": "1d6",
+    "Parameters": {
+      "staggerPulses": 1
+    },
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ]
+  },
+  {
+    "Id": "armor_optimization",
+    "Name": "armor optimization",
+    "Description": "Wear heavy armor more efficiently, adding to torso and head protection.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": {
+      "armorBonus": 2
+    },
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "disarm",
+    "Name": "disarm",
+    "Description": "A technical strike with a chance to knock the target's weapon to the floor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 15,
+    "Parameters": {
+      "dropChance": 0.4
+    },
+    "Tags": [
+      "Active",
+      "Utility"
+    ]
+  },
+  {
+    "Id": "second_wind",
+    "Name": "second wind",
+    "Description": "Recover a burst of health once per fight when dropping below a threshold.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": {
+      "thresholdPct": 25,
+      "healAmount": 30
+    },
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "dual_wield_specialization",
+    "Name": "dual-wield specialization",
+    "Description": "Remove the penalty on off-hand strikes.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "taunt",
+    "Name": "taunt",
+    "Description": "A battlecry that forces unengaged aggressive NPCs to target you.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Aggro"
+    ]
+  },
+  {
+    "Id": "cleave",
+    "Name": "cleave",
+    "Description": "A sweeping strike: full damage to the target, half to others in combat.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 15,
+    "DamageType": "Physical",
+    "Parameters": {
+      "splashFraction": 0.5
+    },
+    "Tags": [
+      "Active",
+      "AoE"
+    ]
+  },
+  {
+    "Id": "blind_fight",
+    "Name": "blind-fight",
+    "Description": "Maintain full accuracy and dodge in rooms with environmental blindness.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "parry",
+    "Name": "parry",
+    "Description": "A chance each round to fully negate an enemy's main-hand strike.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": {
+      "baseChance": 0.1
+    },
+    "Tags": [
+      "Passive",
+      "Defense"
+    ]
+  },
+  {
+    "Id": "lunge",
+    "Name": "lunge",
+    "Description": "Open combat with a high-accuracy strike dealing maximum weapon damage.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 20,
+    "DamageType": "Physical",
+    "Tags": [
+      "Active",
+      "Gap Closer"
+    ]
+  },
+  {
+    "Id": "critical_mastery",
+    "Name": "critical mastery",
+    "Description": "Maximum natural weapon rolls become critical strikes, doubling damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "berserk",
+    "Name": "berserk",
+    "Description": "Rage for a few ticks: more damage and Charm/Fear immunity, no armor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 30,
+    "DurationTicks": 3,
+    "Parameters": {
+      "damageBonusPct": 50
+    },
+    "Tags": [
+      "Active",
+      "Buff"
+    ]
+  },
+  {
+    "Id": "counterstrike",
+    "Name": "counterstrike",
+    "Description": "On a successful parry, execute a free out-of-turn main-hand attack.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ]
+  },
+  {
+    "Id": "decapitate",
+    "Name": "decapitate",
+    "Description": "Execute a low-health foe for colossal damage, destroying its gear.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 30,
+    "DamageType": "Physical",
+    "DiceNotation": "10d10",
+    "Parameters": {
+      "executeThresholdPct": 15
+    },
+    "Tags": [
+      "Active",
+      "Finisher"
+    ]
+  },
+  {
+    "Id": "indomitable_will",
+    "Name": "indomitable will",
+    "Description": "Permanent Fear immunity and a flat cut to Magic and Psychic damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Parameters": {
+      "magicPsychicReductionPct": 25
+    },
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ]
+  },
+  {
+    "Id": "onslaught",
+    "Name": "onslaught",
+    "Description": "Five consecutive main-hand attacks, each hitting harder than the last.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "CooldownSeconds": 120,
+    "DamageType": "Physical",
+    "Parameters": {
+      "hits": 5,
+      "rampPct": 10
+    },
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ]
+  },
+  {
+    "Id": "peek",
+    "Name": "peek",
+    "Description": "Automatically glimpse the inventories of NPCs when you look.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Utility"
+    ]
+  },
+  {
+    "Id": "magic_missile",
+    "Name": "magic missile",
+    "Description": "Bolts of pure arcane force that ignore armor and shields.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "DamageType": "Force",
+    "DiceNotation": "1d4",
+    "Parameters": {
+      "ignoresArmor": 1
+    },
+    "Tags": [
+      "Active",
+      "Spell"
+    ]
+  },
+  {
+    "Id": "minor_heal",
+    "Name": "minor heal",
+    "Description": "Restore a small amount of health to yourself or an ally.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "DiceNotation": "1d8",
+    "AttributeBonus": "Wisdom",
+    "Parameters": {
+      "isHeal": 1
+    },
+    "Tags": [
+      "Active",
+      "Spell"
+    ]
+  },
+  {
+    "Id": "entangle",
+    "Name": "entangle",
+    "Description": "Roots bind a target, preventing flee or movement for a couple of rounds.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 6,
+    "CooldownSeconds": 10,
+    "DurationTicks": 2,
+    "DamageType": "Nature",
+    "Parameters": {
+      "rootRounds": 2
+    },
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ]
+  },
+  {
+    "Id": "shoot",
+    "Name": "shoot",
+    "Description": "Fire a ranged weapon at a target, even from an adjacent room.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 3,
+    "DamageType": "Physical",
+    "Tags": [
+      "Active",
+      "Ranged"
+    ]
+  },
+  {
+    "Id": "bless",
+    "Name": "bless",
+    "Description": "Fill an ally with divine favor, boosting accuracy.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 8,
+    "CooldownSeconds": 30,
+    "DurationTicks": 15,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "accuracyBonus": 10
+    }
+  },
+  {
+    "Id": "turn_undead",
+    "Name": "turn undead",
+    "Description": "Radiate holy energy that routs undead.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 10,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "divine_grace",
+    "Name": "divine grace",
+    "Description": "Your healing scales with Wisdom.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "cure_poison",
+    "Name": "cure poison",
+    "Description": "Purge poison and damage-over-time from a target.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 6,
+    "CooldownSeconds": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "smite",
+    "Name": "smite",
+    "Description": "A bolt of divine fire; double vs undead and fiends.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 6,
+    "DamageType": "Holy",
+    "DiceNotation": "2d6",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "archetypeBonus": 2
+    }
+  },
+  {
+    "Id": "retribution_aura",
+    "Name": "retribution aura",
+    "Description": "Attackers suffer holy damage when they strike you.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "DamageType": "Holy",
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "thornsDamage": 2
+    }
+  },
+  {
+    "Id": "sanctuary",
+    "Name": "sanctuary",
+    "Description": "Ward a target so foes struggle to land blows.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 30,
+    "DurationTicks": 15,
+    "Tags": [
+      "Active",
+      "Defense"
+    ],
+    "Parameters": {
+      "avoidance": 50
+    }
+  },
+  {
+    "Id": "major_heal",
+    "Name": "major heal",
+    "Description": "A potent restorative invocation.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 5,
+    "DiceNotation": "4d8",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "isHeal": 1
+    }
+  },
+  {
+    "Id": "divine_armor",
+    "Name": "divine armor",
+    "Description": "Faith hardens you; Wisdom adds to armor.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "wisFraction": 0.15
+    }
+  },
+  {
+    "Id": "prayer",
+    "Name": "prayer",
+    "Description": "A pulse of light healing all friendly players in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 30,
+    "CooldownSeconds": 15,
+    "DiceNotation": "2d8",
+    "AttributeBonus": "Wisdom",
+    "Tags": [
+      "Active",
+      "Area"
+    ],
+    "Parameters": {
+      "manaRestore": 5
+    }
+  },
+  {
+    "Id": "dispel_magic",
+    "Name": "dispel magic",
+    "Description": "Strip negative magical effects from a target.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "holy_fervor",
+    "Name": "holy fervor",
+    "Description": "Mace and club strikes may stun on impact.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "stunChance": 0.15
+    }
+  },
+  {
+    "Id": "divine_intervention",
+    "Name": "divine intervention",
+    "Description": "Heal a target to full and cleanse all ailments.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 60,
+    "CooldownSeconds": 180,
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "soul_ward",
+    "Name": "soul ward",
+    "Description": "Your soul resists psychic harm.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "resurrection",
+    "Name": "resurrection",
+    "Description": "Revive a fallen ally. (Requires the corpse/death model.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 75,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "undying_faith",
+    "Name": "undying faith",
+    "Description": "A lethal blow leaves you at 1 HP, briefly invulnerable.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "invulnTicks": 3
+    }
+  },
+  {
+    "Id": "judgment",
+    "Name": "judgment",
+    "Description": "A pillar of holy light smites and blinds all foes.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 90,
+    "CooldownSeconds": 120,
+    "DamageType": "Holy",
+    "DiceNotation": "6d8",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {
+      "blindRounds": 3
+    }
+  },
+  {
+    "Id": "shield",
+    "Name": "shield",
+    "Description": "A kinetic barrier that adds armor for a short time.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 10,
+    "CooldownSeconds": 30,
+    "DurationTicks": 10,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "armorBonus": 5
+    }
+  },
+  {
+    "Id": "detect_magic",
+    "Name": "detect magic",
+    "Description": "Reveal magical auras. (Requires hidden-content systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "sage_insight",
+    "Name": "sage insight",
+    "Description": "Your offensive spells scale with Intelligence.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shocking_grasp",
+    "Name": "shocking grasp",
+    "Description": "A close electric jolt that briefly locks the target up.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 6,
+    "DamageType": "Lightning",
+    "DiceNotation": "2d6",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "stunRounds": 1
+    }
+  },
+  {
+    "Id": "arcane_meditation",
+    "Name": "arcane meditation",
+    "Description": "Mana recovers faster while sitting or resting.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "fireball",
+    "Name": "fireball",
+    "Description": "An explosion of flame that hits everything in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 25,
+    "CooldownSeconds": 15,
+    "DamageType": "Fire",
+    "DiceNotation": "4d6",
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "blink",
+    "Name": "blink",
+    "Description": "Teleport to a random adjacent room, breaking combat.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Escape"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "haste",
+    "Name": "haste",
+    "Description": "Quicken a target, granting an extra attack each round.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 30,
+    "CooldownSeconds": 45,
+    "DurationTicks": 10,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "attackRate": 1
+    }
+  },
+  {
+    "Id": "spell_mirror",
+    "Name": "spell mirror",
+    "Description": "A chance to reflect incoming spells. (Awaits NPC spellcasters.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "reflectChance": 15
+    }
+  },
+  {
+    "Id": "ice_storm",
+    "Name": "ice storm",
+    "Description": "Freezing shards hit all foes and slow them.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 35,
+    "CooldownSeconds": 20,
+    "DamageType": "Cold",
+    "DiceNotation": "4d6",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {
+      "slow": 1
+    }
+  },
+  {
+    "Id": "teleport",
+    "Name": "teleport",
+    "Description": "Fold space to a known hub. (Requires grouping/recall systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 40,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Movement"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "channeling_flow",
+    "Name": "channeling flow",
+    "Description": "Casting sometimes refunds half its mana.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "refundChance": 0.2,
+      "refundFraction": 0.5
+    }
+  },
+  {
+    "Id": "disintegrate",
+    "Name": "disintegrate",
+    "Description": "A beam of pure force; vaporizes what it slays.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 50,
+    "CooldownSeconds": 60,
+    "DamageType": "Force",
+    "DiceNotation": "8d8",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "elemental_mastery",
+    "Name": "elemental mastery",
+    "Description": "Immunity to your chosen element.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "time_stop",
+    "Name": "time stop",
+    "Description": "Freeze the room's foes for a few rounds.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 80,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "freezeRounds": 3
+    }
+  },
+  {
+    "Id": "arcane_singularity",
+    "Name": "arcane singularity",
+    "Description": "At low mana, spells draw on life. (Partial.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "meteor_swarm",
+    "Name": "meteor swarm",
+    "Description": "Cataclysmic meteors hammer the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 100,
+    "CooldownSeconds": 180,
+    "DamageType": "Fire",
+    "DiceNotation": "8d6",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "set_trap",
+    "Name": "set trap",
+    "Description": "Conceal a snare; the next hostile NPC trips it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 30,
+    "DamageType": "Physical",
+    "DiceNotation": "2d6",
+    "Tags": [
+      "Active",
+      "Tactical"
+    ],
+    "Parameters": {
+      "rootRounds": 3
+    }
+  },
+  {
+    "Id": "shapeshift_bear",
+    "Name": "shapeshift bear",
+    "Description": "Transform into a grizzly bear (no spellcasting).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_wolf",
+    "Name": "shapeshift wolf",
+    "Description": "Transform into a swift wolf (no spellcasting).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 15,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_owl",
+    "Name": "shapeshift owl",
+    "Description": "Transform into a silent owl (no melee).",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stance"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shapeshift_dragon",
+    "Name": "shapeshift dragon",
+    "Description": "Become a Nature Dragon with a breath weapon.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 70,
+    "CooldownSeconds": 300,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "tame",
+    "Name": "tame",
+    "Description": "Befriend a wild animal, making it your companion.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Pet"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "call_companion",
+    "Name": "call companion",
+    "Description": "Whistle your companion to your side.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 15,
+    "Tags": [
+      "Active",
+      "Pet"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "rejuvenate",
+    "Name": "rejuvenate",
+    "Description": "A healing bloom that restores health over time.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 8,
+    "DiceNotation": "1d4",
+    "AttributeBonus": "Wisdom",
+    "DurationTicks": 5,
+    "Tags": [
+      "Active",
+      "Heal"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "natures_speech",
+    "Name": "nature's speech",
+    "Description": "Speak with animals. (Requires hidden-content systems.)",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 5,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "skin_of_oak",
+    "Name": "skin of oak",
+    "Description": "Bark-like skin grants permanent armor.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "armorBonus": 3
+    }
+  },
+  {
+    "Id": "natural_herbology",
+    "Name": "natural herbology",
+    "Description": "Better foraging. (Requires consumables.)",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "lightning_strike",
+    "Name": "lightning strike",
+    "Description": "A bolt of nature; doubled in rain or storms.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 18,
+    "CooldownSeconds": 8,
+    "DamageType": "Nature",
+    "DiceNotation": "3d6",
+    "Tags": [
+      "Active",
+      "Spell"
+    ],
+    "Parameters": {
+      "weatherBonus": 2
+    }
+  },
+  {
+    "Id": "thorns",
+    "Name": "thorns",
+    "Description": "Briars that wound melee attackers of the warded ally.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 20,
+    "CooldownSeconds": 30,
+    "DurationTicks": 7,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "eco_location",
+    "Name": "eco-location",
+    "Description": "While outside, sense creatures up to two rooms away.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "insect_swarm",
+    "Name": "insect swarm",
+    "Description": "Biting insects that damage over time and spoil aim.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 25,
+    "CooldownSeconds": 15,
+    "DamageType": "Nature",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Debuff"
+    ],
+    "Parameters": {
+      "tickDamage": 3,
+      "accuracyDebuff": 30
+    }
+  },
+  {
+    "Id": "adaptive_synergy",
+    "Name": "adaptive synergy",
+    "Description": "Retain mana regen while shapeshifted.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "call_lightning",
+    "Name": "call lightning",
+    "Description": "A storm strikes several foes with nature lightning.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 45,
+    "CooldownSeconds": 45,
+    "DamageType": "Nature",
+    "DiceNotation": "4d6",
+    "Tags": [
+      "Active",
+      "AoE"
+    ],
+    "Parameters": {
+      "targets": 4
+    }
+  },
+  {
+    "Id": "toxic_resilience",
+    "Name": "toxic resilience",
+    "Description": "Immunity to poison.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "gaean_embrace",
+    "Name": "gaean embrace",
+    "Description": "A lethal blow outdoors reincarnates you at half health.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "healthFraction": 0.5
+    }
+  },
+  {
+    "Id": "wrath_of_nature",
+    "Name": "wrath of nature",
+    "Description": "Roots, blinds, and blasts every foe in the room.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 85,
+    "CooldownSeconds": 120,
+    "DamageType": "Nature",
+    "DiceNotation": "6d8",
+    "Tags": [
+      "Active",
+      "Ultimate",
+      "AoE"
+    ],
+    "Parameters": {
+      "rootRounds": 2,
+      "blindRounds": 2
+    }
+  },
+  {
+    "Id": "steal",
+    "Name": "steal",
+    "Description": "Filch an item from a target; failure may anger it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Economy"
+    ],
+    "Parameters": {
+      "catchChance": 0.5
+    }
+  },
+  {
+    "Id": "hide",
+    "Name": "hide",
+    "Description": "Slip into the shadows when idle and out of combat.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Stealth"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "evasion",
+    "Name": "evasion",
+    "Description": "Dodge chance scaling with Dexterity.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Defense"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "backstab",
+    "Name": "backstab",
+    "Description": "A devastating surprise strike from stealth.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "Tags": [
+      "Active",
+      "Finisher"
+    ],
+    "Parameters": {
+      "multiplier": 3
+    }
+  },
+  {
+    "Id": "poison",
+    "Name": "poison",
+    "Description": "Coat your blade; strikes may poison for a few hits.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 30,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "charges": 5,
+      "procChance": 0.25,
+      "tickDamage": 2,
+      "dotTicks": 3
+    }
+  },
+  {
+    "Id": "picklock",
+    "Name": "picklock",
+    "Description": "Open locks without a key. (Requires the lock system.)",
+    "Kind": "Active",
+    "IsSpell": false,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "trip",
+    "Name": "trip",
+    "Description": "Sweep a foe off its feet, stunning and pinning it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 12,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {
+      "stunRounds": 1,
+      "rootRounds": 3
+    }
+  },
+  {
+    "Id": "reflexive_dodge",
+    "Name": "reflexive dodge",
+    "Description": "Heightened reflexes add to your dodge.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "shadowstep",
+    "Name": "shadowstep",
+    "Description": "Slip past a blocking foe. (Requires exit-blocking.)",
+    "Kind": "Active",
+    "IsSpell": false,
+    "Tags": [
+      "Active",
+      "Movement"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "opportunist",
+    "Name": "opportunist",
+    "Description": "Openings sharpen your aim for critical strikes.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "smoke_bomb",
+    "Name": "smoke bomb",
+    "Description": "Vanish in a blinding cloud, escaping combat.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "Tags": [
+      "Active",
+      "Escape"
+    ],
+    "Parameters": {
+      "blindRounds": 2
+    }
+  },
+  {
+    "Id": "anatomic_precision",
+    "Name": "anatomic precision",
+    "Description": "Your backstab multiplier rises to 5x.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "blindside",
+    "Name": "blindside",
+    "Description": "A deceptive feint that stuns for two rounds.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 20,
+    "Tags": [
+      "Active",
+      "Deception"
+    ],
+    "Parameters": {
+      "stunRounds": 2
+    }
+  },
+  {
+    "Id": "slippery_mind",
+    "Name": "slippery mind",
+    "Description": "Strong resistance to charm and fear.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {
+      "reductionPct": 50
+    }
+  },
+  {
+    "Id": "assassinate",
+    "Name": "assassinate",
+    "Description": "From stealth: slay the weak outright, cripple the strong.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 300,
+    "DiceNotation": "10d8",
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "untouchable",
+    "Name": "untouchable",
+    "Description": "Near death, phase briefly immune to physical harm.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "thresholdPct": 20,
+      "durationTicks": 3,
+      "cooldownSeconds": 600
+    }
+  },
+  {
+    "Id": "death_dance",
+    "Name": "death dance",
+    "Description": "Whirl through every foe with your off-hand, unseen.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 120,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "hits": 3
+    }
+  },
+  {
+    "Id": "track",
+    "Name": "track",
+    "Description": "Read a creature's trail and mark it as your quarry.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Utility"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "wilderness_lore",
+    "Name": "wilderness lore",
+    "Description": "Recover faster resting outdoors.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "point_blank_shot",
+    "Name": "point-blank shot",
+    "Description": "No penalty for shooting in melee.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "forest_camouflage",
+    "Name": "forest camouflage",
+    "Description": "Blend into outdoor cover, hiding at once.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 10,
+    "Tags": [
+      "Active",
+      "Stealth"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "scout",
+    "Name": "scout",
+    "Description": "Peek into an adjacent room without entering it.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 5,
+    "Tags": [
+      "Active",
+      "Perception"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "arrow_volley",
+    "Name": "arrow volley",
+    "Description": "Your shots strike up to three foes at once.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {
+      "targets": 3
+    }
+  },
+  {
+    "Id": "companion_link",
+    "Name": "companion link",
+    "Description": "Your pet shares your armor and resistances.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "snare",
+    "Name": "snare",
+    "Description": "A leg shot that damages and roots a foe.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 15,
+    "DamageType": "Physical",
+    "DiceNotation": "2d6",
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Crowd Control"
+    ],
+    "Parameters": {
+      "rootRounds": 4
+    }
+  },
+  {
+    "Id": "mark_of_the_hunter",
+    "Name": "mark of the hunter",
+    "Description": "Your marked quarry takes extra damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "spirit_of_the_pack",
+    "Name": "spirit of the pack",
+    "Description": "You and your pet attack faster for a time.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 60,
+    "DurationTicks": 4,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {
+      "attackRate": 1
+    }
+  },
+  {
+    "Id": "weather_hardened",
+    "Name": "weather hardened",
+    "Description": "Immunity to harsh weather (cold).",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive",
+      "Immunity"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "arrow_of_slaying",
+    "Name": "arrow of slaying",
+    "Description": "A focused sniper shot that ignores armor.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 90,
+    "DamageType": "Physical",
+    "DiceNotation": "8d8",
+    "Tags": [
+      "Active",
+      "Finisher"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "natural_attunement",
+    "Name": "natural attunement",
+    "Description": "Outdoors, your strikes carry bonus magic damage.",
+    "Kind": "Passive",
+    "IsSpell": false,
+    "Tags": [
+      "Passive"
+    ],
+    "Parameters": {}
+  },
+  {
+    "Id": "alpha_strike",
+    "Name": "alpha strike",
+    "Description": "Your pet pins a foe while you land four critical shots.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 120,
+    "Tags": [
+      "Active",
+      "Ultimate"
+    ],
+    "Parameters": {
+      "shots": 4
+    }
+  },
+  {
+    "Id": "darkvision",
+    "Name": "darkvision",
+    "Description": "Grant a target sight in the dark for a long while.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 12,
+    "CooldownSeconds": 0,
+    "DurationTicks": 40,
+    "Tags": [
+      "Active",
+      "Buff"
+    ],
+    "Parameters": {}
+  }
+]</script>
+  <script type="application/json" id="seed-species">[
+  {
+    "Id": "human",
+    "Name": "Human",
+    "Description": "Versatile and well-rounded, humans bend a little toward everything.",
+    "Modifiers": {
+      "Str": 1,
+      "Dex": 1,
+      "Con": 1,
+      "Int": 1,
+      "Wis": 1,
+      "Cha": 1
+    },
+    "DamageMultipliers": {},
+    "HasDarkvision": false
+  },
+  {
+    "Id": "elf",
+    "Name": "Elf",
+    "Description": "Graceful and keen-minded, but slight of frame.",
+    "Modifiers": {
+      "Str": 0,
+      "Dex": 2,
+      "Con": -2,
+      "Int": 1,
+      "Wis": 0,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Charm": 0.5,
+      "Sleep": 0.5
+    },
+    "HasDarkvision": true
+  },
+  {
+    "Id": "dwarf",
+    "Name": "Dwarf",
+    "Description": "Hardy and stubborn, raised in stone and resistant to toxins.",
+    "Modifiers": {
+      "Str": 0,
+      "Dex": -2,
+      "Con": 2,
+      "Int": 0,
+      "Wis": 1,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Poison": 0.5
+    },
+    "HasDarkvision": true
+  },
+  {
+    "Id": "halfling",
+    "Name": "Halfling",
+    "Description": "Small, nimble, and stout of heart.",
+    "Modifiers": {
+      "Str": -2,
+      "Dex": 2,
+      "Con": 0,
+      "Int": 0,
+      "Wis": 0,
+      "Cha": 1
+    },
+    "DamageMultipliers": {
+      "Fear": 0.5
+    },
+    "HasDarkvision": false
+  },
+  {
+    "Id": "gnome",
+    "Name": "Gnome",
+    "Description": "Clever tinkerers steeped in arcane study.",
+    "Modifiers": {
+      "Str": -2,
+      "Dex": 0,
+      "Con": 0,
+      "Int": 2,
+      "Wis": 1,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Magic": 0.5
+    },
+    "HasDarkvision": false
+  },
+  {
+    "Id": "orc",
+    "Name": "Orc",
+    "Description": "Brutally strong and tough, but slow to reason and easily rattled in mind.",
+    "Modifiers": {
+      "Str": 2,
+      "Dex": 0,
+      "Con": 1,
+      "Int": -2,
+      "Wis": 0,
+      "Cha": 0
+    },
+    "DamageMultipliers": {
+      "Psychic": 2.0
+    },
+    "HasDarkvision": true
+  }
+]</script>
+  <script type="application/json" id="seed-forms">[
+  {
+    "Id": "bear",
+    "Name": "grizzly bear",
+    "HpBonus": 50,
+    "ArmorBonus": 10,
+    "AttackDice": "1d10",
+    "AttackVerb": "maul",
+    "AttackAttribute": "Strength",
+    "LocksCasting": true,
+    "LocksPhysical": false,
+    "TransformMessage": "Your body swells into a massive grizzly bear!"
+  },
+  {
+    "Id": "wolf",
+    "Name": "timber wolf",
+    "HpBonus": 10,
+    "ArmorBonus": 0,
+    "AttackDice": "1d8",
+    "AttackVerb": "bite",
+    "AttackAttribute": "Dexterity",
+    "LocksCasting": true,
+    "LocksPhysical": false,
+    "TransformMessage": "You drop onto four legs as a swift timber wolf!"
+  },
+  {
+    "Id": "owl",
+    "Name": "silent owl",
+    "HpBonus": 0,
+    "ArmorBonus": 0,
+    "AttackDice": "",
+    "AttackVerb": "",
+    "AttackAttribute": "",
+    "LocksCasting": false,
+    "LocksPhysical": true,
+    "TransformMessage": "You shrink into a silent owl and take wing."
+  },
+  {
+    "Id": "dragon",
+    "Name": "nature dragon",
+    "HpBonus": 100,
+    "ArmorBonus": 15,
+    "AttackDice": "2d10",
+    "AttackVerb": "rake",
+    "AttackAttribute": "Strength",
+    "LocksCasting": false,
+    "LocksPhysical": false,
+    "BreathDice": "6d8",
+    "TransformMessage": "You become a towering Nature Dragon, scales gleaming!"
+  }
+]</script>
+  <script type="application/json" id="seed-tuning">{
+  "combat.baseHitChance":            { "value": 85,     "desc": "Base percent chance an attack lands, before attacker accuracy and defender avoidance." },
+  "combat.critMultiplier":           { "value": 2.0,    "desc": "Damage multiplier applied on a critical hit." },
+  "combat.markBonusMultiplier":      { "value": 1.2,    "desc": "Damage multiplier against a hunter's-marked target (mark_of_the_hunter)." },
+  "combat.darkMissPenalty":          { "value": 50,     "desc": "Initial to-hit penalty (percentage points) when attacking a target you can't see in the dark." },
+  "combat.darkAdaptationPerRound":   { "value": 5,      "desc": "Percentage points the dark to-hit penalty eases each combat round as eyes adjust." },
+  "combat.darkAdaptationCap":        { "value": 30,     "desc": "Maximum the dark to-hit penalty can ease over a single fight." },
+
+  "proficiency.ceiling":             { "value": 99.999, "desc": "Maximum effective success chance; even 100 proficiency fails a tiny fraction of the time." },
+  "proficiency.baseGain":            { "value": 2.0,    "desc": "Proficiency gained per attempt at 0; tapers toward the ceiling as proficiency rises." },
+  "proficiency.minGain":             { "value": 0.01,   "desc": "Minimum proficiency gain per attempt, so the climb to 100 never fully stalls." },
+
+  "leveling.xpPerLevel":             { "value": 100,    "desc": "XP-to-advance coefficient: cost to reach the next level = value * current level." },
+  "leveling.maxLevel":               { "value": 101,    "desc": "Highest attainable level (the HERO tier)." },
+
+  "regen.manaBase":                  { "value": 5,      "desc": "Mana restored per status tick while standing and out of combat." },
+  "regen.healthBase":                { "value": 2,      "desc": "Health restored per status tick while standing and out of combat." },
+  "regen.sittingMultiplier":         { "value": 2,      "desc": "Regen multiplier while sitting (out of combat)." },
+  "regen.restingMultiplier":         { "value": 3,      "desc": "Regen multiplier while resting (out of combat)." },
+  "regen.arcaneMeditationMultiplier":{ "value": 2,      "desc": "Mana-regen multiplier from arcane_meditation while sitting or resting." },
+  "regen.wildernessLoreBonus":       { "value": 1,      "desc": "Extra regen factor from wilderness_lore while resting/sitting outdoors." },
+
+  "passive.parryProficiencyFactor":  { "value": 0.4,    "desc": "Parry avoidance% = parry proficiency * this factor." },
+  "passive.parryCap":                { "value": 40,     "desc": "Maximum avoidance% granted by parry." },
+  "passive.evasionDexDivisor":       { "value": 2,      "desc": "Evasion avoidance% = Dexterity / this divisor." },
+  "passive.reflexiveDexDivisor":     { "value": 4,      "desc": "Reflexive-dodge avoidance% = Dexterity / this divisor." },
+  "passive.opportunistCrit":         { "value": 10,     "desc": "Flat critical-hit% granted by opportunist." }
+}</script>
+
+<script>
+"use strict";
+
+/* ---------- Enum value lists (from ConsoleMud/Enums) ---------- */
+const ENUMS = {
+  DamageType: ["Physical","Poison","Magic","Psychic","Charm","Sleep","Fear","Fire","Cold","Lightning","Force","Holy","Nature"],
+  Kind: ["Active","Passive"],
+  Attribute: ["Strength","Dexterity","Constitution","Intelligence","Wisdom","Charisma"]
+};
+
+/* ---------- Schema registry ----------
+   include: 'always' | 'omitEmpty' | 'omitDefault'
+   type: text | textarea | int | number | bool | enum | stringList | numberMap | object | objectList
+*/
+const SCHEMAS = {
+  classes: {
+    label: "Classes", kind: "array", file: "classes.json",
+    idField: "Id", labelField: "Name",
+    fields: [
+      { name: "Id", label: "Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "HpBonus", label: "HP Bonus", type: "int", include: "always", default: 0 },
+      { name: "ManaBonus", label: "Mana Bonus", type: "int", include: "always", default: 0 },
+      { name: "Skills", label: "Skills", type: "objectList", include: "always",
+        sub: [
+          { name: "SkillId", label: "Skill", type: "skillRef" },
+          { name: "Level", label: "Level", type: "int", default: 1 }
+        ] },
+      { name: "HpPerLevel", label: "HP / Level", type: "int", include: "always", default: 0 },
+      { name: "ManaPerLevel", label: "Mana / Level", type: "int", include: "always", default: 0 }
+    ]
+  },
+  skills: {
+    label: "Skills", kind: "array", file: "skills.json",
+    idField: "Id", labelField: "Name",
+    fields: [
+      { name: "Id", label: "Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Kind", label: "Kind", type: "enum", enum: "Kind", include: "always", default: "Active" },
+      { name: "IsSpell", label: "Is Spell", type: "bool", include: "always", default: false },
+      { name: "ManaCost", label: "Mana Cost", type: "int", include: "omitDefault", default: 0 },
+      { name: "CooldownSeconds", label: "Cooldown (s)", type: "int", include: "omitDefault", default: 0 },
+      { name: "DurationTicks", label: "Duration (ticks)", type: "int", include: "omitDefault", default: 0 },
+      { name: "DamageType", label: "Damage Type", type: "enum", enum: "DamageType", include: "omitEmpty", optional: true },
+      { name: "DiceNotation", label: "Dice Notation", type: "text", include: "omitEmpty", placeholder: "e.g. 1d6" },
+      { name: "AttributeBonus", label: "Attribute Bonus", type: "enum", enum: "Attribute", include: "omitEmpty", optional: true },
+      { name: "StartingProficiency", label: "Starting Proficiency", type: "number", include: "omitDefault", default: 1.0 },
+      { name: "Tags", label: "Tags", type: "stringList", include: "omitEmpty" },
+      { name: "Parameters", label: "Parameters", type: "numberMap", include: "omitEmpty", keyType: "text" }
+    ]
+  },
+  species: {
+    label: "Species", kind: "array", file: "species.json",
+    idField: "Id", labelField: "Name",
+    fields: [
+      { name: "Id", label: "Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Modifiers", label: "Attribute Modifiers", type: "object", include: "always",
+        sub: [
+          { name: "Str", label: "Str", type: "int", default: 0 },
+          { name: "Dex", label: "Dex", type: "int", default: 0 },
+          { name: "Con", label: "Con", type: "int", default: 0 },
+          { name: "Int", label: "Int", type: "int", default: 0 },
+          { name: "Wis", label: "Wis", type: "int", default: 0 },
+          { name: "Cha", label: "Cha", type: "int", default: 0 }
+        ] },
+      { name: "DamageMultipliers", label: "Damage Multipliers", type: "numberMap", include: "always", keyType: "enum", keyEnum: "DamageType" },
+      { name: "HasDarkvision", label: "Has Darkvision", type: "bool", include: "always", default: false }
+    ]
+  },
+  forms: {
+    label: "Forms", kind: "array", file: "forms.json",
+    idField: "Id", labelField: "Name",
+    fields: [
+      { name: "Id", label: "Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "HpBonus", label: "HP Bonus", type: "int", include: "always", default: 0 },
+      { name: "ArmorBonus", label: "Armor Bonus", type: "int", include: "always", default: 0 },
+      { name: "AttackDice", label: "Attack Dice", type: "text", include: "always", placeholder: "e.g. 1d10" },
+      { name: "AttackVerb", label: "Attack Verb", type: "text", include: "always", placeholder: "e.g. maul" },
+      { name: "AttackAttribute", label: "Attack Attribute", type: "enum", enum: "Attribute", include: "always", optional: true },
+      { name: "LocksCasting", label: "Locks Casting", type: "bool", include: "always", default: false },
+      { name: "LocksPhysical", label: "Locks Physical", type: "bool", include: "always", default: false },
+      { name: "BreathDice", label: "Breath Dice", type: "text", include: "omitEmpty", placeholder: "e.g. 6d8 (dragon only)" },
+      { name: "TransformMessage", label: "Transform Message", type: "textarea", include: "always" }
+    ]
+  }
+};
+
+const TAB_ORDER = ["classes", "skills", "species", "forms", "tuning"];
+
+/* ---------- State ---------- */
+const state = {
+  files: {},
+  selected: {},
+  activeTab: "classes",
+  warnings: []
+};
+
+/* ---------- Boot ---------- */
+function parseSeed(id) {
+  const el = document.getElementById(id);
+  const raw = (el ? el.textContent : "").trim();
+  if (!raw || raw.indexOf("__SEED_") !== -1) return null; // placeholder not replaced
+  try { return JSON.parse(raw); } catch (e) { console.error("Seed parse failed for " + id, e); return null; }
+}
+
+/* Record which top-level keys an entry had when loaded, so serialization can
+   reproduce the source's (inconsistent) field presence -- e.g. some skills keep
+   "ManaCost": 0 or an empty "Parameters": {} while others omit them entirely.
+   Stored non-enumerable so it never leaks into JSON or key iteration. */
+function stampOrig(entry, keys) {
+  Object.defineProperty(entry, "__orig", { value: new Set(keys), enumerable: false, writable: true, configurable: true });
+}
+function ingestArray(arr) {
+  (arr || []).forEach(e => { if (e && typeof e === "object") stampOrig(e, Object.keys(e)); });
+  return arr || [];
+}
+
+function init() {
+  state.files.classes = ingestArray(parseSeed("seed-classes") || []);
+  state.files.skills  = ingestArray(parseSeed("seed-skills")  || []);
+  state.files.species = ingestArray(parseSeed("seed-species") || []);
+  state.files.forms   = ingestArray(parseSeed("seed-forms")   || []);
+  state.files.tuning  = parseSeed("seed-tuning")  || {};
+
+  for (const key of TAB_ORDER) {
+    if (key !== "tuning") state.selected[key] = state.files[key].length ? 0 : -1;
+  }
+
+  document.getElementById("btn-download-all").onclick = downloadAll;
+  document.getElementById("btn-revalidate").onclick = () => { runValidation(); renderWarnings(); toast("Validation complete"); };
+
+  renderTabs();
+  renderActiveTab();
+  runValidation();
+  renderWarnings();
+}
+
+/* ---------- DOM helpers ---------- */
+function el(tag, props, children) {
+  const node = document.createElement(tag);
+  if (props) {
+    for (const k in props) {
+      if (k === "class") node.className = props[k];
+      else if (k === "text") node.textContent = props[k];
+      else if (k === "html") node.innerHTML = props[k];
+      else if (k.startsWith("on") && typeof props[k] === "function") node.addEventListener(k.slice(2), props[k]);
+      else if (props[k] !== null && props[k] !== undefined && props[k] !== false) node.setAttribute(k, props[k]);
+    }
+  }
+  if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+/* ---------- Tabs ---------- */
+function renderTabs() {
+  const nav = document.getElementById("tabs");
+  clear(nav);
+  for (const key of TAB_ORDER) {
+    const label = key === "tuning" ? "Tuning" : SCHEMAS[key].label;
+    nav.appendChild(el("button", {
+      class: "tab" + (state.activeTab === key ? " active" : ""),
+      onclick: () => { state.activeTab = key; renderTabs(); renderActiveTab(); }
+    }, label));
+  }
+}
+
+function renderActiveTab() {
+  const main = document.getElementById("main");
+  clear(main);
+  if (state.activeTab === "tuning") main.appendChild(renderTuning());
+  else main.appendChild(renderArrayTab(state.activeTab));
+}
+
+/* ---------- Array tab (list + form) ---------- */
+function renderArrayTab(key) {
+  const schema = SCHEMAS[key];
+  const layout = el("div", { class: "layout" });
+
+  // Left list panel
+  const listPanel = el("div", { class: "list-panel" });
+  const head = el("div", { class: "list-head" }, [
+    el("span", { class: "count" }, state.files[key].length + " entries"),
+    el("div", {}, [
+      el("button", { class: "btn small", onclick: () => triggerUpload(key) }, "Upload"),
+      el("button", { class: "btn small primary", onclick: () => addEntry(key) }, "+ Add")
+    ])
+  ]);
+  listPanel.appendChild(head);
+
+  const list = el("div", { class: "entry-list" });
+  state.files[key].forEach((entry, i) => {
+    const name = entry[schema.labelField] || "(unnamed)";
+    const id = entry[schema.idField] || "";
+    list.appendChild(el("div", {
+      class: "entry" + (state.selected[key] === i ? " active" : ""),
+      onclick: () => { state.selected[key] = i; renderActiveTab(); }
+    }, [
+      el("span", { class: "e-name" }, stripMarkup(String(name))),
+      el("span", { class: "e-id" }, id)
+    ]));
+  });
+  listPanel.appendChild(list);
+
+  // Right form panel
+  const formPanel = el("div", { class: "form-panel" });
+  const idx = state.selected[key];
+  if (idx == null || idx < 0 || idx >= state.files[key].length) {
+    formPanel.appendChild(el("div", { class: "empty-hint" }, "Select an entry on the left, or click + Add to create one."));
+  } else {
+    formPanel.appendChild(renderForm(key, idx));
+  }
+
+  layout.appendChild(listPanel);
+  layout.appendChild(formPanel);
+  return layout;
+}
+
+function renderForm(key, idx) {
+  const schema = SCHEMAS[key];
+  const entry = state.files[key][idx];
+  const wrap = el("div", {});
+
+  wrap.appendChild(el("div", { class: "form-actions" }, [
+    el("button", { class: "btn small", onclick: () => duplicateEntry(key, idx) }, "Duplicate"),
+    el("button", { class: "btn small", onclick: () => downloadFile(key) }, "Download " + schema.file),
+    el("button", { class: "btn small danger", onclick: () => deleteEntry(key, idx) }, "Delete")
+  ]));
+
+  for (const field of schema.fields) {
+    wrap.appendChild(renderField(key, entry, field));
+  }
+  return wrap;
+}
+
+/* ---------- Field renderer ---------- */
+function renderField(key, entry, field) {
+  const t = field.type;
+  if (t === "text" || t === "textarea") return textField(entry, field);
+  if (t === "int" || t === "number") return numberField(entry, field);
+  if (t === "bool") return boolField(entry, field);
+  if (t === "enum") return enumField(entry, field);
+  if (t === "stringList") return stringListField(key, entry, field);
+  if (t === "numberMap") return numberMapField(key, entry, field);
+  if (t === "object") return objectField(entry, field);
+  if (t === "objectList") return objectListField(key, entry, field);
+  return el("div", {});
+}
+
+function textField(entry, field) {
+  const input = el(field.type === "textarea" ? "textarea" : "input", {
+    type: "text",
+    value: entry[field.name] != null ? entry[field.name] : "",
+    placeholder: field.placeholder || "",
+    oninput: e => { entry[field.name] = e.target.value; afterEdit(false); }
+  });
+  if (field.type === "textarea") input.value = entry[field.name] != null ? entry[field.name] : "";
+  return el("div", { class: "field" }, [ el("label", {}, field.label), input ]);
+}
+
+function numberField(entry, field) {
+  const isInt = field.type === "int";
+  const cur = entry[field.name];
+  const input = el("input", {
+    type: "number",
+    step: isInt ? "1" : "any",
+    value: cur != null && cur !== "" ? cur : "",
+    oninput: e => {
+      const v = e.target.value;
+      if (v === "") { entry[field.name] = field.default != null ? field.default : 0; }
+      else { const n = isInt ? parseInt(v, 10) : parseFloat(v); entry[field.name] = isNaN(n) ? (field.default || 0) : n; }
+      afterEdit(false);
+    }
+  });
+  return el("div", { class: "field" }, [ el("label", {}, field.label), input ]);
+}
+
+function boolField(entry, field) {
+  const input = el("input", {
+    type: "checkbox",
+    onchange: e => { entry[field.name] = e.target.checked; afterEdit(false); }
+  });
+  if (entry[field.name]) input.checked = true;
+  return el("div", { class: "field checkbox" }, [ input, el("label", {}, field.label) ]);
+}
+
+function enumField(entry, field) {
+  const values = ENUMS[field.enum] || [];
+  const cur = entry[field.name] != null ? entry[field.name] : "";
+  const opts = [];
+  if (field.optional || cur === "") opts.push(el("option", { value: "" }, "(none)"));
+  values.forEach(v => opts.push(el("option", { value: v }, v)));
+  if (cur && !values.includes(cur)) opts.push(el("option", { value: cur }, cur + " (custom)"));
+  const sel = el("select", {
+    onchange: e => { entry[field.name] = e.target.value; afterEdit(false); }
+  }, opts);
+  sel.value = cur;
+  return el("div", { class: "field" }, [ el("label", {}, field.label), sel ]);
+}
+
+function stringListField(key, entry, field) {
+  if (!Array.isArray(entry[field.name])) entry[field.name] = [];
+  const arr = entry[field.name];
+  const rows = el("div", { class: "row-list" });
+  arr.forEach((val, i) => {
+    rows.appendChild(el("div", { class: "tag-row" }, [
+      el("input", { type: "text", value: val, oninput: e => { arr[i] = e.target.value; afterEdit(false); } }),
+      el("button", { class: "btn small danger", onclick: () => { arr.splice(i, 1); afterEdit(true); } }, "x")
+    ]));
+  });
+  const add = el("button", { class: "btn small add-row", onclick: () => { arr.push(""); afterEdit(true); } }, "+ Add tag");
+  return el("fieldset", {}, [ el("legend", {}, field.label), rows, add ]);
+}
+
+function numberMapField(key, entry, field) {
+  if (typeof entry[field.name] !== "object" || entry[field.name] == null || Array.isArray(entry[field.name])) entry[field.name] = {};
+  const map = entry[field.name];
+  const keys = Object.keys(map);
+  const rows = el("div", { class: "row-list" });
+
+  keys.forEach((k) => {
+    let keyInput;
+    if (field.keyType === "enum") {
+      const values = ENUMS[field.keyEnum] || [];
+      const opts = values.map(v => el("option", { value: v }, v));
+      if (k && !values.includes(k)) opts.push(el("option", { value: k }, k + " (custom)"));
+      keyInput = el("select", {
+        onchange: e => { renameKey(map, k, e.target.value); afterEdit(true); }
+      }, opts);
+      keyInput.value = k;
+    } else {
+      keyInput = el("input", { type: "text", value: k, onchange: e => { renameKey(map, k, e.target.value); afterEdit(true); } });
+    }
+    const valInput = el("input", {
+      class: "v", type: "number", step: "any", value: map[k],
+      oninput: e => { const n = parseFloat(e.target.value); map[k] = isNaN(n) ? 0 : n; afterEdit(false); }
+    });
+    rows.appendChild(el("div", { class: "kv-row" }, [
+      keyInput, valInput,
+      el("button", { class: "btn small danger", onclick: () => { delete map[k]; afterEdit(true); } }, "x")
+    ]));
+  });
+
+  const add = el("button", { class: "btn small add-row", onclick: () => {
+    let newKey = field.keyType === "enum" ? firstUnusedEnum(field.keyEnum, map) : uniqueKey(map, "key");
+    if (newKey == null) { toast("All values already added"); return; }
+    map[newKey] = field.keyType === "enum" ? 1.0 : 0;
+    afterEdit(true);
+  } }, "+ Add entry");
+
+  return el("fieldset", {}, [ el("legend", {}, field.label), rows, add ]);
+}
+
+function objectField(entry, field) {
+  if (typeof entry[field.name] !== "object" || entry[field.name] == null) entry[field.name] = {};
+  const obj = entry[field.name];
+  const grid = el("div", { class: "grid" });
+  field.sub.forEach(sf => {
+    if (obj[sf.name] == null) obj[sf.name] = sf.default != null ? sf.default : 0;
+    const input = el("input", {
+      type: "number", step: "1", value: obj[sf.name],
+      oninput: e => { const n = parseInt(e.target.value, 10); obj[sf.name] = isNaN(n) ? 0 : n; afterEdit(false); }
+    });
+    grid.appendChild(el("div", { class: "field" }, [ el("label", {}, sf.label), input ]));
+  });
+  return el("fieldset", {}, [ el("legend", {}, field.label), grid ]);
+}
+
+function objectListField(key, entry, field) {
+  if (!Array.isArray(entry[field.name])) entry[field.name] = [];
+  const arr = entry[field.name];
+  const rows = el("div", { class: "row-list" });
+
+  arr.forEach((row, i) => {
+    const cells = [];
+    field.sub.forEach(sf => {
+      if (sf.type === "skillRef") {
+        cells.push(skillRefControl(row, sf, i));
+      } else if (sf.type === "int") {
+        const input = el("input", {
+          class: "lvl", type: "number", step: "1", value: row[sf.name] != null ? row[sf.name] : (sf.default || 0),
+          oninput: e => { const n = parseInt(e.target.value, 10); row[sf.name] = isNaN(n) ? (sf.default || 0) : n; afterEdit(false); }
+        });
+        cells.push(input);
+      } else {
+        const input = el("input", { type: "text", value: row[sf.name] != null ? row[sf.name] : "",
+          oninput: e => { row[sf.name] = e.target.value; afterEdit(false); } });
+        cells.push(input);
+      }
+    });
+    cells.push(el("button", { class: "btn small", onclick: () => { if (i > 0) { [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; afterEdit(true); } } }, "\u2191"));
+    cells.push(el("button", { class: "btn small", onclick: () => { if (i < arr.length-1) { [arr[i+1], arr[i]] = [arr[i], arr[i+1]]; afterEdit(true); } } }, "\u2193"));
+    cells.push(el("button", { class: "btn small danger", onclick: () => { arr.splice(i, 1); afterEdit(true); } }, "x"));
+    rows.appendChild(el("div", { class: "obj-row" }, cells));
+  });
+
+  const add = el("button", { class: "btn small add-row", onclick: () => {
+    const row = {};
+    field.sub.forEach(sf => { row[sf.name] = sf.type === "int" ? (sf.default || 0) : ""; });
+    arr.push(row);
+    afterEdit(true);
+  } }, "+ Add skill");
+
+  return el("fieldset", {}, [ el("legend", {}, field.label), rows, add ]);
+}
+
+function skillRefControl(row, sf, i) {
+  const skills = state.files.skills || [];
+  const ids = skills.map(s => s.Id).filter(Boolean);
+  const cur = row[sf.name] != null ? row[sf.name] : "";
+  if (ids.length === 0) {
+    // free-text fallback when no skills loaded
+    return el("input", { type: "text", value: cur, placeholder: "skill id",
+      oninput: e => { row[sf.name] = e.target.value; afterEdit(false); } });
+  }
+  const opts = [ el("option", { value: "" }, "(select skill)") ];
+  ids.forEach(id => opts.push(el("option", { value: id }, id)));
+  const unknown = cur && !ids.includes(cur);
+  if (unknown) opts.push(el("option", { value: cur }, cur + " (unknown)"));
+  const sel = el("select", {
+    class: unknown ? "ref-bad" : "",
+    onchange: e => { row[sf.name] = e.target.value; afterEdit(true); }
+  }, opts);
+  sel.value = cur;
+  return sel;
+}
+
+/* ---------- Tuning view ---------- */
+function renderTuning() {
+  const wrap = el("div", { class: "tuning-wrap" });
+  wrap.appendChild(el("div", { class: "form-actions" }, [
+    el("button", { class: "btn small", onclick: () => triggerUpload("tuning") }, "Upload tuning.json"),
+    el("button", { class: "btn small primary", onclick: addTuning }, "+ Add key"),
+    el("button", { class: "btn small", onclick: () => downloadFile("tuning") }, "Download tuning.json")
+  ]));
+
+  const table = el("table", { class: "tuning" });
+  table.appendChild(el("tr", {}, [
+    el("th", { class: "k" }, "Key"), el("th", { class: "v" }, "Value"), el("th", {}, "Description"), el("th", {}, "")
+  ]));
+
+  const tuning = state.files.tuning;
+  Object.keys(tuning).forEach(k => {
+    const entry = tuning[k] || {};
+    const keyInput = el("input", { type: "text", value: k, onchange: e => { renameKey(tuning, k, e.target.value); afterEdit(true); } });
+    const valInput = el("input", { type: "number", step: "any", value: entry.value != null ? entry.value : 0,
+      oninput: e => { const n = parseFloat(e.target.value); entry.value = isNaN(n) ? 0 : n; afterEdit(false); } });
+    const descInput = el("input", { type: "text", value: entry.desc != null ? entry.desc : "",
+      oninput: e => { entry.desc = e.target.value; afterEdit(false); } });
+    table.appendChild(el("tr", {}, [
+      el("td", { class: "k" }, keyInput),
+      el("td", { class: "v" }, valInput),
+      el("td", {}, descInput),
+      el("td", {}, el("button", { class: "btn small danger", onclick: () => { delete tuning[k]; afterEdit(true); } }, "x"))
+    ]));
+  });
+
+  wrap.appendChild(table);
+  return wrap;
+}
+
+function addTuning() {
+  const tuning = state.files.tuning;
+  const k = uniqueKey(tuning, "new.key");
+  tuning[k] = { value: 0, desc: "" };
+  afterEdit(true);
+}
+
+/* ---------- CRUD ---------- */
+function addEntry(key) {
+  const schema = SCHEMAS[key];
+  const entry = {};
+  for (const f of schema.fields) entry[f.name] = defaultFor(f);
+  // ensure a unique-ish id
+  entry[schema.idField] = uniqueId(key, "new_" + key.slice(0, -1));
+  // New entries only "originally have" the always-present fields, so optional
+  // fields left at their defaults are omitted from the output until edited.
+  stampOrig(entry, schema.fields.filter(f => f.include === "always").map(f => f.name));
+  state.files[key].push(entry);
+  state.selected[key] = state.files[key].length - 1;
+  afterEdit(true);
+}
+
+function duplicateEntry(key, idx) {
+  const schema = SCHEMAS[key];
+  const src = state.files[key][idx];
+  const copy = JSON.parse(JSON.stringify(src));
+  copy[schema.idField] = uniqueId(key, (copy[schema.idField] || "copy") + "_copy");
+  // Preserve the source's field-presence so the duplicate round-trips identically.
+  stampOrig(copy, src.__orig ? Array.from(src.__orig) : Object.keys(src));
+  state.files[key].splice(idx + 1, 0, copy);
+  state.selected[key] = idx + 1;
+  afterEdit(true);
+}
+
+function deleteEntry(key, idx) {
+  const schema = SCHEMAS[key];
+  const name = state.files[key][idx][schema.labelField] || state.files[key][idx][schema.idField] || "this entry";
+  if (!confirm("Delete " + stripMarkup(String(name)) + "?")) return;
+  state.files[key].splice(idx, 1);
+  if (state.selected[key] >= state.files[key].length) state.selected[key] = state.files[key].length - 1;
+  afterEdit(true);
+}
+
+function defaultFor(field) {
+  switch (field.type) {
+    case "int": case "number": return field.default != null ? field.default : 0;
+    case "bool": return field.default != null ? field.default : false;
+    case "enum": return field.optional ? "" : (field.default != null ? field.default : (ENUMS[field.enum] ? ENUMS[field.enum][0] : ""));
+    case "stringList": return [];
+    case "numberMap": return {};
+    case "objectList": return [];
+    case "object": {
+      const o = {}; (field.sub || []).forEach(sf => o[sf.name] = sf.default != null ? sf.default : 0); return o;
+    }
+    default: return "";
+  }
+}
+
+/* ---------- helpers ---------- */
+function renameKey(obj, oldKey, newKey) {
+  if (oldKey === newKey) return;
+  if (newKey === "" ) { return; }
+  if (Object.prototype.hasOwnProperty.call(obj, newKey)) { toast("Key '" + newKey + "' already exists"); return; }
+  const ordered = {};
+  Object.keys(obj).forEach(k => { ordered[k === oldKey ? newKey : k] = obj[k]; });
+  // mutate in place to preserve reference
+  Object.keys(obj).forEach(k => delete obj[k]);
+  Object.keys(ordered).forEach(k => obj[k] = ordered[k]);
+}
+function firstUnusedEnum(enumName, map) {
+  const values = ENUMS[enumName] || [];
+  for (const v of values) if (!Object.prototype.hasOwnProperty.call(map, v)) return v;
+  return null;
+}
+function uniqueKey(obj, base) {
+  if (!Object.prototype.hasOwnProperty.call(obj, base)) return base;
+  let i = 2; while (Object.prototype.hasOwnProperty.call(obj, base + "_" + i)) i++;
+  return base + "_" + i;
+}
+function uniqueId(key, base) {
+  const schema = SCHEMAS[key];
+  const ids = new Set(state.files[key].map(e => e[schema.idField]));
+  if (!ids.has(base)) return base;
+  let i = 2; while (ids.has(base + "_" + i)) i++;
+  return base + "_" + i;
+}
+function stripMarkup(s) { return s.replace(/\{\{/g, "\u0001").replace(/\{[a-zA-Z]/g, "").replace(/\u0001/g, "{"); }
+
+function afterEdit(structural) {
+  if (structural) renderActiveTab();
+  runValidation();
+  renderWarnings();
+}
+
+/* ---------- Validation ---------- */
+function runValidation() {
+  const w = [];
+  for (const key of ["classes","skills","species","forms"]) {
+    const schema = SCHEMAS[key];
+    const seen = new Map();
+    state.files[key].forEach((e, i) => {
+      const id = e[schema.idField];
+      if (!id || String(id).trim() === "") w.push(`${schema.file}: entry #${i+1} has an empty Id.`);
+      else {
+        if (seen.has(id)) w.push(`${schema.file}: duplicate Id "${id}" (entries #${seen.get(id)+1} and #${i+1}).`);
+        else seen.set(id, i);
+      }
+    });
+  }
+  // cross-ref: class skill ids must exist in skills
+  const skillIds = new Set((state.files.skills || []).map(s => s.Id));
+  if (skillIds.size > 0) {
+    (state.files.classes || []).forEach(c => {
+      (c.Skills || []).forEach(s => {
+        if (s.SkillId && !skillIds.has(s.SkillId))
+          w.push(`classes.json: class "${c.Id}" references unknown skill "${s.SkillId}".`);
+      });
+    });
+  }
+  state.warnings = w;
+}
+
+function renderWarnings() {
+  const box = document.getElementById("warnings");
+  clear(box);
+  if (state.warnings.length === 0) {
+    box.classList.remove("show");
+    return;
+  }
+  box.classList.add("show");
+  box.appendChild(el("strong", {}, state.warnings.length + " issue(s) found:"));
+  const ul = el("ul", {});
+  state.warnings.forEach(msg => ul.appendChild(el("li", {}, msg)));
+  box.appendChild(ul);
+}
+
+/* ---------- Serialization ---------- */
+function serializeFile(key) {
+  if (key === "tuning") return JSON.stringify(buildTuning(), null, 2) + "\n";
+  const schema = SCHEMAS[key];
+  const out = state.files[key].map(e => buildEntry(schema, e));
+  return JSON.stringify(out, null, 2) + "\n";
+}
+
+function buildEntry(schema, entry) {
+  const o = {};
+  for (const f of schema.fields) {
+    const v = entry[f.name];
+    if (!shouldInclude(f, v, entry)) continue;
+    o[f.name] = coerceOut(f, v);
+  }
+  return o;
+}
+
+function isMeaningful(field, v) {
+  const inc = field.include || "omitEmpty";
+  if (inc === "omitDefault") {
+    const def = field.default != null ? field.default : 0;
+    return !(v == null || v === def);
+  }
+  if (v == null) return false;
+  if (typeof v === "string") return v.trim() !== "";
+  if (Array.isArray(v)) return v.length > 0;
+  if (typeof v === "object") return Object.keys(v).length > 0;
+  return true;
+}
+
+function shouldInclude(field, v, entry) {
+  if ((field.include || "omitEmpty") === "always") return true;
+  if (isMeaningful(field, v)) return true;
+  // Preserve fields that were present in the originally-loaded data even when
+  // they hold a default/empty value (matches the source files' field presence).
+  return !!(entry && entry.__orig && entry.__orig.has(field.name));
+}
+
+function coerceOut(field, v) {
+  switch (field.type) {
+    case "int": { const n = parseInt(v, 10); return isNaN(n) ? (field.default || 0) : n; }
+    case "number": { const n = parseFloat(v); return isNaN(n) ? (field.default || 0) : n; }
+    case "bool": return !!v;
+    case "stringList": return (Array.isArray(v) ? v : []).map(String).filter(s => s.trim() !== "");
+    case "numberMap": {
+      const o = {}; const src = v || {};
+      Object.keys(src).forEach(k => { if (k.trim() !== "") { const n = parseFloat(src[k]); o[k] = isNaN(n) ? 0 : n; } });
+      return o;
+    }
+    case "object": {
+      const o = {}; (field.sub || []).forEach(sf => { const n = parseInt((v||{})[sf.name], 10); o[sf.name] = isNaN(n) ? (sf.default||0) : n; }); return o;
+    }
+    case "objectList": {
+      return (Array.isArray(v) ? v : []).map(row => {
+        const o = {};
+        (field.sub || []).forEach(sf => {
+          if (sf.type === "int") { const n = parseInt(row[sf.name], 10); o[sf.name] = isNaN(n) ? (sf.default||0) : n; }
+          else o[sf.name] = row[sf.name] != null ? row[sf.name] : "";
+        });
+        return o;
+      });
+    }
+    default: return v != null ? v : "";
+  }
+}
+
+function buildTuning() {
+  const t = state.files.tuning; const o = {};
+  Object.keys(t).forEach(k => {
+    if (k.trim() === "") return;
+    const e = t[k] || {};
+    const n = parseFloat(e.value);
+    o[k] = { value: isNaN(n) ? 0 : n, desc: e.desc != null ? e.desc : "" };
+  });
+  return o;
+}
+
+/* ---------- Upload / Download ---------- */
+function download(filename, text) {
+  const blob = new Blob([text], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function downloadFile(key) {
+  const file = key === "tuning" ? "tuning.json" : SCHEMAS[key].file;
+  download(file, serializeFile(key));
+  toast("Downloaded " + file);
+}
+function downloadAll() {
+  for (const key of TAB_ORDER) downloadFile(key);
+}
+
+let pendingUploadKey = null;
+let fileInput = null;
+function triggerUpload(key) {
+  pendingUploadKey = key;
+  if (!fileInput) {
+    fileInput = el("input", { type: "file", accept: ".json,application/json", onchange: onUploadChange });
+    document.body.appendChild(fileInput);
+  }
+  fileInput.value = "";
+  fileInput.click();
+}
+function onUploadChange(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      applyUpload(pendingUploadKey, data);
+    } catch (err) {
+      alert("Could not parse JSON: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+function applyUpload(key, data) {
+  if (key === "tuning") {
+    if (typeof data !== "object" || Array.isArray(data) || data == null) { alert("tuning.json must be a JSON object."); return; }
+    state.files.tuning = data;
+  } else {
+    if (!Array.isArray(data)) { alert(SCHEMAS[key].file + " must be a JSON array."); return; }
+    state.files[key] = ingestArray(data);
+    state.selected[key] = data.length ? 0 : -1;
+  }
+  toast("Loaded " + (key === "tuning" ? "tuning.json" : SCHEMAS[key].file));
+  renderActiveTab();
+  runValidation();
+  renderWarnings();
+}
+
+/* ---------- Toast ---------- */
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
