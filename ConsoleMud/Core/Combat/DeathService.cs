@@ -96,9 +96,18 @@ public static class DeathService
             foreach (var ch in world.Characters.Values.Where(c => c.CombatTarget == npc))
                 ch.CombatTarget = null;
 
-            // Award experience to the killer.
+            // Award experience to the killer and assign new target if in gang fight
             if (killer is Player slayer)
+            {
                 Services.LevelingService.AwardXp(slayer, npc.XpReward);
+                if (world.Rooms.TryGetValue(slayer.CurrentRoomId, out var currentRoom))
+                {
+                    // If any of the current NPCs in the room are fighting the slayer, assign them a new target.
+                    if (currentRoom.Characters.Any(c => c is NonPlayerCharacter && c.CombatTarget == slayer))
+                        slayer.CombatTarget = currentRoom.Characters.OfType<NonPlayerCharacter>().First();
+                }
+            }
+             
         }
     }
 }
