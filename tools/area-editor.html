@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ConsoleMud - Area Editor</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel-2: #1f2430;
+    --border: #2a3140;
+    --text: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #4f9cff;
+    --accent-2: #3a7bd5;
+    --danger: #ff5d5d;
+    --ok: #4fd18b;
+    --warn: #ffcc66;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; white-space: nowrap; }
+  header h1 .sub { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  .area-name { color: var(--accent); font-weight: 600; font-size: 13px; }
+  .spacer { flex: 1; }
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .tabbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 0 12px; display: flex; gap: 4px; }
+  .tab {
+    background: transparent; border: 1px solid transparent; border-bottom: none;
+    color: var(--muted); padding: 8px 16px; border-radius: 8px 8px 0 0;
+    cursor: pointer; font-size: 13px; font-weight: 500;
+  }
+  .tab:hover { color: var(--text); background: var(--panel-2); }
+  .tab.active { color: #fff; background: var(--panel-2); border-color: var(--border); }
+
+  button.btn {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 13px;
+  }
+  button.btn:hover { border-color: var(--accent); }
+  button.btn.primary { background: var(--accent-2); border-color: var(--accent); color: #fff; }
+  button.btn.danger { color: var(--danger); }
+  button.btn.danger:hover { border-color: var(--danger); }
+  button.btn.small { padding: 3px 8px; font-size: 12px; }
+  select.picker { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font: inherit; }
+
+  #warnings {
+    background: #2a2410; border-bottom: 1px solid #4a3f18; color: var(--warn);
+    padding: 8px 16px; font-size: 12.5px; display: none; max-height: 160px; overflow-y: auto;
+  }
+  #warnings.show { display: block; }
+  #warnings ul { margin: 6px 0 0; padding-left: 20px; }
+
+  main { flex: 1; overflow: hidden; display: flex; }
+  .layout { display: flex; width: 100%; height: 100%; }
+
+  .list-panel { width: 280px; min-width: 220px; border-right: 1px solid var(--border); background: var(--panel); display: flex; flex-direction: column; }
+  .list-panel .list-head { padding: 10px 12px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+  .list-panel .list-head .count { color: var(--muted); font-size: 12px; }
+  .entry-list { overflow-y: auto; flex: 1; padding: 6px; }
+  .entry { padding: 8px 10px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; border: 1px solid transparent; }
+  .entry:hover { background: var(--panel-2); }
+  .entry.active { background: var(--panel-2); border-color: var(--accent); }
+  .entry .e-name { font-weight: 600; }
+  .entry .e-id { color: var(--muted); font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .form-panel { flex: 1; overflow-y: auto; padding: 18px 22px; }
+  .form-panel .form-actions { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .empty-hint { color: var(--muted); padding: 40px; text-align: center; }
+
+  .field { margin-bottom: 14px; max-width: 720px; }
+  .field > label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+  .field input[type="text"], .field input[type="number"], .field textarea, .field select {
+    width: 100%; background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 8px 10px; font: inherit;
+  }
+  .field textarea { min-height: 64px; resize: vertical; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); }
+  .field.checkbox { display: flex; align-items: center; gap: 8px; }
+  .field.checkbox input { width: 16px; height: 16px; }
+  .checks { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px 16px; max-width: 720px; margin-bottom: 14px; }
+  .checks .field.checkbox { margin: 0; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; max-width: 720px; }
+  fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin: 0 0 16px; max-width: 760px; }
+  fieldset legend { padding: 0 6px; color: var(--accent); font-size: 12px; font-weight: 600; }
+  fieldset .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: -4px 0 10px; }
+  fieldset .legend-row .recip { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+
+  .row-list { display: flex; flex-direction: column; gap: 8px; }
+  .kv-row, .tag-row { display: flex; gap: 8px; align-items: center; }
+  .kv-row select, .kv-row input, .tag-row input { flex: 1; background: var(--panel-2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 7px 9px; font: inherit; }
+  .kv-row .cnt { max-width: 110px; flex: none; }
+  .add-row { margin-top: 8px; }
+  .ref-bad { border-color: var(--danger) !important; }
+  .sub-section-title { color: var(--muted); font-size: 12px; margin: 12px 0 6px; font-weight: 600; }
+  .multi-enum { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+  .multi-enum label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+
+  /* Map */
+  .map-wrap { width: 100%; height: 100%; overflow: auto; padding: 16px; }
+  .map-wrap .map-hint { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+  svg .room-node rect { fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; cursor: pointer; }
+  svg .room-node.selected rect { stroke: var(--accent); stroke-width: 2.5; }
+  svg .room-node text { fill: var(--text); font-size: 12px; pointer-events: none; }
+  svg .room-node text.vid { fill: var(--muted); font-size: 10px; }
+  svg .exit-line { stroke: var(--accent-2); stroke-width: 1.5; opacity: 0.7; }
+  svg .vert-badge { fill: var(--warn); font-size: 11px; font-weight: 700; }
+
+  /* Area info */
+  .area-info { padding: 20px 24px; overflow-y: auto; width: 100%; }
+
+  .toast {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: var(--panel-2); border: 1px solid var(--accent); color: var(--text);
+    padding: 10px 18px; border-radius: 10px; box-shadow: 0 6px 24px var(--shadow);
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  input[type="file"] { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Area Editor <span class="sub">ConsoleMud</span></h1>
+    <span class="area-name" id="area-name-display"></span>
+    <div class="spacer"></div>
+    <div class="header-actions">
+      <button class="btn" id="btn-new">New area</button>
+      <select class="picker" id="example-picker" title="Load an embedded example area">
+        <option value="">Load example...</option>
+      </select>
+      <button class="btn" id="btn-upload">Upload</button>
+      <button class="btn" id="btn-validate">Validate</button>
+      <button class="btn primary" id="btn-download">Download area</button>
+    </div>
+  </header>
+
+  <nav class="tabbar" id="tabs"></nav>
+
+  <div id="warnings"></div>
+
+  <main id="main"></main>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Embedded snapshot of the current area files (static; will not auto-update). -->
+  <script type="application/json" id="seed-emerald_forest">{
+  "Name": "The Emerald Forest",
+  "Author": "MUD Builder",
+  "ItemTemplates": [
+    {
+      "VirtualId": "bastard_sword",
+      "Name": "=== The Bastard Sword {wS{dteamy {xet {rR{Rotteux{x ===",
+      "Description": "A long, heavy bastard sword. It's a beautiful weapon, but it's also a bit of a bastard.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "DiceNotation": "3d4",
+      "TargetSlot": "MainHand",
+      "AttackVerbs": [
+        "slash",
+        "slice"
+      ]
+    },
+    {
+      "VirtualId": "dire_wolf_fangs",
+      "Name": "sharp fangs",
+      "Description": "A sharp set of direwolf fangs.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "DiceNotation": "3d4",
+      "TargetSlot": "MainHand",
+      "AttackVerbs": [
+        "bite"
+      ]
+    },
+    {
+      "VirtualId": "leather_vest",
+      "Name": "leather armor",
+      "Description": "A vest of boiled leather.",
+      "IsGetable": true,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "TargetSlot": "Torso",
+      "ArmorRating": 2
+    },
+    {
+      "VirtualId": "rusty_dagger",
+      "Name": "dagger",
+      "Description": "A pitted, rusty dagger.",
+      "IsGetable": true,
+      "IsWeapon": true,
+      "TargetSlot": "OffHand",
+      "DiceNotation": "1d4",
+      "AttackVerbs": [
+        "stab",
+        "pierce"
+      ]
+    },
+    {
+      "VirtualId": "iron_helm",
+      "Name": "iron helmet",
+      "Description": "A heavy iron helmet.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "IsArmor": true,
+      "TargetSlot": "Head",
+      "ArmorRating": 2
+    },
+    {
+      "VirtualId": "gold_ring_1",
+      "Name": "gold ring",
+      "Description": "A shiny signet ring.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "TargetSlot": "Ring",
+      "ArmorRating": 0
+    },
+    {
+      "VirtualId": "wooden_shield",
+      "Name": "shield",
+      "Description": "A sturdy round shield.",
+      "IsEquippable": true,
+      "IsGetable": true,
+      "IsArmor": true,
+      "TargetSlot": "OffHand",
+      "IsShield": true,
+      "ArmorRating": 4
+    },
+    {
+      "VirtualId": "hunting_bow",
+      "Name": "hunting bow",
+      "Description": "A supple yew longbow.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "WeaponType": "Bow",
+      "DiceNotation": "2d4",
+      "TargetSlot": "MainHand",
+      "AttackVerbs": [
+        "shoot",
+        "loose"
+      ]
+    },
+    {
+      "VirtualId": "torch",
+      "Name": "{ytorch{x",
+      "Description": "A rough pine torch wrapped in oil-soaked rags. It casts a warm circle of light.",
+      "IsGetable": true,
+      "IsLightSource": true
+    },
+    {
+      "VirtualId": "goggles_of_night",
+      "Name": "{Dgoggles of night{x",
+      "Description": "Smoked-glass goggles etched with a faint silver rune. Wearing them grants sight in total darkness.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": false,
+      "TargetSlot": "Head",
+      "GrantsDarkvision": true
+    }
+  ],
+  "NpcTemplates": [
+    {
+      "VirtualId": "street_walker",
+      "Name": "walker",
+      "Description": "A lean gray street walker with predatory yellow eyes.",
+      "Health": 25,
+      "MaxHealth": 25,
+      "EquippedWeaponTemplateId": "rusty_dagger",
+      "IsAggressive": false
+    },
+    {
+      "VirtualId": "dire_wolf",
+      "Name": "ferocious {Rdire wolf{x",
+      "Description": "A massive, {Rcorrupted{x beast dripping {dblack{x saliva",
+      "Health": 45,
+      "MaxHealth": 45,
+      "EquippedWeaponTemplateId": "dire_wolf_fangs",
+      "IsAggressive": true
+    },
+    {
+      "VirtualId": "cave_bat",
+      "Name": "{Dgiant cave bat{x",
+      "Description": "A huge bat with leathery wings and needle-sharp fangs. Its eyes glow faintly red — it sees perfectly in the dark.",
+      "Health": 15,
+      "MaxHealth": 15,
+      "Level": 2,
+      "XpReward": 30,
+      "HasDarkvision": true,
+      "IsAggressive": true,
+      "Archetypes": [ "Animal" ]
+    }
+  ],
+  "Rooms": [
+    {
+      "VirtualId": "forest_entrance",
+      "Name": "The Forest Edge",
+      "Description": "Sunlight filters through a thick canopy. A path winds east.",
+      "Exits": {
+        "East": "deep_woods"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "leather_vest",
+            "Count": 1
+          },
+          {
+            "TemplateId": "bastard_sword",
+            "Count": 1
+          },
+          {
+            "TemplateId": "wooden_shield",
+            "Count": 1
+          },
+          {
+            "TemplateId": "gold_ring_1",
+            "Count": 1
+          },
+          {
+            "TemplateId": "iron_helm",
+            "Count": 1
+          },
+          {
+            "TemplateId": "rusty_dagger",
+            "Count": 3
+          },
+          {
+            "TemplateId": "hunting_bow",
+            "Count": 1
+          }
+        ],
+        "Npcs": []
+      },
+      "IsOutside": true
+    },
+    {
+      "VirtualId": "deep_woods",
+      "Name": "Deep Whispering Woods",
+      "Description": "The shadows deepen. You hear rustling in the brush. A dark cave mouth yawns to the north.",
+      "Exits": {
+        "West": "forest_entrance",
+        "North": "cave_entrance"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "street_walker",
+            "Count": 2
+          },
+          {
+            "TemplateId": "dire_wolf",
+            "Count": 1
+          }
+        ]
+      },
+      "IsOutside": true
+    },
+    {
+      "VirtualId": "cave_entrance",
+      "Name": "Cave Entrance",
+      "Description": "The mouth of a shallow cave carved into the hillside. Without a light source or darkvision, you cannot see your hand in front of your face.",
+      "IsDark": true,
+      "IsOutside": false,
+      "Exits": {
+        "South": "deep_woods"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "torch",
+            "Count": 1
+          },
+          {
+            "TemplateId": "goggles_of_night",
+            "Count": 1
+          }
+        ],
+        "Npcs": [
+          {
+            "TemplateId": "cave_bat",
+            "Count": 1
+          }
+        ]
+      }
+    }
+  ]
+}</script>
+  <script type="application/json" id="seed-fanatics_tower">{
+  "Name": "fanatics_tower",
+  "Description": "A tower to test your skills",
+  "Rooms": [
+    {
+      "VirtualId": "tower_entrance",
+      "Name": "The tower entrance",
+      "Description": "The Threshold of Infiltration",
+      "Exits": {},
+      "IsOutside": false,
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 3
+          }
+        ]
+      }
+    }
+  ],
+  "ItemTemplates": [
+    {
+      "VirtualId": "bastard_sword",
+      "Name": "The Bastard Sword Beginners Luck",
+      "Description": "A simple bastard sword",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": true,
+      "WeaponType": "Sword",
+      "DiceNotation": "1d10",
+      "AttackVerbs": [
+        "slash",
+        "slice"
+      ],
+      "IsArmor": false,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 0,
+      "TargetSlot": "MainHand"
+    },
+    {
+      "VirtualId": "wood_shield",
+      "Name": "A wooden shield",
+      "Description": "A simple wooden shield",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": true,
+      "ArmorRating": 2,
+      "TargetSlot": "OffHand"
+    },
+    {
+      "VirtualId": "worn_leather_cap",
+      "Name": "A worn leather cap",
+      "Description": "A simpe cap of boiled leather",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Head"
+    },
+    {
+      "VirtualId": "wool_scarf",
+      "Name": "A frayed wool scarf",
+      "Description": "A thick, rough-woven scarf wrapped tightly against the elements",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Necklace"
+    },
+    {
+      "VirtualId": "copper_amulet",
+      "Name": "A copper amulet",
+      "Description": "A dull copper disc hanging from a thin leather cord",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Necklace"
+    },
+    {
+      "VirtualId": "copper_stud",
+      "Name": "A copper stud",
+      "Description": "A small, tarnished bit of copper wire bent into a loop.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Earring"
+    },
+    {
+      "VirtualId": "scout_leather_vest",
+      "Name": "Leather vest of the scout",
+      "Description": "A stiff jerkin made of thin leather pieces stitched together with thick twine.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Torso"
+    },
+    {
+      "VirtualId": "leather_shoulderguard",
+      "Name": "A worn leather shoulderguard",
+      "Description": "A pair of light leather spaulders that strap over the shoulders.",
+      "IsGetable": true,
+      "IsContainer": false,
+      "IsWeapon": false,
+      "WeaponType": null,
+      "DiceNotation": null,
+      "AttackVerbs": null,
+      "IsArmor": true,
+      "IsEquippable": true,
+      "IsShield": false,
+      "ArmorRating": 1,
+      "TargetSlot": "Arm"
+    }
+  ],
+  "NpcTemplates": [
+    {
+      "VirtualId": "blind_novice",
+      "Name": "A blind novice",
+      "Description": "A frantic, newly recruited cultist wearing a starch-white blindfold.",
+      "Health": 20,
+      "MaxHealth": 20,
+      "Level": 5,
+      "XpReward": 10,
+      "EquippedWeaponTemplateId": "bastard_sword",
+      "IsAggressive": false,
+      "Archetypes": []
+    }
+  ]
+}</script>
+
+<script>
+"use strict";
+
+/* ---------- Enum value lists (from ConsoleMud/Enums) ---------- */
+const ENUMS = {
+  Direction: ["North", "South", "East", "West", "Up", "Down"],
+  EquipmentSlot: ["Head","Mask","Necklace","Torso","Gloves","Belt","Pants","Shins","Boots","MainHand","OffHand","Ring","Earring","Arm","Forearm","Ring1","Ring2","Earring1","Earring2","LeftArm","RightArm","LeftForearm","RightForearm"],
+  WeaponType: ["Unarmed","Sword","Dagger","Mace","Club","Axe","Spear","Staff","Bow"],
+  Archetype: ["Humanoid","Animal","Beast","Undead","Fiend","Dragon","Elemental"]
+};
+
+const OPPOSITE = { North:"South", South:"North", East:"West", West:"East", Up:"Down", Down:"Up" };
+const GRID_DELTA = { North:[0,-1], South:[0,1], East:[1,0], West:[-1,0] };
+
+/* ---------- Schema registry ----------
+   include: 'always' | 'omitFalse' | 'omitEmpty' | 'omitZero' | 'omitDefault'(uses default)
+   type: text | textarea | int | bool | enum | stringList | multiEnum | itemRef
+*/
+const SCHEMAS = {
+  items: {
+    label: "Items", idField: "VirtualId", labelField: "Name",
+    fields: [
+      { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "IsGetable", label: "Getable", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsEquippable", label: "Equippable", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsWeapon", label: "Weapon", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsArmor", label: "Armor", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsShield", label: "Shield", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsContainer", label: "Container", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsCloseable", label: "Closeable", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "StartsLocked", label: "Starts Locked", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsLightSource", label: "Light Source", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "GrantsDarkvision", label: "Grants Darkvision", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "TargetSlot", label: "Target Slot", type: "enum", enum: "EquipmentSlot", include: "omitEmpty", optional: true },
+      { name: "ArmorRating", label: "Armor Rating", type: "int", include: "omitZero", default: 0 },
+      { name: "WeaponType", label: "Weapon Type", type: "enum", enum: "WeaponType", include: "omitEmpty", optional: true },
+      { name: "DiceNotation", label: "Dice Notation", type: "text", include: "omitEmpty", placeholder: "e.g. 1d10" },
+      { name: "AttackVerbs", label: "Attack Verbs", type: "stringList", include: "omitEmpty" },
+      { name: "KeyId", label: "Key Id (this item is a key)", type: "text", include: "omitEmpty" },
+      { name: "LockKeyId", label: "Lock Key Id (key that opens this)", type: "text", include: "omitEmpty" }
+    ]
+  },
+  npcs: {
+    label: "NPCs", idField: "VirtualId", labelField: "Name",
+    fields: [
+      { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Health", label: "Health", type: "int", include: "always", default: 20 },
+      { name: "MaxHealth", label: "Max Health", type: "int", include: "always", default: 20 },
+      { name: "Level", label: "Level", type: "int", include: "omitDefault", default: 1 },
+      { name: "XpReward", label: "XP Reward (0 = auto)", type: "int", include: "omitZero", default: 0 },
+      { name: "EquippedWeaponTemplateId", label: "Equipped Weapon", type: "itemRef", include: "omitEmpty" },
+      { name: "IsAggressive", label: "Aggressive", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "HasDarkvision", label: "Has Darkvision", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "Archetypes", label: "Archetypes", type: "multiEnum", enum: "Archetype", include: "omitEmpty" }
+    ]
+  },
+  rooms: {
+    label: "Rooms", idField: "VirtualId", labelField: "Name",
+    fields: [
+      { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always" },
+      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "IsOutside", label: "Outside", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "IsDark", label: "Dark", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "Exits", label: "Exits", type: "exits", include: "omitEmpty" },
+      { name: "Spawns", label: "Spawns", type: "spawns", include: "omitEmpty" }
+    ]
+  }
+};
+
+const TAB_ORDER = ["info", "items", "npcs", "rooms", "map"];
+const TAB_LABELS = { info: "Area Info", items: "Items", npcs: "NPCs", rooms: "Rooms", map: "Map" };
+
+/* ---------- State ---------- */
+const state = {
+  area: null,             // { Name, Description, Author, ItemTemplates:[], NpcTemplates:[], Rooms:[] }
+  selected: { items: -1, npcs: -1, rooms: -1 },
+  activeTab: "info",
+  reciprocal: true,
+  warnings: []
+};
+
+/* collection key per tab */
+const COLL = { items: "ItemTemplates", npcs: "NpcTemplates", rooms: "Rooms" };
+
+/* ---------- Boot ---------- */
+function parseSeed(id) {
+  const el = document.getElementById(id);
+  const raw = (el ? el.textContent : "").trim();
+  if (!raw || raw.indexOf("__SEED_") !== -1) return null;
+  try { return JSON.parse(raw); } catch (e) { console.error("Seed parse failed for " + id, e); return null; }
+}
+const SEED_AREAS = {};
+
+function emptyArea() {
+  return { Name: "New Area", Description: "", Author: "", ItemTemplates: [], NpcTemplates: [], Rooms: [] };
+}
+
+function normalizeArea(a) {
+  a.Name = a.Name || "";
+  a.Description = a.Description || "";
+  a.Author = a.Author || "";
+  a.ItemTemplates = Array.isArray(a.ItemTemplates) ? a.ItemTemplates : [];
+  a.NpcTemplates = Array.isArray(a.NpcTemplates) ? a.NpcTemplates : [];
+  a.Rooms = Array.isArray(a.Rooms) ? a.Rooms : [];
+  a.Rooms.forEach(r => {
+    if (typeof r.Exits !== "object" || r.Exits == null) r.Exits = {};
+    if (typeof r.Spawns !== "object" || r.Spawns == null) r.Spawns = { Items: [], Npcs: [] };
+    if (!Array.isArray(r.Spawns.Items)) r.Spawns.Items = [];
+    if (!Array.isArray(r.Spawns.Npcs)) r.Spawns.Npcs = [];
+  });
+  return a;
+}
+
+function init() {
+  const emerald = parseSeed("seed-emerald_forest");
+  const fanatics = parseSeed("seed-fanatics_tower");
+  if (emerald) SEED_AREAS.emerald_forest = emerald;
+  if (fanatics) SEED_AREAS.fanatics_tower = fanatics;
+
+  const picker = document.getElementById("example-picker");
+  Object.keys(SEED_AREAS).forEach(key => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = SEED_AREAS[key].Name || key;
+    picker.appendChild(opt);
+  });
+
+  // Open with the first embedded example if present, else an empty area.
+  const firstKey = Object.keys(SEED_AREAS)[0];
+  state.area = normalizeArea(firstKey ? deepClone(SEED_AREAS[firstKey]) : emptyArea());
+  resetSelection();
+
+  document.getElementById("btn-new").onclick = () => { state.area = normalizeArea(emptyArea()); resetSelection(); state.activeTab = "info"; fullRender(); toast("New area created"); };
+  picker.onchange = (e) => {
+    const key = e.target.value; e.target.value = "";
+    if (!key || !SEED_AREAS[key]) return;
+    state.area = normalizeArea(deepClone(SEED_AREAS[key]));
+    resetSelection(); fullRender(); toast("Loaded example: " + (SEED_AREAS[key].Name || key));
+  };
+  document.getElementById("btn-upload").onclick = triggerUpload;
+  document.getElementById("btn-download").onclick = downloadArea;
+  document.getElementById("btn-validate").onclick = () => { runValidation(); renderWarnings(); toast("Validation complete"); };
+
+  fullRender();
+}
+
+function resetSelection() {
+  state.selected.items = state.area.ItemTemplates.length ? 0 : -1;
+  state.selected.npcs = state.area.NpcTemplates.length ? 0 : -1;
+  state.selected.rooms = state.area.Rooms.length ? 0 : -1;
+}
+
+function fullRender() {
+  renderHeader();
+  renderTabs();
+  renderActiveTab();
+  runValidation();
+  renderWarnings();
+}
+
+/* ---------- DOM helpers ---------- */
+function el(tag, props, children) {
+  const node = document.createElement(tag);
+  if (props) {
+    for (const k in props) {
+      if (k === "class") node.className = props[k];
+      else if (k === "text") node.textContent = props[k];
+      else if (k === "html") node.innerHTML = props[k];
+      else if (k.startsWith("on") && typeof props[k] === "function") node.addEventListener(k.slice(2), props[k]);
+      else if (props[k] !== null && props[k] !== undefined && props[k] !== false) node.setAttribute(k, props[k]);
+    }
+  }
+  if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+function svgEl(tag, props, children) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  if (props) for (const k in props) {
+    if (k.startsWith("on") && typeof props[k] === "function") node.addEventListener(k.slice(2), props[k]);
+    else if (props[k] != null) node.setAttribute(k, props[k]);
+  }
+  if (children) (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return; node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+function stripMarkup(s) { return String(s).replace(/\{\{/g, "\u0001").replace(/\{[a-zA-Z]/g, "").replace(/\u0001/g, "{"); }
+
+/* ---------- Header + Tabs ---------- */
+function renderHeader() {
+  document.getElementById("area-name-display").textContent = stripMarkup(state.area.Name || "(unnamed area)");
+}
+
+function renderTabs() {
+  const nav = document.getElementById("tabs");
+  clear(nav);
+  for (const key of TAB_ORDER) {
+    let label = TAB_LABELS[key];
+    if (key === "items") label += " (" + state.area.ItemTemplates.length + ")";
+    else if (key === "npcs") label += " (" + state.area.NpcTemplates.length + ")";
+    else if (key === "rooms") label += " (" + state.area.Rooms.length + ")";
+    nav.appendChild(el("button", {
+      class: "tab" + (state.activeTab === key ? " active" : ""),
+      onclick: () => { state.activeTab = key; renderTabs(); renderActiveTab(); }
+    }, label));
+  }
+}
+
+function renderActiveTab() {
+  const main = document.getElementById("main");
+  clear(main);
+  if (state.activeTab === "info") main.appendChild(renderAreaInfo());
+  else if (state.activeTab === "map") main.appendChild(renderMap());
+  else main.appendChild(renderArrayTab(state.activeTab));
+}
+
+/* ---------- Area Info ---------- */
+function renderAreaInfo() {
+  const wrap = el("div", { class: "area-info" });
+  const a = state.area;
+  wrap.appendChild(simpleText("Name", a.Name, v => { a.Name = v; renderHeader(); renderTabsSoon(); }));
+  wrap.appendChild(simpleTextarea("Description", a.Description, v => { a.Description = v; }));
+  wrap.appendChild(simpleText("Author (optional, preserved for tooling)", a.Author, v => { a.Author = v; }));
+  const stats = el("div", { class: "field" }, [
+    el("label", {}, "Contents"),
+    el("div", { class: "e-id", style: "color:var(--muted)" },
+      a.ItemTemplates.length + " items, " + a.NpcTemplates.length + " NPCs, " + a.Rooms.length + " rooms")
+  ]);
+  wrap.appendChild(stats);
+  return wrap;
+}
+function renderTabsSoon() { renderTabs(); }
+function simpleText(label, val, onChange) {
+  return el("div", { class: "field" }, [
+    el("label", {}, label),
+    el("input", { type: "text", value: val != null ? val : "", oninput: e => onChange(e.target.value) })
+  ]);
+}
+function simpleTextarea(label, val, onChange) {
+  const ta = el("textarea", { oninput: e => onChange(e.target.value) });
+  ta.value = val != null ? val : "";
+  return el("div", { class: "field" }, [ el("label", {}, label), ta ]);
+}
+
+/* ---------- Array tabs (Items / NPCs / Rooms) ---------- */
+function coll(key) { return state.area[COLL[key]]; }
+
+function renderArrayTab(key) {
+  const schema = SCHEMAS[key];
+  const layout = el("div", { class: "layout" });
+  const list = coll(key);
+
+  const listPanel = el("div", { class: "list-panel" });
+  listPanel.appendChild(el("div", { class: "list-head" }, [
+    el("span", { class: "count" }, list.length + " entries"),
+    el("button", { class: "btn small primary", onclick: () => addEntry(key) }, "+ Add")
+  ]));
+  const listEl = el("div", { class: "entry-list" });
+  list.forEach((entry, i) => {
+    listEl.appendChild(el("div", {
+      class: "entry" + (state.selected[key] === i ? " active" : ""),
+      onclick: () => { state.selected[key] = i; renderActiveTab(); }
+    }, [
+      el("span", { class: "e-name" }, stripMarkup(entry[schema.labelField] || "(unnamed)")),
+      el("span", { class: "e-id" }, entry[schema.idField] || "")
+    ]));
+  });
+  listPanel.appendChild(listEl);
+
+  const formPanel = el("div", { class: "form-panel" });
+  const idx = state.selected[key];
+  if (idx < 0 || idx >= list.length) {
+    formPanel.appendChild(el("div", { class: "empty-hint" }, "Select an entry on the left, or click + Add to create one."));
+  } else {
+    formPanel.appendChild(renderForm(key, idx));
+  }
+
+  layout.appendChild(listPanel);
+  layout.appendChild(formPanel);
+  return layout;
+}
+
+function renderForm(key, idx) {
+  const schema = SCHEMAS[key];
+  const entry = coll(key)[idx];
+  const wrap = el("div", {});
+  wrap.appendChild(el("div", { class: "form-actions" }, [
+    el("button", { class: "btn small", onclick: () => duplicateEntry(key, idx) }, "Duplicate"),
+    el("button", { class: "btn small danger", onclick: () => deleteEntry(key, idx) }, "Delete")
+  ]));
+
+  // group consecutive boolean flags into a checkbox grid
+  let i = 0;
+  const fields = schema.fields;
+  while (i < fields.length) {
+    const f = fields[i];
+    if (f.group === "flags") {
+      const box = el("div", { class: "checks" });
+      while (i < fields.length && fields[i].group === "flags") { box.appendChild(boolField(entry, fields[i])); i++; }
+      wrap.appendChild(box);
+    } else {
+      wrap.appendChild(renderField(key, entry, f));
+      i++;
+    }
+  }
+  return wrap;
+}
+
+function renderField(key, entry, field) {
+  switch (field.type) {
+    case "text": return textField(entry, field, false);
+    case "textarea": return textField(entry, field, true);
+    case "int": return numberField(entry, field);
+    case "bool": return boolField(entry, field);
+    case "enum": return enumField(entry, field);
+    case "stringList": return stringListField(entry, field);
+    case "multiEnum": return multiEnumField(entry, field);
+    case "itemRef": return itemRefField(entry, field);
+    case "exits": return exitsField(entry);
+    case "spawns": return spawnsField(entry);
+    default: return el("div", {});
+  }
+}
+
+function textField(entry, field, multi) {
+  const input = el(multi ? "textarea" : "input", {
+    type: "text", placeholder: field.placeholder || "",
+    oninput: e => { entry[field.name] = e.target.value; afterEdit(false); }
+  });
+  input.value = entry[field.name] != null ? entry[field.name] : "";
+  return el("div", { class: "field" }, [ el("label", {}, field.label), input ]);
+}
+function numberField(entry, field) {
+  const cur = entry[field.name];
+  const input = el("input", {
+    type: "number", step: "1", value: cur != null && cur !== "" ? cur : "",
+    oninput: e => {
+      const v = e.target.value;
+      if (v === "") entry[field.name] = field.default != null ? field.default : 0;
+      else { const n = parseInt(v, 10); entry[field.name] = isNaN(n) ? (field.default || 0) : n; }
+      afterEdit(false);
+    }
+  });
+  return el("div", { class: "field" }, [ el("label", {}, field.label), input ]);
+}
+function boolField(entry, field) {
+  const input = el("input", { type: "checkbox", onchange: e => { entry[field.name] = e.target.checked; afterEdit(false); } });
+  if (entry[field.name]) input.checked = true;
+  return el("div", { class: "field checkbox" }, [ input, el("label", {}, field.label) ]);
+}
+function enumField(entry, field) {
+  const values = ENUMS[field.enum] || [];
+  const cur = entry[field.name] != null ? entry[field.name] : "";
+  const opts = [];
+  if (field.optional || cur === "") opts.push(el("option", { value: "" }, "(none)"));
+  values.forEach(v => opts.push(el("option", { value: v }, v)));
+  if (cur && !values.includes(cur)) opts.push(el("option", { value: cur }, cur + " (custom)"));
+  const sel = el("select", { onchange: e => { entry[field.name] = e.target.value; afterEdit(false); } }, opts);
+  sel.value = cur;
+  return el("div", { class: "field" }, [ el("label", {}, field.label), sel ]);
+}
+function stringListField(entry, field) {
+  if (!Array.isArray(entry[field.name])) entry[field.name] = [];
+  const arr = entry[field.name];
+  const rows = el("div", { class: "row-list" });
+  arr.forEach((val, i) => {
+    rows.appendChild(el("div", { class: "tag-row" }, [
+      el("input", { type: "text", value: val, oninput: e => { arr[i] = e.target.value; afterEdit(false); } }),
+      el("button", { class: "btn small danger", onclick: () => { arr.splice(i, 1); afterEdit(true); } }, "x")
+    ]));
+  });
+  return el("fieldset", {}, [ el("legend", {}, field.label), rows,
+    el("button", { class: "btn small add-row", onclick: () => { arr.push(""); afterEdit(true); } }, "+ Add") ]);
+}
+function multiEnumField(entry, field) {
+  if (!Array.isArray(entry[field.name])) entry[field.name] = [];
+  const arr = entry[field.name];
+  const values = ENUMS[field.enum] || [];
+  const box = el("div", { class: "multi-enum" });
+  values.forEach(v => {
+    const cb = el("input", { type: "checkbox", onchange: e => {
+      if (e.target.checked) { if (!arr.includes(v)) arr.push(v); }
+      else { const idx = arr.indexOf(v); if (idx >= 0) arr.splice(idx, 1); }
+      afterEdit(false);
+    } });
+    if (arr.includes(v)) cb.checked = true;
+    box.appendChild(el("label", {}, [ cb, v ]));
+  });
+  return el("fieldset", {}, [ el("legend", {}, field.label), box ]);
+}
+function itemRefField(entry, field) {
+  const items = state.area.ItemTemplates || [];
+  const ids = items.map(x => x.VirtualId).filter(Boolean);
+  const cur = entry[field.name] != null ? entry[field.name] : "";
+  const opts = [ el("option", { value: "" }, "(none)") ];
+  ids.forEach(id => opts.push(el("option", { value: id }, id)));
+  const unknown = cur && !ids.includes(cur);
+  if (unknown) opts.push(el("option", { value: cur }, cur + " (unknown)"));
+  const sel = el("select", { class: unknown ? "ref-bad" : "", onchange: e => { entry[field.name] = e.target.value; afterEdit(false); } }, opts);
+  sel.value = cur;
+  return el("div", { class: "field" }, [ el("label", {}, field.label), sel ]);
+}
+
+/* ---------- Exits editor ---------- */
+function roomById(vid) { return state.area.Rooms.find(r => r.VirtualId === vid); }
+
+function exitsField(room) {
+  const rows = el("div", { class: "row-list" });
+  const entries = Object.entries(room.Exits);
+  const roomIds = state.area.Rooms.map(r => r.VirtualId).filter(Boolean);
+
+  entries.forEach(([dir, tgt]) => {
+    // direction select
+    const dirOpts = ENUMS.Direction.map(d => el("option", { value: d }, d));
+    if (dir && !ENUMS.Direction.includes(dir)) dirOpts.push(el("option", { value: dir }, dir + " (custom)"));
+    const dirSel = el("select", { onchange: e => renameExitDir(room, dir, e.target.value) }, dirOpts);
+    dirSel.value = dir;
+
+    // target room select
+    const tgtOpts = [ el("option", { value: "" }, "(select room)") ];
+    roomIds.forEach(id => { if (id !== room.VirtualId) tgtOpts.push(el("option", { value: id }, id)); });
+    const unknown = tgt && !roomIds.includes(tgt);
+    if (unknown) tgtOpts.push(el("option", { value: tgt }, tgt + " (unknown)"));
+    const tgtSel = el("select", { class: unknown ? "ref-bad" : "", onchange: e => setExitTarget(room, dir, e.target.value) }, tgtOpts);
+    tgtSel.value = tgt;
+
+    rows.appendChild(el("div", { class: "kv-row" }, [
+      dirSel, tgtSel,
+      el("button", { class: "btn small danger", onclick: () => removeExit(room, dir) }, "x")
+    ]));
+  });
+
+  const recip = el("input", { type: "checkbox", onchange: e => { state.reciprocal = e.target.checked; } });
+  if (state.reciprocal) recip.checked = true;
+
+  const legendRow = el("div", { class: "legend-row" }, [
+    el("span", { style: "color:var(--accent);font-size:12px;font-weight:600" }, "Exits"),
+    el("label", { class: "recip" }, [ recip, "Auto-add reciprocal exit" ])
+  ]);
+
+  const addBtn = el("button", { class: "btn small add-row", onclick: () => addExit(room) }, "+ Add exit");
+  return el("fieldset", {}, [ legendRow, rows, addBtn ]);
+}
+
+function firstUnusedDirection(room) {
+  for (const d of ENUMS.Direction) if (!Object.prototype.hasOwnProperty.call(room.Exits, d)) return d;
+  return null;
+}
+function addExit(room) {
+  const d = firstUnusedDirection(room);
+  if (d == null) { toast("All six directions are already used"); return; }
+  room.Exits[d] = "";
+  afterEdit(true);
+}
+function setExitTarget(room, dir, newTgt) {
+  const old = room.Exits[dir];
+  room.Exits[dir] = newTgt;
+  if (state.reciprocal) {
+    const opp = OPPOSITE[dir];
+    if (opp) {
+      if (old) { const or = roomById(old); if (or && or.Exits[opp] === room.VirtualId) delete or.Exits[opp]; }
+      if (newTgt) { const nr = roomById(newTgt); if (nr) nr.Exits[opp] = room.VirtualId; }
+    }
+  }
+  afterEdit(true);
+}
+function renameExitDir(room, oldDir, newDir) {
+  if (oldDir === newDir) return;
+  if (Object.prototype.hasOwnProperty.call(room.Exits, newDir)) { toast("Direction '" + newDir + "' already used"); renderActiveTab(); return; }
+  const tgt = room.Exits[oldDir];
+  // rebuild preserving order
+  const rebuilt = {};
+  Object.keys(room.Exits).forEach(k => { rebuilt[k === oldDir ? newDir : k] = room.Exits[k]; });
+  Object.keys(room.Exits).forEach(k => delete room.Exits[k]);
+  Object.keys(rebuilt).forEach(k => room.Exits[k] = rebuilt[k]);
+  if (state.reciprocal && tgt) {
+    const tr = roomById(tgt);
+    if (tr) {
+      const oldOpp = OPPOSITE[oldDir], newOpp = OPPOSITE[newDir];
+      if (oldOpp && tr.Exits[oldOpp] === room.VirtualId) delete tr.Exits[oldOpp];
+      if (newOpp) tr.Exits[newOpp] = room.VirtualId;
+    }
+  }
+  afterEdit(true);
+}
+function removeExit(room, dir) {
+  const tgt = room.Exits[dir];
+  delete room.Exits[dir];
+  if (state.reciprocal && tgt) {
+    const opp = OPPOSITE[dir]; const tr = roomById(tgt);
+    if (tr && opp && tr.Exits[opp] === room.VirtualId) delete tr.Exits[opp];
+  }
+  afterEdit(true);
+}
+
+/* ---------- Spawns editor ---------- */
+function spawnsField(room) {
+  if (typeof room.Spawns !== "object" || room.Spawns == null) room.Spawns = { Items: [], Npcs: [] };
+  if (!Array.isArray(room.Spawns.Items)) room.Spawns.Items = [];
+  if (!Array.isArray(room.Spawns.Npcs)) room.Spawns.Npcs = [];
+
+  const body = el("div", {});
+  body.appendChild(el("div", { class: "sub-section-title" }, "Item spawns"));
+  body.appendChild(spawnRows(room.Spawns.Items, state.area.ItemTemplates));
+  body.appendChild(el("button", { class: "btn small add-row", onclick: () => { room.Spawns.Items.push({ TemplateId: "", Count: 1 }); afterEdit(true); } }, "+ Add item spawn"));
+
+  body.appendChild(el("div", { class: "sub-section-title" }, "NPC spawns"));
+  body.appendChild(spawnRows(room.Spawns.Npcs, state.area.NpcTemplates));
+  body.appendChild(el("button", { class: "btn small add-row", onclick: () => { room.Spawns.Npcs.push({ TemplateId: "", Count: 1 }); afterEdit(true); } }, "+ Add NPC spawn"));
+
+  return el("fieldset", {}, [ el("legend", {}, "Spawns"), body ]);
+}
+function spawnRows(arr, templates) {
+  const ids = templates.map(t => t.VirtualId).filter(Boolean);
+  const rows = el("div", { class: "row-list" });
+  arr.forEach((sp, i) => {
+    const cur = sp.TemplateId != null ? sp.TemplateId : "";
+    const opts = [ el("option", { value: "" }, "(select template)") ];
+    ids.forEach(id => opts.push(el("option", { value: id }, id)));
+    const unknown = cur && !ids.includes(cur);
+    if (unknown) opts.push(el("option", { value: cur }, cur + " (unknown)"));
+    const sel = el("select", { class: unknown ? "ref-bad" : "", onchange: e => { sp.TemplateId = e.target.value; afterEdit(false); } }, opts);
+    sel.value = cur;
+    const cnt = el("input", { class: "cnt", type: "number", step: "1", min: "1", value: sp.Count != null ? sp.Count : 1,
+      oninput: e => { const n = parseInt(e.target.value, 10); sp.Count = isNaN(n) ? 1 : n; afterEdit(false); } });
+    rows.appendChild(el("div", { class: "kv-row" }, [
+      sel, cnt, el("button", { class: "btn small danger", onclick: () => { arr.splice(i, 1); afterEdit(true); } }, "x")
+    ]));
+  });
+  return rows;
+}
+
+/* ---------- CRUD ---------- */
+function defaultFor(field) {
+  switch (field.type) {
+    case "int": return field.default != null ? field.default : 0;
+    case "bool": return false;
+    case "stringList": case "multiEnum": return [];
+    case "enum": case "text": case "textarea": case "itemRef": return "";
+    case "exits": return {};
+    case "spawns": return { Items: [], Npcs: [] };
+    default: return "";
+  }
+}
+function addEntry(key) {
+  const schema = SCHEMAS[key];
+  const entry = {};
+  for (const f of schema.fields) entry[f.name] = defaultFor(f);
+  entry[schema.idField] = uniqueId(key, "new_" + key.slice(0, -1));
+  entry[schema.labelField] = entry[schema.labelField] || "";
+  coll(key).push(entry);
+  state.selected[key] = coll(key).length - 1;
+  afterEdit(true);
+}
+function duplicateEntry(key, idx) {
+  const schema = SCHEMAS[key];
+  const copy = deepClone(coll(key)[idx]);
+  copy[schema.idField] = uniqueId(key, (copy[schema.idField] || "copy") + "_copy");
+  coll(key).splice(idx + 1, 0, copy);
+  state.selected[key] = idx + 1;
+  afterEdit(true);
+}
+function deleteEntry(key, idx) {
+  const schema = SCHEMAS[key];
+  const entry = coll(key)[idx];
+  const name = entry[schema.labelField] || entry[schema.idField] || "this entry";
+  if (!confirm("Delete " + stripMarkup(name) + "?")) return;
+  coll(key).splice(idx, 1);
+  if (state.selected[key] >= coll(key).length) state.selected[key] = coll(key).length - 1;
+  afterEdit(true);
+}
+function uniqueId(key, base) {
+  const ids = new Set(coll(key).map(e => e[SCHEMAS[key].idField]));
+  if (!ids.has(base)) return base;
+  let i = 2; while (ids.has(base + "_" + i)) i++;
+  return base + "_" + i;
+}
+
+function afterEdit(structural) {
+  if (structural) renderActiveTab();
+  renderTabs();
+  runValidation();
+  renderWarnings();
+}
+
+/* ---------- Validation ---------- */
+function runValidation() {
+  const w = [];
+  const itemIds = new Set(state.area.ItemTemplates.map(x => x.VirtualId));
+  const npcIds = new Set(state.area.NpcTemplates.map(x => x.VirtualId));
+  const roomIds = new Set(state.area.Rooms.map(x => x.VirtualId));
+  const keyIds = new Set(state.area.ItemTemplates.map(x => x.KeyId).filter(Boolean));
+
+  function checkDup(list, label) {
+    const seen = new Map();
+    list.forEach((e, i) => {
+      const id = e.VirtualId;
+      if (!id || String(id).trim() === "") w.push(`${label}: entry #${i + 1} has an empty VirtualId.`);
+      else if (seen.has(id)) w.push(`${label}: duplicate VirtualId "${id}" (entries #${seen.get(id) + 1} and #${i + 1}).`);
+      else seen.set(id, i);
+    });
+  }
+  checkDup(state.area.ItemTemplates, "Items");
+  checkDup(state.area.NpcTemplates, "NPCs");
+  checkDup(state.area.Rooms, "Rooms");
+
+  state.area.NpcTemplates.forEach(n => {
+    if (n.EquippedWeaponTemplateId && !itemIds.has(n.EquippedWeaponTemplateId))
+      w.push(`NPC "${n.VirtualId}" equips unknown item "${n.EquippedWeaponTemplateId}".`);
+  });
+  state.area.ItemTemplates.forEach(it => {
+    if (it.LockKeyId && !keyIds.has(it.LockKeyId))
+      w.push(`Item "${it.VirtualId}" has LockKeyId "${it.LockKeyId}" with no matching item KeyId.`);
+  });
+  state.area.Rooms.forEach(r => {
+    Object.entries(r.Exits || {}).forEach(([dir, tgt]) => {
+      if (!tgt) w.push(`Room "${r.VirtualId}" has an empty ${dir} exit target.`);
+      else if (!roomIds.has(tgt)) w.push(`Room "${r.VirtualId}" ${dir} exit points to unknown room "${tgt}".`);
+    });
+    (r.Spawns && r.Spawns.Items || []).forEach(s => {
+      if (s.TemplateId && !itemIds.has(s.TemplateId)) w.push(`Room "${r.VirtualId}" spawns unknown item "${s.TemplateId}".`);
+    });
+    (r.Spawns && r.Spawns.Npcs || []).forEach(s => {
+      if (s.TemplateId && !npcIds.has(s.TemplateId)) w.push(`Room "${r.VirtualId}" spawns unknown NPC "${s.TemplateId}".`);
+    });
+  });
+
+  state.warnings = w;
+}
+function renderWarnings() {
+  const box = document.getElementById("warnings");
+  clear(box);
+  if (state.warnings.length === 0) { box.classList.remove("show"); return; }
+  box.classList.add("show");
+  box.appendChild(el("strong", {}, state.warnings.length + " issue(s) found:"));
+  const ul = el("ul", {});
+  state.warnings.forEach(m => ul.appendChild(el("li", {}, m)));
+  box.appendChild(ul);
+}
+
+/* ---------- Room map ---------- */
+function computeLayout(rooms) {
+  const byId = {}; rooms.forEach(r => byId[r.VirtualId] = r);
+  const pos = {}; const occupied = {};
+  function occupy(x, y) { return occupied[x + "," + y]; }
+  function place(vid, x, y) {
+    let key = x + "," + y;
+    while (occupied[key] !== undefined) { x += 1; key = x + "," + y; }
+    occupied[key] = vid; pos[vid] = { x, y };
+  }
+  rooms.forEach(r => {
+    if (pos[r.VirtualId] !== undefined) return;
+    if (Object.keys(pos).length === 0) place(r.VirtualId, 0, 0);
+    else { const maxY = Math.max.apply(null, Object.values(pos).map(p => p.y)); place(r.VirtualId, 0, maxY + 2); }
+    const queue = [r.VirtualId];
+    const seen = new Set();
+    while (queue.length) {
+      const cur = queue.shift();
+      if (seen.has(cur)) continue; seen.add(cur);
+      const room = byId[cur]; if (!room || !room.Exits) continue;
+      for (const dir of Object.keys(room.Exits)) {
+        const tgt = room.Exits[dir];
+        if (!tgt || !byId[tgt] || pos[tgt] !== undefined) continue;
+        const d = GRID_DELTA[dir];
+        if (d) place(tgt, pos[cur].x + d[0], pos[cur].y + d[1]);
+        else place(tgt, pos[cur].x, pos[cur].y); // Up/Down: near, will nudge
+        queue.push(tgt);
+      }
+    }
+  });
+  return pos;
+}
+
+function renderMap() {
+  const wrap = el("div", { class: "map-wrap" });
+  const rooms = state.area.Rooms;
+  if (rooms.length === 0) { wrap.appendChild(el("div", { class: "empty-hint" }, "No rooms yet. Add rooms to see the map.")); return wrap; }
+
+  wrap.appendChild(el("div", { class: "map-hint" }, "Read-only map. Click a room to edit it. Up/Down exits shown as badges."));
+
+  const pos = computeLayout(rooms);
+  const byId = {}; rooms.forEach(r => byId[r.VirtualId] = r);
+  const cellW = 180, cellH = 110, nodeW = 140, nodeH = 56, pad = 30;
+  const xs = Object.values(pos).map(p => p.x), ys = Object.values(pos).map(p => p.y);
+  const minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+  const minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+  const width = (maxX - minX + 1) * cellW + pad * 2;
+  const height = (maxY - minY + 1) * cellH + pad * 2;
+  const cx = vid => pad + (pos[vid].x - minX) * cellW + nodeW / 2;
+  const cy = vid => pad + (pos[vid].y - minY) * cellH + nodeH / 2;
+
+  const svg = svgEl("svg", { width: width, height: height, viewBox: "0 0 " + width + " " + height });
+
+  // edges first
+  rooms.forEach(r => {
+    Object.keys(r.Exits || {}).forEach(dir => {
+      const tgt = r.Exits[dir];
+      if (!tgt || !pos[tgt] || !pos[r.VirtualId]) return;
+      if (GRID_DELTA[dir]) {
+        svg.appendChild(svgEl("line", { class: "exit-line", x1: cx(r.VirtualId), y1: cy(r.VirtualId), x2: cx(tgt), y2: cy(tgt) }));
+      }
+    });
+  });
+
+  // nodes
+  rooms.forEach(r => {
+    if (!pos[r.VirtualId]) return;
+    const nx = pad + (pos[r.VirtualId].x - minX) * cellW;
+    const ny = pad + (pos[r.VirtualId].y - minY) * cellH;
+    const selected = state.selected.rooms >= 0 && state.area.Rooms[state.selected.rooms] === r;
+    const g = svgEl("g", { class: "room-node" + (selected ? " selected" : ""),
+      onclick: () => { state.selected.rooms = rooms.indexOf(r); state.activeTab = "rooms"; renderTabs(); renderActiveTab(); } });
+    g.appendChild(svgEl("rect", { x: nx, y: ny, width: nodeW, height: nodeH, rx: 8 }));
+    g.appendChild(svgEl("text", { x: nx + nodeW / 2, y: ny + 22, "text-anchor": "middle" }, truncate(stripMarkup(r.Name || "(unnamed)"), 20)));
+    g.appendChild(svgEl("text", { class: "vid", x: nx + nodeW / 2, y: ny + 40, "text-anchor": "middle" }, truncate(r.VirtualId || "", 22)));
+    // vertical exit badges
+    const verts = [];
+    if (r.Exits && r.Exits.Up) verts.push("\u25B2U");
+    if (r.Exits && r.Exits.Down) verts.push("\u25BCD");
+    if (verts.length) g.appendChild(svgEl("text", { class: "vert-badge", x: nx + nodeW - 6, y: ny + 14, "text-anchor": "end" }, verts.join(" ")));
+    svg.appendChild(g);
+  });
+
+  wrap.appendChild(svg);
+  return wrap;
+}
+function truncate(s, n) { return s.length > n ? s.slice(0, n - 1) + "\u2026" : s; }
+
+/* ---------- Serialization (minimal) ---------- */
+function shouldInclude(field, v) {
+  switch (field.include) {
+    case "always": return true;
+    case "omitFalse": return v === true;
+    case "omitZero": { const n = Number(v); return !isNaN(n) && n !== 0; }
+    case "omitDefault": return v != null && v !== (field.default != null ? field.default : 0);
+    case "omitEmpty":
+    default:
+      if (v == null) return false;
+      if (typeof v === "string") return v.trim() !== "";
+      if (Array.isArray(v)) return v.length > 0;
+      if (typeof v === "object") return Object.keys(v).length > 0;
+      return true;
+  }
+}
+function coerceOut(field, v) {
+  switch (field.type) {
+    case "int": { const n = parseInt(v, 10); return isNaN(n) ? (field.default || 0) : n; }
+    case "bool": return !!v;
+    case "stringList": return (Array.isArray(v) ? v : []).map(String).filter(s => s.trim() !== "");
+    case "multiEnum": return (Array.isArray(v) ? v : []).slice();
+    default: return v != null ? v : "";
+  }
+}
+function buildEntry(schema, entry) {
+  const o = {};
+  for (const f of schema.fields) {
+    if (f.type === "exits") { const ex = buildExits(entry.Exits); if (Object.keys(ex).length) o.Exits = ex; continue; }
+    if (f.type === "spawns") { const sp = buildSpawns(entry.Spawns); if (sp) o.Spawns = sp; continue; }
+    const v = entry[f.name];
+    if (!shouldInclude(f, v)) continue;
+    o[f.name] = coerceOut(f, v);
+  }
+  return o;
+}
+function buildExits(exits) {
+  const o = {};
+  if (exits) for (const dir of Object.keys(exits)) { const t = exits[dir]; if (t && String(t).trim() !== "") o[dir] = t; }
+  return o;
+}
+function buildSpawns(spawns) {
+  if (!spawns) return null;
+  const items = (spawns.Items || []).filter(s => s.TemplateId && String(s.TemplateId).trim() !== "")
+    .map(s => ({ TemplateId: s.TemplateId, Count: parseInt(s.Count, 10) || 1 }));
+  const npcs = (spawns.Npcs || []).filter(s => s.TemplateId && String(s.TemplateId).trim() !== "")
+    .map(s => ({ TemplateId: s.TemplateId, Count: parseInt(s.Count, 10) || 1 }));
+  if (items.length === 0 && npcs.length === 0) return null;
+  return { Items: items, Npcs: npcs };
+}
+function serializeArea() {
+  const a = state.area;
+  const out = {};
+  out.Name = a.Name || "";
+  if (a.Description && a.Description.trim() !== "") out.Description = a.Description;
+  if (a.Author && a.Author.trim() !== "") out.Author = a.Author;
+  out.ItemTemplates = a.ItemTemplates.map(e => buildEntry(SCHEMAS.items, e));
+  out.NpcTemplates = a.NpcTemplates.map(e => buildEntry(SCHEMAS.npcs, e));
+  out.Rooms = a.Rooms.map(e => buildEntry(SCHEMAS.rooms, e));
+  return JSON.stringify(out, null, 2) + "\n";
+}
+
+/* ---------- Upload / Download ---------- */
+function areaFileName() {
+  const base = (state.area.Name || "area").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+  return (base || "area") + ".json";
+}
+function download(filename, text) {
+  const blob = new Blob([text], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: filename });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function downloadArea() { const f = areaFileName(); download(f, serializeArea()); toast("Downloaded " + f); }
+
+let fileInput = null;
+function triggerUpload() {
+  if (!fileInput) { fileInput = el("input", { type: "file", accept: ".json,application/json", onchange: onUploadChange }); document.body.appendChild(fileInput); }
+  fileInput.value = ""; fileInput.click();
+}
+function onUploadChange(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (typeof data !== "object" || Array.isArray(data) || data == null) { alert("An area file must be a JSON object."); return; }
+      state.area = normalizeArea(data);
+      resetSelection(); state.activeTab = "info"; fullRender();
+      toast("Loaded " + (state.area.Name || file.name));
+    } catch (err) { alert("Could not parse JSON: " + err.message); }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- Toast ---------- */
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
