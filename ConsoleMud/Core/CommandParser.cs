@@ -26,6 +26,10 @@ public class CommandParser
         _commands["e"] = new MoveCommand(Direction.East);
         _commands["west"] = new MoveCommand(Direction.West);
         _commands["w"] = new MoveCommand(Direction.West);
+        _commands["up"] = new MoveCommand(Direction.Up);
+        _commands["u"] = new MoveCommand(Direction.Up);
+        _commands["down"] = new MoveCommand(Direction.Down);
+        _commands["d"] = new MoveCommand(Direction.Down);
         
         _commands["get"] = new GetCommand();
         _commands["take"] = new GetCommand();
@@ -33,7 +37,6 @@ public class CommandParser
         _commands["inv"] = new InventoryCommand();
         _commands["i"] = new InventoryCommand();
         _commands["drop"] = new DropCommand();
-        _commands["d"] = new DropCommand();
         _commands["put"] = new PutCommand();
         _commands["open"] = new OpenCommand();
         _commands["close"] = new CloseCommand();
@@ -49,6 +52,9 @@ public class CommandParser
         _commands["second"] = new SecondCommand();
         _commands["sec"] = new SecondCommand();
         _commands["status"] = new StatusCommand();
+        _commands["st"] = new StatusCommand();
+        _commands["score"] = new StatusCommand();
+        _commands["sc"] = new StatusCommand();
         _commands["flee"] = new FleeCommand();
         _commands["sit"] = new SitCommand();
         _commands["rest"] = new RestCommand();
