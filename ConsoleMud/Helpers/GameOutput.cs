@@ -2,6 +2,7 @@ using Terminal.Gui;
 using ConsoleMud.Core;
 using ConsoleMud.Entities;
 using ConsoleMud.Views;
+using ConsoleMud.Core.Services;
 using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
@@ -15,13 +16,13 @@ namespace ConsoleMud.Helpers;
 public static class GameOutput
 {
     private static GameOutputView?  _outputView;
-    private static Label?           _statusBar;
+    private static StatusBarView?   _statusBar;
     private static IApplication?    _app;
 
     /// <summary>
     /// Called once, after Terminal.Gui is initialised, to wire up the views.
     /// </summary>
-    public static void Setup(GameOutputView outputView, Label statusBar, IApplication app)
+    public static void Setup(GameOutputView outputView, StatusBarView statusBar, IApplication app)
     {
         _outputView = outputView;
         _statusBar  = statusBar;
@@ -47,15 +48,27 @@ public static class GameOutput
         string location = world.Rooms.TryGetValue(player.CurrentRoomId, out var room)
             ? room.Name
             : "Unknown";
-
-        string text = $" HP: {player.Health}/{player.MaxHealth}  "
-                    + $"Mana: {player.Mana}/{player.MaxMana}  "
+        string xpLine = player.Level >= LevelingService.MaxLevel
+            ? "MAX"
+            : $"{{y{player.Experience}{{x/{{y{LevelingService.XpForNextLevel(player.Level)}{{x";
+        
+        string text = $" {{wHP: {{G{player.Health}{{x/{{G{player.MaxHealth}{{x  "
+                    + $"{{wMana: {{B{player.Mana}{{x/{{B{player.MaxMana}{{x  "
+                    + $"XP: {xpLine}  "
                     + $"[ {location} ]";
+        
+        var segmets = ColorMarkup.ParseSegments(text, ConsoleColor.Gray);
 
-        _app?.Invoke(() =>
-        {
-            if (_statusBar != null)
-                _statusBar.Text = text;
-        });
+        _app?.Invoke(() => _statusBar?.SetSegments(segmets));
+    }
+
+    /// <summary>
+    /// Sets the status bar's text to the given markup.'
+    /// </summary>
+    /// <param name="markup"></param>
+    public static void SetStatusMessage(string markup)
+    {
+        var segments = ColorMarkup.ParseSegments(markup, ConsoleColor.White);
+        _app?.Invoke(() => _statusBar?.SetSegments(segments));
     }
 }

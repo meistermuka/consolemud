@@ -74,17 +74,14 @@ class Program
         };
 
         // Status bar: one row sitting immediately above the input field.
-        var statusBar = new Label
+        var statusBar = new StatusBarView
         {
             X      = 0,
             Y      = Pos.AnchorEnd(2),
             Width  = Dim.Fill(),
             Height = 1,
-            Text   = " HP: -- / --   Mana: -- / --   [ loading... ]"
+            Text   = " HP: -- / --   Mana: -- / --  XP: -- / --  [ loading... ]"
         };
-        SchemeManager.AddScheme("StatusBar",
-            new Scheme(new TGuiAttr(ColorName16.Black, ColorName16.Cyan)));
-        statusBar.SchemeName = "StatusBar";
 
         // Input field: pinned to the very bottom, full width.
         var inputField = new TextField
