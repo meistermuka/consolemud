@@ -10,4 +10,8 @@ public class RoomBlueprint
     public bool IsOutside { get; set; }
     public bool IsDark { get; set; }
     public SpawnRulesBlueprint Spawns { get; set; } = new();
+
+    // Optional: relative path to a Scripts/rooms/*.lua file (without extension).
+    // e.g. "rooms/throne_room". Null means no entry event.
+    public string? ScriptId { get; set; }
 }

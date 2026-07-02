@@ -18,4 +18,8 @@ public class Room
 
     public bool IsOutside { get; set; }
     public bool IsDark { get; set; } // a light source or darkvision is needed to see here
+
+    // Optional Lua script key for room entry events (Layer 4).
+    // e.g. "rooms/throne_room". Null means no entry event.
+    public string? ScriptId { get; set; }
 }

@@ -710,7 +710,8 @@ const SCHEMAS = {
       { name: "EquippedWeaponTemplateId", label: "Equipped Weapon", type: "itemRef", include: "omitEmpty" },
       { name: "IsAggressive", label: "Aggressive", type: "bool", include: "omitFalse", group: "flags" },
       { name: "HasDarkvision", label: "Has Darkvision", type: "bool", include: "omitFalse", group: "flags" },
-      { name: "Archetypes", label: "Archetypes", type: "multiEnum", enum: "Archetype", include: "omitEmpty" }
+      { name: "Archetypes", label: "Archetypes", type: "multiEnum", enum: "Archetype", include: "omitEmpty" },
+      { name: "ScriptId", label: "Script Id (optional)", type: "text", include: "omitEmpty", placeholder: "npcs/my_script" }
     ]
   },
   rooms: {
@@ -721,6 +722,7 @@ const SCHEMAS = {
       { name: "Description", label: "Description", type: "textarea", include: "always", colour: true },
       { name: "IsOutside", label: "Outside", type: "bool", include: "omitFalse", group: "flags" },
       { name: "IsDark", label: "Dark", type: "bool", include: "omitFalse", group: "flags" },
+      { name: "ScriptId", label: "Script Id (optional)", type: "text", include: "omitEmpty", placeholder: "rooms/my_script" },
       { name: "Exits", label: "Exits", type: "exits", include: "omitEmpty" },
       { name: "Spawns", label: "Spawns", type: "spawns", include: "omitEmpty" }
     ]

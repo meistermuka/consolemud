@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Scripting;
 using ConsoleMud.Entities;
 using ConsoleMud.Enums;
 
@@ -39,6 +40,14 @@ public class WorldState
             newRoom.Characters.Add(character);
             character.CurrentRoomId = targetRoomId;
             TrapSystem.OnEnter(character, newRoom, this);
+
+            // Room entry script — fires after traps so dead NPCs don't receive the event.
+            if (newRoom.ScriptId != null && ScriptEngine.HasScript(newRoom.ScriptId))
+            {
+                var charProxy = new LuaCharacterProxy(character);
+                var roomProxy = new LuaRoomProxy(newRoom);
+                ScriptEngine.RunFunction(newRoom.ScriptId, "on_enter", charProxy, roomProxy);
+            }
         }
     }
 }

@@ -37,7 +37,8 @@ public static class AreaLoaderService
                 Name = bp.Name,
                 Description = bp.Description,
                 IsOutside = bp.IsOutside,
-                IsDark = bp.IsDark
+                IsDark = bp.IsDark,
+                ScriptId = bp.ScriptId
             };
             // Pair the textual VirtualId to this room's permanent memory Guid
             idTranslationTable[bp.VirtualId] = liveRoom.Id;
