@@ -7,6 +7,7 @@ using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using ConsoleMud.Core;
 using ConsoleMud.Core.Commands;
+using ConsoleMud.Core.Scripting;
 using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
@@ -45,6 +46,10 @@ class Program
         AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
         var startingRoom = world.Rooms.Values.First();
         world.SafeRoomId = startingRoom.Id;
+
+        // Load Lua scripts after all world data is ready so ScriptApi can
+        // reference rooms and characters from the start.
+        ScriptEngine.Load("Scripts", world);
 
         var player = SelectCharacter(world, definitions, startingRoom.Id);
 
