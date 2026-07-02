@@ -26,8 +26,14 @@ while (!token.IsCancellationRequested)
 | Constant | Pulses | Real time | Drives |
 |---|---|---|---|
 | `CombatInterval` | 4 | 1.0 s | `CombatSystem.Tick` — auto-attacks, CC ageing, second-wind |
-| `AiInterval` | 8 | 2.0 s | `UpdateStealth` (idle auto-hide) + `UpdateNpcIntelligence` (aggro) |
+| `AiInterval` | 8 | 2.0 s | `UpdateStealth` (idle auto-hide) + `UpdateNpcIntelligence` (aggro + NPC Lua scripts) |
 | `StatusInterval` | 12 | 3.0 s | `StatusAndRegenSystem.Tick` — DoT/HoT, regen, effect expiry |
+
+> **NPC Lua scripts**: `UpdateNpcIntelligence` now also fires
+> `ScriptEngine.RunFunction(npc.ScriptId, "on_tick", npcProxy, roomProxy, playerProxy)`
+> after the default aggressive-attack check, for any NPC whose blueprint includes a
+> `ScriptId`. A broken or missing script is silently swallowed and never interrupts
+> the tick loop. See [scripting.md](scripting.md) for the full authoring guide.
 | `WeatherInterval` | 240 | 60 s | `UpdateWeather` — rolls `WorldState.CurrentWeather`, announced to players outside |
 | `AutosaveInterval` | 480 | 120 s | `SaveService.Save` for each active player |
 | `HideIdleSeconds` | — | 10 s | idle threshold the stealth check compares against |

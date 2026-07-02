@@ -50,6 +50,7 @@ Right panel: form for the selected NPC:
 - **`EquippedWeaponTemplateId`** — dropdown populated from the item templates defined in this area; unknown references are shown in red.
 - Boolean flags: `IsAggressive`, `HasDarkvision`.
 - `Archetypes` — multi-select checkboxes (Humanoid, Animal, Beast, Undead, Fiend, Dragon, Elemental).
+- **`ScriptId`** (optional) — relative path to a Lua behaviour script under `Scripts/`, without the extension (e.g. `npcs/goblin_shaman`). Assigns custom per-tick AI that fires every 2 seconds after the default aggressive check. See [scripting.md](scripting.md).
 
 #### Rooms
 
@@ -58,12 +59,23 @@ Right panel: form for the selected room:
 
 - Basic: `VirtualId`, `Name`, `Description`.
 - Boolean flags: `IsOutside`, `IsDark`.
+- **`ScriptId`** (optional) — relative path to a Lua entry-event script under `Scripts/`, without the extension (e.g. `rooms/throne_room`). The script's `on_enter(character, room)` function fires whenever any character steps into the room, after floor traps are checked. See [scripting.md](scripting.md).
 - **Exits editor** — each exit is a row of two dropdowns: direction (North / South / East / West / Up / Down) and target room (populated from the rooms in this area). The **Auto-add reciprocal exit** toggle automatically writes the opposite exit on the target room (N↔S, E↔W, Up↔Down) and removes it when the exit is deleted or retargeted.
 - **Spawns editor** — separate sections for item spawns and NPC spawns. Each spawn row is a template dropdown (populated from item/NPC templates) and a count.
 
 #### Map
 
 A read-only SVG diagram auto-laid-out from the exit directions: N/S/E/W exits determine grid position; Up/Down exits appear as small badges on the room node. Click any room node to jump directly to that room in the Rooms tab.
+
+### Colour preview
+
+The `Name` and `Description` fields for Items, NPCs, and Rooms support ConsoleMud
+colour markup (e.g. `{Rdire wolf{x`). Each of these fields shows:
+
+- **Colour chip toolbar** — a row of 17 small coloured circles (one per code: `r R g G y Y b B m M c C w W d k x`). Click any chip to insert the corresponding code at the current cursor position in the input. Hover a chip to see its code letter and colour name.
+- **Preview pane** — a dark-background read-only div below the input that renders the markup in real time. Plain text with no codes displays unchanged.
+
+The `{x` (reset) chip is shown as a labelled outline circle rather than a filled colour. Full colour code reference: [colour.md](colour.md).
 
 ### Validation
 

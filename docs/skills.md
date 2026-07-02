@@ -150,7 +150,47 @@ come in three flavours:
 1. Add the entry to `Definitions/skills.json`.
 2. Reference it in the class's `Skills` list in `Definitions/classes.json` (id + unlock level).
 3. Implement the behaviour:
-   - active -> `ISkillHandler` + register in `SkillHandlerRegistry`;
+   - active -> `ISkillHandler` + register in `SkillHandlerRegistry`; **or** a Lua file (see below);
    - static passive -> a `case` in `PassiveService`;
    - trigger passive -> wire into combat / `TriggerBus`.
 4. A character learns it automatically at the unlock level via `LevelingService`, and it appears in the `skills` command.
+
+## Alternative: Lua skill handlers
+
+Active skill effects can be written in Lua instead of C#. The metadata entry in
+`skills.json` (mana cost, cooldown, dice notation, etc.) is still required —
+the script provides only the runtime effect.
+
+### Minimal example
+
+```lua
+-- Scripts/skills/thunder_bolt.lua
+skill_id = "thunder_bolt"   -- must match the Id in skills.json
+
+function execute(ctx)
+    if ctx.target_id == nil then
+        game.print("{YStrike what?{x")
+        return
+    end
+    local dmg = game.roll_dice("2d6") + ctx.spell_power
+    game.damage(ctx.target_id, dmg)
+    game.print("{YLightning arcs into " .. ctx.target_name .. " for " .. dmg .. " damage!{x")
+end
+```
+
+### Why use Lua?
+
+- No recompile — drop a file in `Scripts/skills/` and restart the server.
+- Content-author friendly for designers who are not C# developers.
+
+### Registration
+
+At startup `ScriptEngine` scans `Scripts/skills/*.lua`, reads the `skill_id`
+global from each file, and registers a `LuaSkillHandler` in `SkillHandlerRegistry`
+automatically. If a C# handler and a Lua handler share the same `skill_id`, the
+last one registered wins (C# handlers are registered first).
+
+### Available `ctx` fields
+
+See [scripting.md](scripting.md) for the full `LuaSkillContext` field table and the
+complete `game` API reference.
