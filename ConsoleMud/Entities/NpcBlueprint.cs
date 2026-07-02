@@ -13,4 +13,8 @@ public class NpcBlueprint
     public bool IsAggressive { get; set; }
     public bool HasDarkvision { get; set; }
     public string[] Archetypes { get; set; } // e.g. ["Animal"], ["Undead"]
+
+    // Optional: relative path to a Scripts/npcs/*.lua file (without extension).
+    // e.g. "npcs/goblin_shaman". Null means default AI only.
+    public string? ScriptId { get; set; }
 }

@@ -154,6 +154,7 @@ public static class AreaLoaderService
             Archetypes = ParseArchetypes(bp.Archetypes),
             // Fallback reward scales with the NPC's level and toughness.
             XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,
+            ScriptId = bp.ScriptId,
         };
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically

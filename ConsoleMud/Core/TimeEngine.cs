@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Scripting;
 using ConsoleMud.Entities;
 
 namespace ConsoleMud.Core;
@@ -86,6 +87,16 @@ public class TimeEngine
                         player.CombatTarget = npc;
                     
                     Helpers.ColorConsole.WriteLine($"\nThe {npc.Name} attacks {player.Name}!", ConsoleColor.Red);
+                }
+
+                // Scripted NPC behaviour — fires after the default aggressive check.
+                if (npc.ScriptId != null && ScriptEngine.HasScript(npc.ScriptId))
+                {
+                    var npcProxy     = new LuaCharacterProxy(npc);
+                    var roomProxy    = new LuaRoomProxy(room);
+                    // Passing C# null to MoonSharp yields Lua nil — the script guards with 'if player == nil'.
+                    object? playerProxy = player != null ? new LuaCharacterProxy(player) : null;
+                    ScriptEngine.RunFunction(npc.ScriptId, "on_tick", npcProxy, roomProxy, playerProxy);
                 }
             }
         }
