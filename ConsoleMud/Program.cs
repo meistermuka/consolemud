@@ -50,6 +50,7 @@ class Program
         // Load Lua scripts after all world data is ready so ScriptApi can
         // reference rooms and characters from the start.
         ScriptEngine.Load("Scripts", world);
+        skillHandlers.RegisterScriptedSkills();
 
         var player = SelectCharacter(world, definitions, startingRoom.Id);
 

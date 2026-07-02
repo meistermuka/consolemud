@@ -1560,5 +1560,22 @@
       "Buff"
     ],
     "Parameters": {}
+  },
+  {
+    "Id": "thunder_bolt",
+    "Name": "thunder bolt",
+    "Description": "Channel raw lightning into a single devastating strike. Effect defined in Scripts/skills/thunder_bolt.lua.",
+    "Kind": "Active",
+    "IsSpell": true,
+    "ManaCost": 18,
+    "CooldownSeconds": 4,
+    "DamageType": "Magic",
+    "DiceNotation": "2d6",
+    "Tags": [
+      "Active",
+      "Spell",
+      "Damage"
+    ],
+    "Parameters": {}
   }
 ]

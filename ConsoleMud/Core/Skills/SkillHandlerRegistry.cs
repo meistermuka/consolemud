@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Scripting;
 using ConsoleMud.Core.Skills.Handlers.Cleric;
 using ConsoleMud.Core.Skills.Handlers.Common;
 using ConsoleMud.Core.Skills.Handlers.Druid;
@@ -114,4 +115,18 @@ public class SkillHandlerRegistry
     public void Register(ISkillHandler handler) => _handlers[handler.SkillId] = handler;
 
     public bool TryGet(string skillId, out ISkillHandler handler) => _handlers.TryGetValue(skillId, out handler);
+
+    /// <summary>
+    /// Auto-registers a <see cref="LuaSkillHandler"/> for every loaded
+    /// <c>Scripts/skills/*.lua</c> file that exports a <c>skill_id</c> global.
+    /// Must be called after <see cref="ScriptEngine.Load"/> has completed.
+    /// </summary>
+    public void RegisterScriptedSkills()
+    {
+        foreach (var (key, skillId) in ScriptEngine.GetSkillScriptIds())
+        {
+            Register(new LuaSkillHandler(skillId, key));
+            Console.WriteLine($"[ScriptEngine] Skill handler registered: {skillId} → {key}");
+        }
+    }
 }

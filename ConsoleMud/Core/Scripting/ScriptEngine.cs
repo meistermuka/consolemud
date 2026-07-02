@@ -113,4 +113,30 @@ public static class ScriptEngine
     /// </summary>
     public static bool HasScript(string scriptId)
         => _loaded && _scripts.ContainsKey(scriptId);
+
+    /// <summary>
+    /// Enumerates all loaded scripts under the <c>skills/</c> prefix and
+    /// yields (scriptKey, skillId) pairs for each file that exports a
+    /// <c>skill_id</c> string global.
+    ///
+    /// Scripts without a valid <c>skill_id</c> are skipped with a console warning.
+    /// Called by <see cref="Skills.SkillHandlerRegistry.RegisterScriptedSkills"/>.
+    /// </summary>
+    public static IEnumerable<(string Key, string SkillId)> GetSkillScriptIds()
+    {
+        foreach (var (key, script) in _scripts)
+        {
+            if (!key.StartsWith("skills/", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var val = script.Globals.Get("skill_id");
+            if (val.IsNil() || val.Type != MoonSharp.Interpreter.DataType.String)
+            {
+                Console.WriteLine($"[ScriptEngine] Warning: '{key}.lua' has no skill_id global — skipped.");
+                continue;
+            }
+
+            yield return (key, val.String);
+        }
+    }
 }
