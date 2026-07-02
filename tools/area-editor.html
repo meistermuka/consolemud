@@ -138,6 +138,28 @@
   }
   .toast.show { opacity: 1; }
   input[type="file"] { display: none; }
+
+  /* Colour preview */
+  .colour-toolbar {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; max-width: 720px;
+  }
+  .chip {
+    width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent;
+    cursor: pointer; font-size: 10px; font-weight: 700; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; transition: border-color .15s;
+    position: relative;
+  }
+  .chip:hover { border-color: #fff; }
+  .chip.reset { background: transparent; border: 2px solid var(--border); color: var(--muted); font-size: 11px; }
+  .chip.reset:hover { border-color: #fff; color: #fff; }
+  .colour-preview {
+    width: 100%; max-width: 720px; min-height: 32px; background: #0a0c11;
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+    line-height: 1.5; color: var(--text); white-space: pre-wrap; word-break: break-word;
+    margin-top: 4px;
+  }
+  .preview-label { font-size: 11px; color: var(--muted); margin: 6px 0 3px; }
 </style>
 </head>
 <body>
@@ -591,6 +613,57 @@ const ENUMS = {
   Archetype: ["Humanoid","Animal","Beast","Undead","Fiend","Dragon","Elemental"]
 };
 
+/* ---------- Colour markup renderer (mirrors ColorMarkup.cs) ---------- */
+const COLOUR_MAP = {
+  r:"#c0392b", R:"#e74c3c",
+  g:"#27ae60", G:"#2ecc71",
+  y:"#d4ac0d", Y:"#f1c40f",
+  b:"#2980b9", B:"#3498db",
+  m:"#8e44ad", M:"#9b59b6",
+  c:"#16a085", C:"#1abc9c",
+  w:"#bdc3c7", W:"#ffffff",
+  d:"#7f8c8d", k:"#2c3e50"
+};
+const BASE_COLOUR = "#e6e9ef";
+
+// Ordered chip list for the toolbar: [code-letter, html-colour, tooltip-name]
+const CHIPS = [
+  ["r","#c0392b","dark red"],   ["R","#e74c3c","red"],
+  ["g","#27ae60","dark green"], ["G","#2ecc71","green"],
+  ["y","#d4ac0d","dark yellow"],["Y","#f1c40f","yellow"],
+  ["b","#2980b9","dark blue"],  ["B","#3498db","blue"],
+  ["m","#8e44ad","dark magenta"],["M","#9b59b6","magenta"],
+  ["c","#16a085","dark cyan"],  ["C","#1abc9c","cyan"],
+  ["w","#bdc3c7","gray"],       ["W","#ffffff","white"],
+  ["d","#7f8c8d","dark gray"],  ["k","#2c3e50","black"],
+  ["x", null, "reset colour"]
+];
+
+function escHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/** Convert a markup string to HTML with <span style="color:..."> segments. */
+function renderMarkup(text) {
+  if (!text) return "";
+  let html = "";
+  let colour = BASE_COLOUR;
+  let buf = "";
+  const flush = () => {
+    if (buf) { html += `<span style="color:${colour}">${escHtml(buf)}</span>`; buf = ""; }
+  };
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === "{" && i + 1 < text.length) {
+      const n = text[i + 1];
+      if (n === "{") { buf += "{"; i++; continue; }
+      if (n === "x") { flush(); colour = BASE_COLOUR; i++; continue; }
+      if (COLOUR_MAP[n] !== undefined) { flush(); colour = COLOUR_MAP[n]; i++; continue; }
+    }
+    buf += c;
+  }
+  flush();
+  return html;
+}
+
 const OPPOSITE = { North:"South", South:"North", East:"West", West:"East", Up:"Down", Down:"Up" };
 const GRID_DELTA = { North:[0,-1], South:[0,1], East:[1,0], West:[-1,0] };
 
@@ -603,8 +676,8 @@ const SCHEMAS = {
     label: "Items", idField: "VirtualId", labelField: "Name",
     fields: [
       { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
-      { name: "Name", label: "Name", type: "text", include: "always" },
-      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always", colour: true },
+      { name: "Description", label: "Description", type: "textarea", include: "always", colour: true },
       { name: "IsGetable", label: "Getable", type: "bool", include: "omitFalse", group: "flags" },
       { name: "IsEquippable", label: "Equippable", type: "bool", include: "omitFalse", group: "flags" },
       { name: "IsWeapon", label: "Weapon", type: "bool", include: "omitFalse", group: "flags" },
@@ -628,8 +701,8 @@ const SCHEMAS = {
     label: "NPCs", idField: "VirtualId", labelField: "Name",
     fields: [
       { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
-      { name: "Name", label: "Name", type: "text", include: "always" },
-      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always", colour: true },
+      { name: "Description", label: "Description", type: "textarea", include: "always", colour: true },
       { name: "Health", label: "Health", type: "int", include: "always", default: 20 },
       { name: "MaxHealth", label: "Max Health", type: "int", include: "always", default: 20 },
       { name: "Level", label: "Level", type: "int", include: "omitDefault", default: 1 },
@@ -644,8 +717,8 @@ const SCHEMAS = {
     label: "Rooms", idField: "VirtualId", labelField: "Name",
     fields: [
       { name: "VirtualId", label: "Virtual Id", type: "text", include: "always" },
-      { name: "Name", label: "Name", type: "text", include: "always" },
-      { name: "Description", label: "Description", type: "textarea", include: "always" },
+      { name: "Name", label: "Name", type: "text", include: "always", colour: true },
+      { name: "Description", label: "Description", type: "textarea", include: "always", colour: true },
       { name: "IsOutside", label: "Outside", type: "bool", include: "omitFalse", group: "flags" },
       { name: "IsDark", label: "Dark", type: "bool", include: "omitFalse", group: "flags" },
       { name: "Exits", label: "Exits", type: "exits", include: "omitEmpty" },
@@ -915,12 +988,62 @@ function renderField(key, entry, field) {
 }
 
 function textField(entry, field, multi) {
+  const wrap = el("div", { class: "field" });
+  wrap.appendChild(el("label", {}, field.label));
+
+  // Colour-chip toolbar
+  let preview = null;
+  if (field.colour) {
+    const toolbar = el("div", { class: "colour-toolbar" });
+    CHIPS.forEach(([code, colour, name]) => {
+      const chip = el("button", {
+        class: "chip" + (code === "x" ? " reset" : ""),
+        type: "button",
+        title: (code === "x" ? "reset" : "{" + code) + " — " + name,
+        onclick: () => insertCode(input, "{" + code, entry, field, preview)
+      });
+      if (colour) chip.style.background = colour;
+      chip.textContent = code === "x" ? "x" : "";
+      toolbar.appendChild(chip);
+    });
+    wrap.appendChild(toolbar);
+  }
+
   const input = el(multi ? "textarea" : "input", {
     type: "text", placeholder: field.placeholder || "",
-    oninput: e => { entry[field.name] = e.target.value; afterEdit(false); }
+    oninput: e => {
+      entry[field.name] = e.target.value;
+      if (preview) preview.innerHTML = renderMarkup(e.target.value) || "&nbsp;";
+      afterEdit(false);
+    }
   });
   input.value = entry[field.name] != null ? entry[field.name] : "";
-  return el("div", { class: "field" }, [ el("label", {}, field.label), input ]);
+  wrap.appendChild(input);
+
+  // Colour preview pane
+  if (field.colour) {
+    wrap.appendChild(el("div", { class: "preview-label" }, "Preview"));
+    preview = el("div", { class: "colour-preview" });
+    const cur = entry[field.name] != null ? entry[field.name] : "";
+    preview.innerHTML = renderMarkup(cur) || "&nbsp;";
+    wrap.appendChild(preview);
+  }
+
+  return wrap;
+}
+
+/** Insert a colour code at the cursor position (or end) of an input/textarea. */
+function insertCode(input, code, entry, field, preview) {
+  const start = input.selectionStart != null ? input.selectionStart : input.value.length;
+  const end   = input.selectionEnd   != null ? input.selectionEnd   : input.value.length;
+  const val = input.value.slice(0, start) + code + input.value.slice(end);
+  input.value = val;
+  entry[field.name] = val;
+  const newPos = start + code.length;
+  input.setSelectionRange(newPos, newPos);
+  input.focus();
+  if (preview) preview.innerHTML = renderMarkup(val) || "&nbsp;";
+  afterEdit(false);
 }
 function numberField(entry, field) {
   const cur = entry[field.name];
