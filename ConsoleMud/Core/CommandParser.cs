@@ -37,6 +37,7 @@ public class CommandParser
         _commands["inv"] = new InventoryCommand();
         _commands["i"] = new InventoryCommand();
         _commands["drop"] = new DropCommand();
+        _commands["give"] = new GiveCommand();
         _commands["put"] = new PutCommand();
         _commands["open"] = new OpenCommand();
         _commands["close"] = new CloseCommand();
