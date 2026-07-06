@@ -1,0 +1,8 @@
+ConsoleMud/Saves/
+ConsoleMud/bin/
+ConsoleMud/obj/
+.idea/
+
+.DS_Store
+ConsoleMud.sln.DotSettings.user
+ConsoleMud/ConsoleMud.sln.DotSettings.user

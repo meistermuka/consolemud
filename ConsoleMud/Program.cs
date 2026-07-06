@@ -43,7 +43,7 @@ class Program
         var skillExecutor  = new SkillExecutor(definitions, skillHandlers);
         var parser         = new CommandParser(skillExecutor, definitions);
 
-        AreaLoaderService.LoadAreaFile("Areas/emerald_forest.json", world);
+        AreaLoaderService.LoadAreaFile("Areas/fanatics_tower.json", world);
         var startingRoom = world.Rooms.Values.First();
         world.SafeRoomId = startingRoom.Id;
 

@@ -1,169 +1,381 @@
 {
   "Name": "fanatics_tower",
   "Description": "A tower to test your skills",
-  "Rooms": [
-    {
-      "VirtualId": "tower_entrance",
-      "Name": "The tower entrance",
-      "Description": "The Threshold of Infiltration",
-      "Exits": {},
-      "IsOutside": false,
-      "Spawns": {
-        "Items": [],
-        "Npcs": [
-          {
-            "TemplateId": "blind_novice",
-            "Count": 3
-          }
-        ]
-      }
-    }
-  ],
   "ItemTemplates": [
     {
-      "VirtualId": "bastard_sword",
-      "Name": "The Bastard Sword Beginners Luck",
-      "Description": "A simple bastard sword",
+      "VirtualId": "iron_helm",
+      "Name": "{GRunic{x {dIron{x Helm",
+      "Description": "A heavy iron greathelm etched with glowing protective runes. The metal feels unnaturally cold to the touch.",
       "IsGetable": true,
-      "IsContainer": false,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Head",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "iron_mask",
+      "Name": "{RZealot {dIron{x Mask",
+      "Description": "A terrifying facial plate molded into the likeness of a screaming cultist. It completely hides the wearer's expressions.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Mask",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "glass_amulet",
+      "Name": "Abyssal {BGlass{x Amulet",
+      "Description": "A sharp shard of void-born glass suspended by a silver chain. It seems to absorb the surrounding ambient light.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Necklace",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "leather_tunic",
+      "Name": "{dAshen{x Leather Tunic",
+      "Description": "Reinforced leather armour treated with the ashes of forbidden rituals, offering incredible flexibility and stealth.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Torso",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "leather_gloves",
+      "Name": "{GRunic{x Leather Gloves",
+      "Description": "Supple calfskin gloves lined with protective sigils along the knuckles to enhance spell delivery or weapon grip.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Gloves",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "spiked_belt",
+      "Name": "{RZealot{x Spiked Belt",
+      "Description": "A thick leather girdle lined with small iron studs. It fits tightly, keeping your core stable and your weapons secure.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Belt",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "cloth_trousers",
+      "Name": "{dAshen{x Cloth Trousers",
+      "Description": "Dark, smoke-scented trousers woven from a rare, flame-resistant fabric that doesn't rustle when you move.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Pants",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "steel_greaves",
+      "Name": "{GRunic {dSteel{x Greaves",
+      "Description": "Polished steel plates contoured perfectly to the shins, humming with a faint, stabilizing magical vibration.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Shins",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "leather_boots",
+      "Name": "{RZealot{x Leather Boots",
+      "Description": "Heavy, combat-ready boots with thick steel toes, designed to leave deep imprints and endure brutal environments.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Boots",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "silver_band",
+      "Name": "Abyssal {wSilver {yBand{x",
+      "Description": "A twisted silver ring set with a microscopic, pulsing dark gem that seems to draw upon the wearer's life force.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Ring1",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "copper_band",
+      "Name": "Abyssal {gCopper {yBand{x",
+      "Description": "A twisted silver ring set with a microscopic, pulsing dark gem that seems to draw upon the wearer's life force.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Ring2",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "crystal_stud",
+      "Name": "Ashen {BCrystal{x Stud",
+      "Description": "A small, jagged crystal fragment that whispers unintelligible fragments of heretical lore directly into your mind.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Earring1",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "steel_pauldrons",
+      "Name": "{RZealot{x Steel Pauldrons",
+      "Description": "Flaired, aggressive shoulderguards featuring jagged metal ridges designed to deflect heavy downward strikes.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Arm",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "steel_bracers",
+      "Name": "Ashen {dSteel{x Bracers",
+      "Description": "Heavy forearm guards covered in soot-colored lacquer, capable of absorbing intense physical impacts or spell recoil.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "LeftForearm",
+      "ArmorRating": 1
+    },
+    {
+      "VirtualId": "abyssal_dagger",
+      "Name": "Abyssal Steel Dagger",
+      "Description": "A serrated ritual blade made of dark steel. The edges ripple with an unstable, shadowy distortion when swung.",
+      "IsGetable": true,
+      "IsEquippable": true,
       "IsWeapon": true,
-      "WeaponType": "Sword",
-      "DiceNotation": "1d10",
-      "AttackVerbs": [
-        "slash",
-        "slice"
-      ],
-      "IsArmor": false,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 0,
-      "TargetSlot": "MainHand"
+      "TargetSlot": "MainHand",
+      "WeaponType": "Dagger",
+      "DiceNotation": "1d6"
     },
     {
-      "VirtualId": "wood_shield",
-      "Name": "A wooden shield",
-      "Description": "A simple wooden shield",
+      "VirtualId": "iron_shield",
+      "Name": "{GRunic{x Iron Shield",
+      "Description": "A heavy heater shield reinforced with an iron rim. A massive warding sigil is hammered directly into its center.",
       "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
       "IsEquippable": true,
-      "IsShield": true,
-      "ArmorRating": 2,
-      "TargetSlot": "OffHand"
+      "IsArmor": true,
+      "TargetSlot": "OffHand",
+      "ArmorRating": 5
     },
     {
-      "VirtualId": "worn_leather_cap",
-      "Name": "A worn leather cap",
-      "Description": "A simpe cap of boiled leather",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Head"
-    },
-    {
-      "VirtualId": "wool_scarf",
-      "Name": "A frayed wool scarf",
-      "Description": "A thick, rough-woven scarf wrapped tightly against the elements",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Necklace"
-    },
-    {
-      "VirtualId": "copper_amulet",
-      "Name": "A copper amulet",
-      "Description": "A dull copper disc hanging from a thin leather cord",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Necklace"
-    },
-    {
-      "VirtualId": "copper_stud",
-      "Name": "A copper stud",
-      "Description": "A small, tarnished bit of copper wire bent into a loop.",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Earring"
-    },
-    {
-      "VirtualId": "scout_leather_vest",
-      "Name": "Leather vest of the scout",
-      "Description": "A stiff jerkin made of thin leather pieces stitched together with thick twine.",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Torso"
-    },
-    {
-      "VirtualId": "leather_shoulderguard",
-      "Name": "A worn leather shoulderguard",
-      "Description": "A pair of light leather spaulders that strap over the shoulders.",
-      "IsGetable": true,
-      "IsContainer": false,
-      "IsWeapon": false,
-      "WeaponType": null,
-      "DiceNotation": null,
-      "AttackVerbs": null,
-      "IsArmor": true,
-      "IsEquippable": true,
-      "IsShield": false,
-      "ArmorRating": 1,
-      "TargetSlot": "Arm"
+      "VirtualId": "magical_chest",
+      "Name": "Magical Chest of Beginner Items",
+      "Description": "A magical chest that contains beginner items",
+      "IsContainer": true
     }
   ],
   "NpcTemplates": [
     {
       "VirtualId": "blind_novice",
-      "Name": "A blind novice",
-      "Description": "A frantic, newly recruited cultist wearing a starch-white blindfold.",
+      "Name": "Blind Novice",
+      "Description": "A frantic, newly recruited cultist wearing a starch-white blindfold. They stumble through the stone hallways, muttering half-learned prayers and striking out wildly at any sound.",
       "Health": 20,
       "MaxHealth": 20,
-      "Level": 5,
-      "XpReward": 10,
-      "EquippedWeaponTemplateId": "bastard_sword",
-      "IsAggressive": false,
-      "Archetypes": []
+      "XpReward": 5,
+      "Archetypes": [
+        "Humanoid"
+      ]
+    }
+  ],
+  "Rooms": [
+    {
+      "VirtualId": "tower_entrance",
+      "Name": "The tower entrance",
+      "Description": "The Threshold of Infiltration",
+      "Exits": {
+        "East": "tower_hall"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "iron_helm",
+            "Count": 1
+          },
+          {
+            "TemplateId": "iron_mask",
+            "Count": 1
+          },
+          {
+            "TemplateId": "glass_amulet",
+            "Count": 1
+          },
+          {
+            "TemplateId": "leather_tunic",
+            "Count": 1
+          },
+          {
+            "TemplateId": "leather_gloves",
+            "Count": 1
+          },
+          {
+            "TemplateId": "spiked_belt",
+            "Count": 1
+          },
+          {
+            "TemplateId": "cloth_trousers",
+            "Count": 1
+          },
+          {
+            "TemplateId": "steel_greaves",
+            "Count": 1
+          },
+          {
+            "TemplateId": "leather_boots",
+            "Count": 1
+          },
+          {
+            "TemplateId": "silver_band",
+            "Count": 1
+          },
+          {
+            "TemplateId": "copper_band",
+            "Count": 1
+          },
+          {
+            "TemplateId": "crystal_stud",
+            "Count": 2
+          },
+          {
+            "TemplateId": "steel_pauldrons",
+            "Count": 1
+          },
+          {
+            "TemplateId": "steel_bracers",
+            "Count": 1
+          },
+          {
+            "TemplateId": "abyssal_dagger",
+            "Count": 2
+          },
+          {
+            "TemplateId": "iron_shield",
+            "Count": 1
+          }
+        ],
+        "Npcs": []
+      }
+    },
+    {
+      "VirtualId": "tower_hall",
+      "Name": "Fanatics Tower Hall",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "West": "tower_entrance",
+        "East": "tower_hall_1"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 2
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "tower_hall_1",
+      "Name": "Fanatics Tower Hall",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "West": "tower_hall",
+        "East": "tower_hall_2"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 2
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "tower_hall_2",
+      "Name": "Fanatics Tower Hall",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "West": "tower_hall_1",
+        "East": "tower_hall_3"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 2
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "tower_hall_3",
+      "Name": "Fanatics Tower Hall",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "West": "tower_hall_2",
+        "Up": "tower_staircase"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "blind_novice",
+            "Count": 2
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "tower_staircase",
+      "Name": "Fanatics Tower Staircase",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "Down": "tower_hall_3",
+        "Up": "tower_staircase_1"
+      }
+    },
+    {
+      "VirtualId": "tower_staircase_1",
+      "Name": "Fanatics Tower Staircase",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "Down": "tower_staircase",
+        "West": "tower_radicals"
+      }
+    },
+    {
+      "VirtualId": "tower_radicals",
+      "Name": "Fanatics Tower Hall of Radicals",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "East": "tower_staircase_1",
+        "West": "tower_radicals_1"
+      }
+    },
+    {
+      "VirtualId": "tower_radicals_1",
+      "Name": "Fanatics Tower Hall of Radicals",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "East": "tower_radicals",
+        "West": "tower_radicals_2"
+      }
+    },
+    {
+      "VirtualId": "tower_radicals_2",
+      "Name": "Fanatics Tower Hall of Radicals",
+      "Description": "A hall in the fanatics tower",
+      "Exits": {
+        "East": "tower_radicals_1"
+      }
     }
   ]
 }
