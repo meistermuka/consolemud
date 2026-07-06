@@ -70,6 +70,8 @@ public class CommandParser
         _commands["equipment"] = new EquipmentCommand();
         _commands["equip"] = new EquipmentCommand();
         _commands["eq"] = new EquipmentCommand();
+        _commands["remove"] = new RemoveCommand();
+        _commands["rem"] = new RemoveCommand();
 
         _commands["cast"] = new CastCommand(_skillExecutor);
 
