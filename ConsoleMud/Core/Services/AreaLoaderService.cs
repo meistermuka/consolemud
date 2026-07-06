@@ -20,7 +20,16 @@ public static class AreaLoaderService
 
         Console.WriteLine($"Loaded area: {areaBlueprint.Name}");
         
-        var itemTemplates = areaBlueprint.ItemTemplates.ToDictionary(t => t.VirtualId, StringComparer.OrdinalIgnoreCase);
+        // Merge this area's item templates into the global registry so scripts can
+        // mint them by VirtualId at runtime. Last-wins on collisions, with a warning.
+        foreach (var itemBp in areaBlueprint.ItemTemplates)
+        {
+            if (world.ItemTemplates.ContainsKey(itemBp.VirtualId))
+                Console.WriteLine($"[Warning] Duplicate item template VirtualId '{itemBp.VirtualId}' — overwriting the previous definition.");
+            world.ItemTemplates[itemBp.VirtualId] = itemBp;
+        }
+
+        var itemTemplates = world.ItemTemplates;
         var npcTemplates = areaBlueprint.NpcTemplates.ToDictionary(t => t.VirtualId, StringComparer.OrdinalIgnoreCase);
 
 
@@ -76,7 +85,7 @@ public static class AreaLoaderService
                 {
                     for (int i = 0; i < spawnRef.Count; i++)
                     {
-                        liveRoom.Items.Add(CreateLiveItem(itemBp));
+                        liveRoom.Items.Add(ItemFactory.CreateLiveItem(itemBp));
                     }
                 }
             }
@@ -101,35 +110,6 @@ public static class AreaLoaderService
         Console.WriteLine($"Successfully loaded {createdRooms.Count} rooms from '{areaBlueprint.Name}'.\n");
     }
 
-    private static Item CreateLiveItem(ItemBlueprint bp)
-    {
-        Enum.TryParse<EquipmentSlot>(bp.TargetSlot, true, out var targetSlot);
-        Enum.TryParse<WeaponType>(bp.WeaponType, true, out var weaponType);
-        return new Item
-        {
-            Name = bp.Name,
-            Description = bp.Description,
-            IsGetable = bp.IsGetable,
-            IsContainer = bp.IsContainer,
-            IsWeapon = bp.IsWeapon,
-            WeaponType = weaponType,
-            DiceNotation = bp.DiceNotation,
-            AttackVerbs = bp.AttackVerbs,
-            IsArmour = bp.IsArmor,
-            IsEquippable = bp.IsEquippable,
-            IsShield = bp.IsShield,
-            TargetSlot = targetSlot,
-            ArmourRating = bp.ArmorRating,
-            IsCloseable = bp.IsCloseable,
-            IsLocked = bp.StartsLocked,
-            IsOpen = !bp.StartsLocked, // locked containers start closed
-            LockKeyId = bp.LockKeyId,
-            KeyId = bp.KeyId,
-            IsLightSource = bp.IsLightSource,
-            GrantsDarkvision = bp.GrantsDarkvision
-        };
-    }
-    
     private static List<Archetype> ParseArchetypes(string[] names)
     {
         var list = new List<Archetype>();
@@ -172,7 +152,7 @@ public static class AreaLoaderService
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically
         if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))
-            npc.Equipment[EquipmentSlot.MainHand] = CreateLiveItem(weaponBp);
+            npc.Equipment[EquipmentSlot.MainHand] = ItemFactory.CreateLiveItem(weaponBp);
 
         return npc;
     }

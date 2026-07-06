@@ -48,6 +48,7 @@ public static class ScriptEngine
         UserData.RegisterType<LuaCharacterProxy>();
         UserData.RegisterType<LuaRoomProxy>();
         UserData.RegisterType<LuaSkillContext>();
+        UserData.RegisterType<LuaItemProxy>();
 
         int count = 0;
         foreach (var file in Directory.EnumerateFiles(scriptsRoot, "*.lua", SearchOption.AllDirectories))

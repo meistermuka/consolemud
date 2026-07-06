@@ -17,6 +17,10 @@ public class WorldState
     // after a restart, when the runtime Guids have all changed.
     public Dictionary<string, Guid> RoomsByVirtualId { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    // Global item-template registry, keyed by VirtualId. Populated as areas load
+    // so scripts can mint items by template id at runtime (e.g. game.give_item).
+    public Dictionary<string, ItemBlueprint> ItemTemplates { get; } = new(StringComparer.OrdinalIgnoreCase);
+
     // Where the dead respawn. Defaults to the starting room until a safe room is flagged.
     public Guid? SafeRoomId { get; set; }
 

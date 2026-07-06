@@ -1,7 +1,9 @@
 using ConsoleMud.Core.Combat;
+using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
+using MoonSharp.Interpreter;
 
 namespace ConsoleMud.Core.Scripting;
 
@@ -42,8 +44,10 @@ public class ScriptApi
     {
         if (!TryResolveCharacter(charId, out var ch) || ch.Health <= 0) return;
         ch.Health = Math.Max(0, ch.Health - Math.Max(0, amount));
-        if (ch.Health <= 0 && ch is NonPlayerCharacter npc)
-            DeathService.HandleDeath(npc, _world, killer: null);
+        // Resolve death for anyone who drops — DeathService handles both the
+        // player branch (recall/undying_faith/gaean_embrace) and NPC corpses.
+        if (ch.Health <= 0)
+            DeathService.HandleDeath(ch, _world, killer: null);
     }
 
     public void use_skill(string casterId, string spellId, string? targetId = null)
@@ -88,6 +92,60 @@ public class ScriptApi
         attacker.CombatTarget = target;
         if (target.CombatTarget == null)
             target.CombatTarget = attacker;
+    }
+
+    // --- Inventory ---
+
+    /// <summary>True if the character carries an item matching the keyword.</summary>
+    public bool has_item(string charId, string keyword)
+    {
+        if (!TryResolveCharacter(charId, out var ch)) return false;
+        return ch.Inventory.Any(i => i.MatchesKeyword(keyword));
+    }
+
+    /// <summary>
+    /// Mint an item from the global template registry (by VirtualId) and add it to
+    /// the character's inventory. Returns false if the character or template is unknown.
+    /// </summary>
+    public bool give_item(string charId, string templateId)
+    {
+        if (!TryResolveCharacter(charId, out var ch)) return false;
+        if (templateId == null || !_world.ItemTemplates.TryGetValue(templateId, out var bp))
+            return false;
+
+        ch.Inventory.Add(ItemFactory.CreateLiveItem(bp));
+        return true;
+    }
+
+    /// <summary>
+    /// Remove the first inventory item matching the keyword. When <paramref name="drop"/>
+    /// is true the item is left in the character's current room; otherwise it is destroyed.
+    /// Returns false if nothing matched.
+    /// </summary>
+    public bool take_item(string charId, string keyword, bool drop = false)
+    {
+        if (!TryResolveCharacter(charId, out var ch)) return false;
+
+        var item = ch.Inventory.FirstOrDefault(i => i.MatchesKeyword(keyword));
+        if (item == null) return false;
+
+        ch.Inventory.Remove(item);
+        if (drop && _world.Rooms.TryGetValue(ch.CurrentRoomId, out var room))
+            room.Items.Add(item);
+        return true;
+    }
+
+    /// <summary>
+    /// Return the character's inventory as a Lua table of read-only item proxies,
+    /// so scripts can iterate with ipairs. Empty table if the character is unknown.
+    /// </summary>
+    public DynValue inventory(ScriptExecutionContext ctx, string charId)
+    {
+        var table = new Table(ctx.GetScript());
+        if (TryResolveCharacter(charId, out var ch))
+            foreach (var item in ch.Inventory)
+                table.Append(UserData.Create(new LuaItemProxy(item)));
+        return DynValue.NewTable(table);
     }
 
     // --- Helpers ---
