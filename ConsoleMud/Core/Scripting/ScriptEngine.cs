@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
 using MoonSharp.Interpreter;
@@ -30,9 +31,9 @@ public static class ScriptEngine
     /// Throws <see cref="SyntaxErrorException"/> on the first syntax error found,
     /// so bad scripts are caught at startup rather than silently at runtime.
     /// </summary>
-    public static void Load(string scriptsRoot, WorldState world)
+    public static void Load(string scriptsRoot, WorldState world, SkillExecutor executor)
     {
-        _api = new ScriptApi(world);
+        _api = new ScriptApi(world, executor);
         _scripts.Clear();
 
         if (!Directory.Exists(scriptsRoot))
@@ -44,6 +45,9 @@ public static class ScriptEngine
 
         // Register ScriptApi so MoonSharp can marshal it as a Lua userdata object.
         UserData.RegisterType<ScriptApi>();
+        UserData.RegisterType<LuaCharacterProxy>();
+        UserData.RegisterType<LuaRoomProxy>();
+        UserData.RegisterType<LuaSkillContext>();
 
         int count = 0;
         foreach (var file in Directory.EnumerateFiles(scriptsRoot, "*.lua", SearchOption.AllDirectories))
@@ -96,7 +100,7 @@ public static class ScriptEngine
         catch (ScriptRuntimeException ex)
         {
             ColorConsole.WriteLine(
-                $"\n[ScriptEngine] Error in '{scriptId}.{fnName}': {ex.DecoratedMessage}",
+                $"\n[ScriptEngine] Error in '{scriptId}.{fnName}': {ex}",
                 ConsoleColor.DarkYellow);
         }
         catch (Exception ex)

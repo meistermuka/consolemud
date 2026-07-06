@@ -1,4 +1,5 @@
 using ConsoleMud.Core.Combat;
+using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
 
@@ -14,8 +15,13 @@ namespace ConsoleMud.Core.Scripting;
 public class ScriptApi
 {
     private readonly WorldState _world;
+    private readonly SkillExecutor _executor;
 
-    public ScriptApi(WorldState world) => _world = world;
+    public ScriptApi(WorldState world, SkillExecutor executor)
+    {
+        _world = world;
+        _executor = executor;
+    }
 
     // --- Output ---
 
@@ -38,6 +44,17 @@ public class ScriptApi
         ch.Health = Math.Max(0, ch.Health - Math.Max(0, amount));
         if (ch.Health <= 0 && ch is NonPlayerCharacter npc)
             DeathService.HandleDeath(npc, _world, killer: null);
+    }
+
+    public void use_skill(string casterId, string spellId, string? targetId = null)
+    {
+        if (!TryResolveCharacter(casterId, out var caster)) return;
+
+        Character? target = null;
+        if (targetId != null && TryResolveCharacter(targetId, out var t))
+            target = t;
+
+        _executor.TryUse(caster, spellId, [], _world, target);
     }
 
     /// <summary>Restore health to a character by their runtime Id string.</summary>

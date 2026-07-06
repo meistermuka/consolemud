@@ -17,13 +17,40 @@ public class SkillContext
     public string[] Args { get; }
     public DefinitionRegistry Definitions { get; }
 
-    public SkillContext(Character caster, WorldState world, SkillDefinition definition, string[] args, DefinitionRegistry definitions)
+    public Character? ExplicitTarget { get; }
+
+    public SkillContext(Character caster, WorldState world, SkillDefinition definition, string[] args, DefinitionRegistry definitions, Character? explicitTarget = null)
     {
         Caster = caster;
         World = world;
         Definition = definition;
         Args = args ?? Array.Empty<string>();
         Definitions = definitions;
+        ExplicitTarget = explicitTarget;
+    }
+
+    /// <summary>
+    /// Hostile target that may be a Player or an NPC. Prefers an explicitly
+    /// supplied target (e.g. from a script), then a named NPC in the room,
+    /// then the caster's current combat target.
+    /// </summary>
+    public Character? ResolveHostileTarget()
+    {
+        if (ExplicitTarget != null)
+            return ExplicitTarget;
+
+        if (Args.Length == 0)
+            return Caster.CombatTarget;
+
+        if (!World.Rooms.TryGetValue(Caster.CurrentRoomId, out var room) || !Caster.CanSee(room))
+            return null;
+
+        var (index, keyword) = KeywordParser.ExtractIndex(string.Join(" ", Args));
+        int matches = 0;
+        foreach (var npc in room.Characters.OfType<NonPlayerCharacter>())
+            if (npc.MatchesKeyword(keyword) && ++matches == index)
+                return npc;
+        return null;
     }
 
     public string TargetName => string.Join(" ", Args);

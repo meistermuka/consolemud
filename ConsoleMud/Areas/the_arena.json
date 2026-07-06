@@ -1,0 +1,51 @@
+{
+  "Name": "The Arena",
+  "Description": "A large arena with a wooden floor and wooden walls.",
+  "ItemTemplates": [],
+  "NpcTemplates": [
+    {
+      "VirtualId": "training_dummy",
+      "Name": "The arena training dummy",
+      "Description": "Here stands the arena training dummy. It is neither sentient or a simple object. It is animated by the will of the combattant.",
+      "Health": 200,
+      "MaxHealth": 200,
+      "Mana": 1000,
+      "MaxMana": 1000,
+      "Skills": [
+        "thunder_bolt"
+      ],
+      "Archetypes": [
+        "Humanoid"
+      ],
+      "ScriptId": "npcs/training_dummy"
+    }
+  ],
+  "Rooms": [
+    {
+      "VirtualId": "central_ring",
+      "Name": "The {YCentral{x Ring",
+      "Description": "An elevated circular platform made out of polished granite.",
+      "Exits": {
+        "East": "square_field"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "training_dummy",
+            "Count": 1
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "square_field",
+      "Name": "The square sparring {gfield{x",
+      "Description": "A field in the shape of a square for combattants to spar",
+      "IsOutside": true,
+      "Exits": {
+        "West": "central_ring"
+      }
+    }
+  ]
+}

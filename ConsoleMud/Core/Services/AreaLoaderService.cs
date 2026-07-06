@@ -140,6 +140,10 @@ public static class AreaLoaderService
         return list;
     }
 
+    // Proficiency granted for skills listed on an NPC blueprint. NPCs are
+    // "masters" of their listed skills so scripted casts don't randomly fizzle.
+    private const double NpcSkillProficiency = 100.0;
+
     private static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, Dictionary<string, ItemBlueprint> itemTemplates)
     {
         var npc = new NonPlayerCharacter
@@ -148,6 +152,8 @@ public static class AreaLoaderService
             Description = bp.Description,
             Health = bp.Health,
             MaxHealth = bp.MaxHealth,
+            Mana = bp.Mana,
+            MaxMana = bp.MaxMana,
             Level = bp.Level < 1 ? 1 : bp.Level,
             CurrentRoomId = roomId,
             IsAggressive = bp.IsAggressive,
@@ -157,6 +163,12 @@ public static class AreaLoaderService
             XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,
             ScriptId = bp.ScriptId,
         };
+
+        // Grant any listed skills at mastery proficiency.
+        if (bp.Skills != null)
+            foreach (var skillId in bp.Skills)
+                if (!string.IsNullOrWhiteSpace(skillId))
+                    npc.KnownSkills[skillId] = NpcSkillProficiency;
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically
         if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))

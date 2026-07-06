@@ -24,7 +24,7 @@ public class SkillExecutor
     /// skill, so the caller can fall through to "unknown command". Any real
     /// skill (known or not, ready or not) returns true after messaging.
     /// </summary>
-    public bool TryUse(Character caster, string skillId, string[] args, WorldState world)
+    public bool TryUse(Character caster, string skillId, string[] args, WorldState world, Character? target = null)
     {
         if (!_definitions.Skills.TryGetValue(skillId, out var def))
             return false; // not a skill at all
@@ -106,7 +106,7 @@ public class SkillExecutor
             return true;
         }
 
-        handler.Execute(new SkillContext(caster, world, def, args, _definitions));
+        handler.Execute(new SkillContext(caster, world, def, args, _definitions, target));
 
         // Notify on-cast passives (e.g. channeling_flow mana refund).
         if (def.IsSpell)

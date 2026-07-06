@@ -34,13 +34,15 @@ public class LuaSkillContext
         _ctx = ctx;
 
         caster_id   = ctx.Caster.Id.ToString();
-        target_name = ctx.TargetName;
+        //target_name = ctx.TargetName;
         spell_power = ctx.SpellPowerBonus();
         heal_bonus  = ctx.HealScaleBonus();
 
         // Pre-resolve so scripts don't need to find the target themselves.
-        var npc = ctx.ResolveNpcTarget();
-        target_id = npc?.Id.ToString();
+        // Uses the general resolver so a Player can be a valid target.
+        var target = ctx.ResolveHostileTarget();
+        target_name = target?.Name ?? "";
+        target_id = target?.Id.ToString();
     }
 
     /// <summary>Read a numeric tunable from the skill's Parameters bag.</summary>
