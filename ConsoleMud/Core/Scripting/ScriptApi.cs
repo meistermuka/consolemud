@@ -61,6 +61,7 @@ public class ScriptApi
         _executor.TryUse(caster, spellId, [], _world, target);
     }
 
+
     /// <summary>Restore health to a character by their runtime Id string.</summary>
     public void heal(string charId, int amount)
     {
@@ -115,6 +116,40 @@ public class ScriptApi
 
         ch.Inventory.Add(ItemFactory.CreateLiveItem(bp));
         return true;
+    }
+
+    /// <summary>
+    /// Spawn <paramref name="count"/> NPCs from the global template registry (by VirtualId)
+    /// into the room identified by VirtualId. Each NPC is fully initialised, placed in the
+    /// room, and registered in world state so it can fight and be targeted. Safe no-op if the
+    /// room or template is unknown.
+    /// </summary>
+    public void spawn_npc(string virtualRoomId, string templateId, int count)
+    {
+        if (!_world.TryGetRoomByVirtualId(virtualRoomId, out var room))
+        {
+            ColorConsole.WriteLine($"Error: Room not found: {virtualRoomId}");
+            return;
+        }
+        if (templateId == null || !_world.NpcTemplates.TryGetValue(templateId, out var bp))
+        {
+            ColorConsole.WriteLine($"Error: NPC template not found: {templateId}");
+            return;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            var npc = NpcFactory.CreateLiveNpc(bp, room.Id, _world.ItemTemplates);
+            room.Characters.Add(npc);
+            _world.Characters[npc.Id] = npc;
+        }
+    }
+
+    /// <summary>Number of NPCs currently in the room identified by VirtualId.</summary>
+    public int count_npcs(string virtualRoomId)
+    {
+        if (!_world.TryGetRoomByVirtualId(virtualRoomId, out var room)) return 0;
+        return room.Characters.Count(c => c is NonPlayerCharacter);
     }
 
     /// <summary>

@@ -20,6 +20,8 @@ public class WorldState
     // Global item-template registry, keyed by VirtualId. Populated as areas load
     // so scripts can mint items by template id at runtime (e.g. game.give_item).
     public Dictionary<string, ItemBlueprint> ItemTemplates { get; } = new(StringComparer.OrdinalIgnoreCase);
+    
+    public Dictionary<string, NpcBlueprint> NpcTemplates { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     // Where the dead respawn. Defaults to the starting room until a safe room is flagged.
     public Guid? SafeRoomId { get; set; }

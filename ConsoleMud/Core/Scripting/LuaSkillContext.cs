@@ -24,6 +24,7 @@ public class LuaSkillContext
     private readonly SkillContext _ctx;
 
     public string caster_id   { get; }
+    public string caster_name { get; }
     public string? target_id  { get; }
     public string target_name { get; }
     public int    spell_power { get; }
@@ -34,7 +35,7 @@ public class LuaSkillContext
         _ctx = ctx;
 
         caster_id   = ctx.Caster.Id.ToString();
-        //target_name = ctx.TargetName;
+        caster_name = ctx.Caster.Name;
         spell_power = ctx.SpellPowerBonus();
         heal_bonus  = ctx.HealScaleBonus();
 

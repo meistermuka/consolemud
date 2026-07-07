@@ -1,3 +1,7 @@
 {
-
+    "Name": "The Arena",
+    "Description": "A large arena with a wooden floor and wooden walls.",
+    "ItemTemplates": [],
+    "NPCTemplates": [],
+    "Rooms": []
 }

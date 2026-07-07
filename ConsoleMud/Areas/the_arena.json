@@ -1,7 +1,24 @@
 {
   "Name": "The Arena",
   "Description": "A large arena with a wooden floor and wooden walls.",
-  "ItemTemplates": [],
+  "ItemTemplates": [
+    {
+      "VirtualId": "platinum_betting_coin",
+      "Name": "A platinum coin",
+      "Description": "A platinum coin with the face of the most famous wrestler",
+      "IsGetable": true
+    },
+    {
+      "VirtualId": "glass_amulet",
+      "Name": "Abyssal {BGlass{x Amulet",
+      "Description": "A sharp shard of void-born glass suspended by a silver chain. It seems to absorb the surrounding ambient light.",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Necklace",
+      "ArmorRating": 1
+    }
+  ],
   "NpcTemplates": [
     {
       "VirtualId": "training_dummy",
@@ -9,15 +26,34 @@
       "Description": "Here stands the arena training dummy. It is neither sentient or a simple object. It is animated by the will of the combattant.",
       "Health": 200,
       "MaxHealth": 200,
-      "Mana": 1000,
-      "MaxMana": 1000,
-      "Skills": [
-        "thunder_bolt"
-      ],
       "Archetypes": [
         "Humanoid"
       ],
       "ScriptId": "npcs/training_dummy"
+    },
+    {
+      "VirtualId": "wrestler_npc",
+      "Name": "A {mburly{x wrestler",
+      "Description": "A mountain of muscles ready to put you in a choke hold.",
+      "Health": 30,
+      "MaxHealth": 30,
+      "Level": 2,
+      "IsAggressive": true,
+      "Archetypes": [
+        "Humanoid"
+      ],
+      "ScriptId": "npcs/suplex"
+    },
+    {
+      "VirtualId": "betting_agent",
+      "Name": "A betting agent",
+      "Description": "A bald man with shifty looking eyes taking bets on the fights",
+      "Health": 20,
+      "MaxHealth": 20,
+      "Archetypes": [
+        "Humanoid"
+      ],
+      "ScriptId": "npcs/betting_agent"
     }
   ],
   "Rooms": [
@@ -26,7 +62,9 @@
       "Name": "The {YCentral{x Ring",
       "Description": "An elevated circular platform made out of polished granite.",
       "Exits": {
-        "East": "square_field"
+        "East": "square_field",
+        "South": "arena_wrestle_room",
+        "North": "betting_desk"
       },
       "Spawns": {
         "Items": [],
@@ -45,6 +83,36 @@
       "IsOutside": true,
       "Exits": {
         "West": "central_ring"
+      }
+    },
+    {
+      "VirtualId": "arena_wrestle_room",
+      "Name": "The {gHall {xof {RWrestlers{x",
+      "Description": "This is where all the wrestlers come to fight!",
+      "Exits": {
+        "North": "central_ring"
+      }
+    },
+    {
+      "VirtualId": "betting_desk",
+      "Name": "The Betting Desk",
+      "Description": "Place your bets on the best wrestler here.",
+      "Exits": {
+        "South": "central_ring"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "platinum_betting_coin",
+            "Count": 10
+          }
+        ],
+        "Npcs": [
+          {
+            "TemplateId": "betting_agent",
+            "Count": 1
+          }
+        ]
       }
     }
   ]

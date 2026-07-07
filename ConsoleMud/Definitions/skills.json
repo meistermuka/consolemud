@@ -1577,5 +1577,21 @@
       "Damage"
     ],
     "Parameters": {}
+  },
+  {
+    "Id": "suplex",
+    "Name": "suplex",
+    "Description": "A wrestling move that throws a target to the ground. Effect defined in Scripts/skills/suplex.lua.",
+    "Kind": "Active",
+    "IsSpell": false,
+    "ManaCost": 0,
+    "CooldownSeconds": 4,
+    "DamageType": "Physical",
+    "DiceNotation": "3d6",
+    "Tags": [
+      "Active",
+      "Damage"
+    ],
+    "Parameters": {}
   }
 ]

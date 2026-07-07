@@ -32,6 +32,13 @@ public static class AreaLoaderService
         var itemTemplates = world.ItemTemplates;
         var npcTemplates = areaBlueprint.NpcTemplates.ToDictionary(t => t.VirtualId, StringComparer.OrdinalIgnoreCase);
 
+        foreach (var npcBp in areaBlueprint.NpcTemplates)
+        {
+            if(world.NpcTemplates.ContainsKey(npcBp.VirtualId))
+                Console.WriteLine($"[Warning] Duplicate npc template VirtualId '{npcBp.VirtualId}' - overwriting the previous definition.");
+            world.NpcTemplates[npcBp.VirtualId] = npcBp;
+        }
+
 
         // A temporary map linking the file's text ID to our live runtime Guid
         var idTranslationTable = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
@@ -97,7 +104,7 @@ public static class AreaLoaderService
                 {
                     for (int i = 0; i < spawnRef.Count; i++)
                     {
-                        var liveNpc = CreateLiveNpc(npcBp, liveRoom.Id, itemTemplates);
+                        var liveNpc = NpcFactory.CreateLiveNpc(npcBp, liveRoom.Id, itemTemplates);
                         liveRoom.Characters.Add(liveNpc);
                         world.Characters[liveNpc.Id] = liveNpc; // Track globally in main thread state
                     }
@@ -108,52 +115,5 @@ public static class AreaLoaderService
         }
         
         Console.WriteLine($"Successfully loaded {createdRooms.Count} rooms from '{areaBlueprint.Name}'.\n");
-    }
-
-    private static List<Archetype> ParseArchetypes(string[] names)
-    {
-        var list = new List<Archetype>();
-        if (names == null) return list;
-        foreach (var n in names)
-            if (Enum.TryParse<Archetype>(n, true, out var a))
-                list.Add(a);
-        return list;
-    }
-
-    // Proficiency granted for skills listed on an NPC blueprint. NPCs are
-    // "masters" of their listed skills so scripted casts don't randomly fizzle.
-    private const double NpcSkillProficiency = 100.0;
-
-    private static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, Dictionary<string, ItemBlueprint> itemTemplates)
-    {
-        var npc = new NonPlayerCharacter
-        {
-            Name = bp.Name,
-            Description = bp.Description,
-            Health = bp.Health,
-            MaxHealth = bp.MaxHealth,
-            Mana = bp.Mana,
-            MaxMana = bp.MaxMana,
-            Level = bp.Level < 1 ? 1 : bp.Level,
-            CurrentRoomId = roomId,
-            IsAggressive = bp.IsAggressive,
-            InnateDarkvision = bp.HasDarkvision,
-            Archetypes = ParseArchetypes(bp.Archetypes),
-            // Fallback reward scales with the NPC's level and toughness.
-            XpReward = bp.XpReward > 0 ? bp.XpReward : (bp.Level < 1 ? 1 : bp.Level) * 10 + bp.MaxHealth,
-            ScriptId = bp.ScriptId,
-        };
-
-        // Grant any listed skills at mastery proficiency.
-        if (bp.Skills != null)
-            foreach (var skillId in bp.Skills)
-                if (!string.IsNullOrWhiteSpace(skillId))
-                    npc.KnownSkills[skillId] = NpcSkillProficiency;
-
-        // If the NPC template requests an equipped starter item weapon, generate it automatically
-        if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))
-            npc.Equipment[EquipmentSlot.MainHand] = ItemFactory.CreateLiveItem(weaponBp);
-
-        return npc;
     }
 }
