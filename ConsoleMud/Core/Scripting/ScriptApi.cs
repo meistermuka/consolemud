@@ -108,14 +108,14 @@ public class ScriptApi
     /// Mint an item from the global template registry (by VirtualId) and add it to
     /// the character's inventory. Returns false if the character or template is unknown.
     /// </summary>
-    public bool give_item(string charId, string templateId)
+    public string give_item(string charId, string templateId)
     {
-        if (!TryResolveCharacter(charId, out var ch)) return false;
+        if (!TryResolveCharacter(charId, out var ch)) return string.Empty;
         if (templateId == null || !_world.ItemTemplates.TryGetValue(templateId, out var bp))
-            return false;
-
-        ch.Inventory.Add(ItemFactory.CreateLiveItem(bp));
-        return true;
+            return string.Empty;
+        var givenItem = ItemFactory.CreateLiveItem(bp);
+        ch.Inventory.Add(givenItem);
+        return givenItem.Name;
     }
 
     /// <summary>
