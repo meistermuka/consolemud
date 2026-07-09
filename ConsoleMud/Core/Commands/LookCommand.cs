@@ -48,8 +48,11 @@ public class LookCommand : ICommand
         var exits = string.Join(", ", room.Exits.Select(e => e.Key.ToString().ToLower()));
         ColorConsole.WriteLine($"Exits: {(string.IsNullOrEmpty(exits) ? "none" : exits)}");
 
-        foreach (var item in room.Items)
-            ColorConsole.WriteLine($"You see a {item.Name} here.", ConsoleColor.Gray);
+        foreach (var (count, item) in room.Items.GroupedByName())
+        {
+            var prefix = count > 1 ? $"{count} x" : string.Empty;
+            ColorConsole.WriteLine($"{prefix} {item.Name}", ConsoleColor.Gray);
+        }
 
         bool canPeek = player.KnownSkills.ContainsKey("peek");
         foreach (var character in room.Characters.Where(c => c != player && !c.IsHidden))
@@ -130,8 +133,12 @@ public class LookCommand : ICommand
         else
         {
             ColorConsole.WriteLine("It contains:");
-            foreach (var item in target.Contents)
-                ColorConsole.WriteLine($"  {item.Name}", ConsoleColor.Gray);
+            
+            foreach (var (count, item) in target.Contents.GroupedByName())
+            {
+                var prefix = count > 1 ? $"{count} x" : string.Empty;
+                ColorConsole.WriteLine($"{prefix} {item.Name}", ConsoleColor.Gray);
+            }
         }
 
         ColorConsole.WriteLine();

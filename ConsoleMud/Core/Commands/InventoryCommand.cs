@@ -19,9 +19,10 @@ public class InventoryCommand : ICommand
             return;
         }
 
-        foreach (var item in player.Inventory)
+        foreach (var (count, item) in player.Inventory.GroupedByName())
         {
-            ColorConsole.WriteLine($"  - {item.Name}: {item.Description}", ConsoleColor.Gray);
+            var prefix = count > 1 ? $"{count} x " : string.Empty;
+            ColorConsole.WriteLine($"  - {prefix}{item.Name}: {item.Description}", ConsoleColor.Gray);
         }
         ColorConsole.WriteLine();
     }
