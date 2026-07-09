@@ -311,7 +311,13 @@
       "Description": "A lean gray street walker with predatory yellow eyes.",
       "Health": 25,
       "MaxHealth": 25,
-      "EquippedWeaponTemplateId": "rusty_dagger",
+      "Class": "Thief",
+      "Species": "Human",
+      "Items": [
+        { "TemplateId": "rusty_dagger", "Slot": "MainHand" },
+        { "TemplateId": "leather_vest", "Slot": "Torso" },
+        { "TemplateId": "torch" }
+      ],
       "IsAggressive": false
     },
     {
@@ -610,7 +616,9 @@ const ENUMS = {
   Direction: ["North", "South", "East", "West", "Up", "Down"],
   EquipmentSlot: ["Head","Mask","Necklace","Torso","Gloves","Belt","Pants","Shins","Boots","MainHand","OffHand","Ring","Earring","Arm","Forearm","Ring1","Ring2","Earring1","Earring2","LeftArm","RightArm","LeftForearm","RightForearm"],
   WeaponType: ["Unarmed","Sword","Dagger","Mace","Club","Axe","Spear","Staff","Bow"],
-  Archetype: ["Humanoid","Animal","Beast","Undead","Fiend","Dragon","Elemental"]
+  Archetype: ["Humanoid","Animal","Beast","Undead","Fiend","Dragon","Elemental"],
+  CharacterClass: ["Fighter","Thief","Ranger","Cleric","Mage","Druid"],
+  Species: ["Human","Elf","Dwarf","Halfling","Gnome","Orc"]
 };
 
 /* ---------- Colour markup renderer (mirrors ColorMarkup.cs) ---------- */
@@ -707,7 +715,10 @@ const SCHEMAS = {
       { name: "MaxHealth", label: "Max Health", type: "int", include: "always", default: 20 },
       { name: "Level", label: "Level", type: "int", include: "omitDefault", default: 1 },
       { name: "XpReward", label: "XP Reward (0 = auto)", type: "int", include: "omitZero", default: 0 },
-      { name: "EquippedWeaponTemplateId", label: "Equipped Weapon", type: "itemRef", include: "omitEmpty" },
+      { name: "Class", label: "Class (optional)", type: "enum", enum: "CharacterClass", include: "omitEmpty", optional: true },
+      { name: "Species", label: "Species (optional)", type: "enum", enum: "Species", include: "omitEmpty", optional: true },
+      { name: "EquippedWeaponTemplateId", label: "Equipped Weapon (legacy shortcut)", type: "itemRef", include: "omitEmpty" },
+      { name: "Items", label: "Items", type: "npcItems", include: "omitEmpty" },
       { name: "IsAggressive", label: "Aggressive", type: "bool", include: "omitFalse", group: "flags" },
       { name: "HasDarkvision", label: "Has Darkvision", type: "bool", include: "omitFalse", group: "flags" },
       { name: "Archetypes", label: "Archetypes", type: "multiEnum", enum: "Archetype", include: "omitEmpty" },
@@ -764,6 +775,9 @@ function normalizeArea(a) {
   a.ItemTemplates = Array.isArray(a.ItemTemplates) ? a.ItemTemplates : [];
   a.NpcTemplates = Array.isArray(a.NpcTemplates) ? a.NpcTemplates : [];
   a.Rooms = Array.isArray(a.Rooms) ? a.Rooms : [];
+  a.NpcTemplates.forEach(n => {
+    if (!Array.isArray(n.Items)) n.Items = [];
+  });
   a.Rooms.forEach(r => {
     if (typeof r.Exits !== "object" || r.Exits == null) r.Exits = {};
     if (typeof r.Spawns !== "object" || r.Spawns == null) r.Spawns = { Items: [], Npcs: [] };
@@ -983,6 +997,7 @@ function renderField(key, entry, field) {
     case "stringList": return stringListField(entry, field);
     case "multiEnum": return multiEnumField(entry, field);
     case "itemRef": return itemRefField(entry, field);
+    case "npcItems": return npcItemsField(entry, field);
     case "exits": return exitsField(entry);
     case "spawns": return spawnsField(entry);
     default: return el("div", {});
@@ -1116,6 +1131,59 @@ function itemRefField(entry, field) {
   const sel = el("select", { class: unknown ? "ref-bad" : "", onchange: e => { entry[field.name] = e.target.value; afterEdit(false); } }, opts);
   sel.value = cur;
   return el("div", { class: "field" }, [ el("label", {}, field.label), sel ]);
+}
+
+/* ---------- NPC Items editor ---------- */
+function npcItemsField(entry, field) {
+  if (!Array.isArray(entry[field.name])) entry[field.name] = [];
+  const arr = entry[field.name];
+  const itemIds = (state.area.ItemTemplates || []).map(x => x.VirtualId).filter(Boolean);
+  const slotValues = ENUMS.EquipmentSlot;
+
+  const rows = el("div", { class: "row-list" });
+
+  const rebuild = () => {
+    // Re-render just this fieldset in place.
+    afterEdit(true);
+  };
+
+  arr.forEach((ref, i) => {
+    const curId = ref.TemplateId != null ? ref.TemplateId : "";
+    const curSlot = ref.Slot != null ? ref.Slot : "";
+
+    // Item template selector
+    const idOpts = [ el("option", { value: "" }, "(select item)") ];
+    itemIds.forEach(id => idOpts.push(el("option", { value: id }, id)));
+    const unknownId = curId && !itemIds.includes(curId);
+    if (unknownId) idOpts.push(el("option", { value: curId }, curId + " (unknown)"));
+    const idSel = el("select", {
+      class: unknownId ? "ref-bad" : "",
+      onchange: e => { ref.TemplateId = e.target.value; afterEdit(false); }
+    }, idOpts);
+    idSel.value = curId;
+
+    // Slot selector (inventory = empty string)
+    const slotOpts = [ el("option", { value: "" }, "(inventory)") ];
+    slotValues.forEach(s => slotOpts.push(el("option", { value: s }, s)));
+    const unknownSlot = curSlot && !slotValues.includes(curSlot);
+    if (unknownSlot) slotOpts.push(el("option", { value: curSlot }, curSlot + " (unknown)"));
+    const slotSel = el("select", {
+      class: unknownSlot ? "ref-bad" : "",
+      onchange: e => { ref.Slot = e.target.value || null; afterEdit(false); }
+    }, slotOpts);
+    slotSel.value = curSlot;
+
+    rows.appendChild(el("div", { class: "kv-row" }, [
+      idSel, slotSel,
+      el("button", { class: "btn small danger", onclick: () => { arr.splice(i, 1); rebuild(); } }, "x")
+    ]));
+  });
+
+  return el("fieldset", {}, [
+    el("legend", {}, field.label),
+    rows,
+    el("button", { class: "btn small add-row", onclick: () => { arr.push({ TemplateId: "", Slot: null }); rebuild(); } }, "+ Add item")
+  ]);
 }
 
 /* ---------- Exits editor ---------- */
@@ -1253,6 +1321,7 @@ function defaultFor(field) {
     case "int": return field.default != null ? field.default : 0;
     case "bool": return false;
     case "stringList": case "multiEnum": return [];
+    case "npcItems": return [];
     case "enum": case "text": case "textarea": case "itemRef": return "";
     case "exits": return {};
     case "spawns": return { Items: [], Npcs: [] };
@@ -1324,6 +1393,12 @@ function runValidation() {
   state.area.NpcTemplates.forEach(n => {
     if (n.EquippedWeaponTemplateId && !itemIds.has(n.EquippedWeaponTemplateId))
       w.push(`NPC "${n.VirtualId}" equips unknown item "${n.EquippedWeaponTemplateId}".`);
+    (n.Items || []).forEach((ref, i) => {
+      if (ref.TemplateId && !itemIds.has(ref.TemplateId))
+        w.push(`NPC "${n.VirtualId}" Items[${i}] references unknown template "${ref.TemplateId}".`);
+      if (ref.Slot && !ENUMS.EquipmentSlot.includes(ref.Slot))
+        w.push(`NPC "${n.VirtualId}" Items[${i}] has unknown slot "${ref.Slot}".`);
+    });
   });
   state.area.ItemTemplates.forEach(it => {
     if (it.LockKeyId && !keyIds.has(it.LockKeyId))
@@ -1465,6 +1540,10 @@ function coerceOut(field, v) {
     case "bool": return !!v;
     case "stringList": return (Array.isArray(v) ? v : []).map(String).filter(s => s.trim() !== "");
     case "multiEnum": return (Array.isArray(v) ? v : []).slice();
+    case "npcItems":
+      return (Array.isArray(v) ? v : [])
+        .filter(r => r && r.TemplateId && String(r.TemplateId).trim() !== "")
+        .map(r => ({ TemplateId: r.TemplateId, ...(r.Slot ? { Slot: r.Slot } : {}) }));
     default: return v != null ? v : "";
   }
 }

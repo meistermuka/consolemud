@@ -17,6 +17,32 @@
       "IsArmor": true,
       "TargetSlot": "Necklace",
       "ArmorRating": 1
+    },
+    {
+      "VirtualId": "gladiator_sword",
+      "Name": "Sword of the {bGladiator{x",
+      "Description": "A sword made of the finest steel",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "TargetSlot": "MainHand",
+      "WeaponType": "Sword",
+      "DiceNotation": "5d20",
+      "AttackVerbs": [
+        "cleave",
+        "gash",
+        "slash"
+      ]
+    },
+    {
+      "VirtualId": "ornate_armor",
+      "Name": "an {yornate{x chestplate",
+      "Description": "",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsArmor": true,
+      "TargetSlot": "Torso",
+      "ArmorRating": 20
     }
   ],
   "NpcTemplates": [
@@ -54,6 +80,23 @@
         "Humanoid"
       ],
       "ScriptId": "npcs/betting_agent"
+    },
+    {
+      "VirtualId": "gladiator",
+      "Name": "a {GLegendary{x gladiator",
+      "Description": "A legendary gladiator",
+      "Health": 2000,
+      "MaxHealth": 2000,
+      "Level": 101,
+      "Class": "Fighter",
+      "Species": "Orc",
+      "EquippedWeaponTemplateId": "gladiator_sword",
+      "Items": [
+        {
+          "TemplateId": "ornate_armor",
+          "Slot": "Torso"
+        }
+      ]
     }
   ],
   "Rooms": [
@@ -83,6 +126,15 @@
       "IsOutside": true,
       "Exits": {
         "West": "central_ring"
+      },
+      "Spawns": {
+        "Items": [],
+        "Npcs": [
+          {
+            "TemplateId": "gladiator",
+            "Count": 1
+          }
+        ]
       }
     },
     {

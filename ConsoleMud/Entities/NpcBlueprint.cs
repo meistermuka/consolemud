@@ -29,4 +29,18 @@ public class NpcBlueprint
     // SpeciesDefinition damage multipliers and darkvision. Stat modifiers are ignored.
     public string? Class { get; set; }
     public string? Species { get; set; }
+
+    // Richer item assignment: each entry is either placed in inventory (Slot null/empty)
+    // or equipped to a specific slot (Slot = a valid EquipmentSlot name).
+    public NpcItemRef[]? Items { get; set; }
+}
+
+/// <summary>
+/// References an item template to assign to an NPC, optionally specifying an equipment slot.
+/// A null or empty <see cref="Slot"/> places the item in the NPC's inventory.
+/// </summary>
+public class NpcItemRef
+{
+    public string TemplateId { get; set; }
+    public string? Slot { get; set; }
 }
