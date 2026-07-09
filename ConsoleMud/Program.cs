@@ -43,13 +43,13 @@ class Program
         var skillExecutor  = new SkillExecutor(definitions, skillHandlers);
         var parser         = new CommandParser(skillExecutor, definitions);
 
-        AreaLoaderService.LoadAreaFile("Areas/the_arena.json", world);
+        AreaLoaderService.LoadAreaFile("Areas/the_arena.json", world, definitions);
         var startingRoom = world.Rooms.Values.First();
         world.SafeRoomId = startingRoom.Id;
 
         // Load Lua scripts after all world data is ready so ScriptApi can
         // reference rooms and characters from the start.
-        ScriptEngine.Load("Scripts", world, skillExecutor);
+        ScriptEngine.Load("Scripts", world, skillExecutor, definitions);
         skillHandlers.RegisterScriptedSkills();
 
         var player = SelectCharacter(world, definitions, startingRoom.Id);

@@ -6,7 +6,7 @@ namespace ConsoleMud.Core.Services;
 
 public static class AreaLoaderService
 {
-    public static void LoadAreaFile(string filePath, WorldState world)
+    public static void LoadAreaFile(string filePath, WorldState world, DefinitionRegistry definitions)
     {
         if (!File.Exists(filePath))
             Console.WriteLine($"Area file not found: {filePath}");
@@ -104,7 +104,7 @@ public static class AreaLoaderService
                 {
                     for (int i = 0; i < spawnRef.Count; i++)
                     {
-                        var liveNpc = NpcFactory.CreateLiveNpc(npcBp, liveRoom.Id, itemTemplates);
+                        var liveNpc = NpcFactory.CreateLiveNpc(npcBp, liveRoom.Id, itemTemplates, definitions);
                         liveRoom.Characters.Add(liveNpc);
                         world.Characters[liveNpc.Id] = liveNpc; // Track globally in main thread state
                     }

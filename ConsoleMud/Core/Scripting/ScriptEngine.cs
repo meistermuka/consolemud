@@ -1,3 +1,4 @@
+using ConsoleMud.Core.Services;
 using ConsoleMud.Core.Skills;
 using ConsoleMud.Entities;
 using ConsoleMud.Helpers;
@@ -31,9 +32,9 @@ public static class ScriptEngine
     /// Throws <see cref="SyntaxErrorException"/> on the first syntax error found,
     /// so bad scripts are caught at startup rather than silently at runtime.
     /// </summary>
-    public static void Load(string scriptsRoot, WorldState world, SkillExecutor executor)
+    public static void Load(string scriptsRoot, WorldState world, SkillExecutor executor, DefinitionRegistry definitions)
     {
-        _api = new ScriptApi(world, executor);
+        _api = new ScriptApi(world, executor, definitions);
         _scripts.Clear();
 
         if (!Directory.Exists(scriptsRoot))

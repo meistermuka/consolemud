@@ -18,11 +18,13 @@ public class ScriptApi
 {
     private readonly WorldState _world;
     private readonly SkillExecutor _executor;
+    private readonly DefinitionRegistry _definitions;
 
-    public ScriptApi(WorldState world, SkillExecutor executor)
+    public ScriptApi(WorldState world, SkillExecutor executor, DefinitionRegistry definitions)
     {
         _world = world;
         _executor = executor;
+        _definitions = definitions;
     }
 
     // --- Output ---
@@ -139,7 +141,7 @@ public class ScriptApi
 
         for (int i = 0; i < count; i++)
         {
-            var npc = NpcFactory.CreateLiveNpc(bp, room.Id, _world.ItemTemplates);
+            var npc = NpcFactory.CreateLiveNpc(bp, room.Id, _world.ItemTemplates, _definitions);
             room.Characters.Add(npc);
             _world.Characters[npc.Id] = npc;
         }

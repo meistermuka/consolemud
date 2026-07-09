@@ -23,4 +23,10 @@ public class NpcBlueprint
     // Optional: relative path to a Scripts/npcs/*.lua file (without extension).
     // e.g. "npcs/goblin_shaman". Null means default AI only.
     public string? ScriptId { get; set; }
+
+    // Optional class and species ids (e.g. "Mage", "Elf"). When set, the factory
+    // applies the matching ClassDefinition skills (up to npc.Level) and the
+    // SpeciesDefinition damage multipliers and darkvision. Stat modifiers are ignored.
+    public string? Class { get; set; }
+    public string? Species { get; set; }
 }

@@ -9,7 +9,7 @@ public static class NpcFactory
     // "masters" of their listed skills so scripted casts don't randomly fizzle.
     private const double NpcSkillProficiency = 100.0;
 
-    public static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, IReadOnlyDictionary<string, ItemBlueprint> itemTemplates)
+    public static NonPlayerCharacter CreateLiveNpc(NpcBlueprint bp, Guid roomId, IReadOnlyDictionary<string, ItemBlueprint> itemTemplates, DefinitionRegistry definitions)
     {
         var npc = new NonPlayerCharacter
         {
@@ -34,6 +34,29 @@ public static class NpcFactory
             foreach (var skillId in bp.Skills)
                 if (!string.IsNullOrWhiteSpace(skillId))
                     npc.KnownSkills[skillId] = NpcSkillProficiency;
+
+        // Apply class: grant all class skills up to npc.Level. Explicit Skills[] entries take priority.
+        if (!string.IsNullOrWhiteSpace(bp.Class) && Enum.TryParse<CharacterClass>(bp.Class, true, out var classEnum)
+            && definitions.Classes.TryGetValue(bp.Class, out var classDef))
+        {
+            npc.Class = classEnum;
+            foreach (var entry in classDef.Skills.Where(e => e.Level <= npc.Level))
+            {
+                if (!npc.KnownSkills.ContainsKey(entry.SkillId))
+                    npc.KnownSkills[entry.SkillId] = NpcSkillProficiency;
+            }
+        }
+
+        // Apply species: copy damage multipliers and darkvision. Stat modifiers are ignored for NPCs.
+        if (!string.IsNullOrWhiteSpace(bp.Species) && Enum.TryParse<Species>(bp.Species, true, out var speciesEnum)
+            && definitions.Species.TryGetValue(bp.Species, out var speciesDef))
+        {
+            npc.Species = speciesEnum;
+            foreach (var kv in speciesDef.DamageMultipliers)
+                if (Enum.TryParse<DamageType>(kv.Key, true, out var dt))
+                    npc.DamageMultipliers[dt] = kv.Value;
+            npc.InnateDarkvision |= speciesDef.HasDarkvision;
+        }
 
         // If the NPC template requests an equipped starter item weapon, generate it automatically
         if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))

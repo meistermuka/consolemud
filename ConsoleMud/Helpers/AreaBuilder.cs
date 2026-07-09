@@ -63,7 +63,7 @@ public static class AreaBuilder
 
         // Final safety net: load it back through the real loader.
         Console.WriteLine("Verifying by loading it back...");
-        AreaLoaderService.LoadAreaFile(path, new WorldState());
+        AreaLoaderService.LoadAreaFile(path, new WorldState(), new DefinitionRegistry());
     }
 
     // ---- sections ----
