@@ -79,6 +79,8 @@ public class CommandParser
         _commands["help"] = new HelpCommand(_commands);
         _commands["commands"] = new CommandsCommand(_commands);
         _commands["cmds"] = new CommandsCommand(_commands);
+        _commands["affect"] = new AffectCommand();
+        _commands["aff"] = new AffectCommand();
     }
 
     public void ParseAndExecute(string input, Player player, WorldState world)
