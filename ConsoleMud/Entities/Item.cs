@@ -41,6 +41,7 @@ public class Item
     public bool IsEquippable { get; set; }
     public EquipmentSlot TargetSlot { get; set; }
     public bool IsShield { get; set; }
+    public string OriginalVirtualId { get; set; }
 
     /// <summary>
     /// Check if a player's query text matches any of the item's keywords.'

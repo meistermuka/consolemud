@@ -100,10 +100,12 @@ public class ScriptApi
     // --- Inventory ---
 
     /// <summary>True if the character carries an item matching the keyword.</summary>
-    public bool has_item(string charId, string keyword)
+    public bool has_item(string charId, string virtualId)
     {
-        if (!TryResolveCharacter(charId, out var ch)) return false;
-        return ch.Inventory.Any(i => i.MatchesKeyword(keyword));
+        if (!TryResolveCharacter(charId, out var ch)) 
+            return false;
+        return ch.Inventory.Any(i => i.OriginalVirtualId == virtualId);
+        //return ch.Inventory.Any(i => i.MatchesKeyword(keyword));
     }
 
     /// <summary>

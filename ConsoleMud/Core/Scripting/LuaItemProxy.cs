@@ -24,6 +24,7 @@ public class LuaItemProxy
     public bool   is_weapon       { get; }
     public bool   is_container    { get; }
     public bool   is_light_source { get; }
+    public string virtual_id      { get; }
 
     public LuaItemProxy(Item item)
     {
@@ -32,5 +33,6 @@ public class LuaItemProxy
         is_weapon       = item.IsWeapon;
         is_container    = item.IsContainer;
         is_light_source = item.IsLightSource;
+        virtual_id      = item.OriginalVirtualId;
     }
 }

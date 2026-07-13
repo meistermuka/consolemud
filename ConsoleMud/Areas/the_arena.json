@@ -43,6 +43,48 @@
       "IsArmor": true,
       "TargetSlot": "Torso",
       "ArmorRating": 20
+    },
+    {
+      "VirtualId": "staff_magi",
+      "Name": "{bStaff{x of the {mMagi{x",
+      "Description": "An ancient standard of high magic",
+      "IsGetable": true,
+      "IsEquippable": true,
+      "IsWeapon": true,
+      "TargetSlot": "MainHand",
+      "WeaponType": "Staff",
+      "DiceNotation": "6d6",
+      "AttackVerbs": [
+        "flame",
+        "scorch",
+        "shock"
+      ]
+    },
+    {
+      "VirtualId": "glass_orb",
+      "Name": "a simple {Bglass{x orb",
+      "Description": "An orb made of blueish glass.",
+      "IsGetable": true
+    },
+    {
+      "VirtualId": "wood_staff",
+      "Name": "a simple {Rwood{x staff",
+      "Description": "A staff made of maplewood.",
+      "IsGetable": true,
+      "IsWeapon": true,
+      "TargetSlot": "MainHand",
+      "WeaponType": "Staff",
+      "DiceNotation": "2d6",
+      "AttackVerbs": [
+        "wack",
+        "thwack"
+      ]
+    },
+    {
+      "VirtualId": "gold_ingot",
+      "Name": "a heavy {ygold{x ingot",
+      "Description": "A 24K gold ingot",
+      "IsGetable": true
     }
   ],
   "NpcTemplates": [
@@ -97,6 +139,17 @@
           "Slot": "Torso"
         }
       ]
+    },
+    {
+      "VirtualId": "master_smith",
+      "Name": "Arena Master Smith",
+      "Description": "The arena master smith knows what it's all about",
+      "Health": 20,
+      "MaxHealth": 20,
+      "Archetypes": [
+        "Humanoid"
+      ],
+      "ScriptId": "npcs/master_smith"
     }
   ],
   "Rooms": [
@@ -107,7 +160,8 @@
       "Exits": {
         "East": "square_field",
         "South": "arena_wrestle_room",
-        "North": "betting_desk"
+        "North": "betting_desk",
+        "West": "arena_armoury"
       },
       "Spawns": {
         "Items": [],
@@ -162,6 +216,36 @@
         "Npcs": [
           {
             "TemplateId": "betting_agent",
+            "Count": 1
+          }
+        ]
+      }
+    },
+    {
+      "VirtualId": "arena_armoury",
+      "Name": "Armoury of the Arena",
+      "Description": "Armour, weapons and accessories of all shapes, sizes and uses can be found in this armoury.",
+      "Exits": {
+        "East": "central_ring"
+      },
+      "Spawns": {
+        "Items": [
+          {
+            "TemplateId": "glass_orb",
+            "Count": 1
+          },
+          {
+            "TemplateId": "wood_staff",
+            "Count": 1
+          },
+          {
+            "TemplateId": "gold_ingot",
+            "Count": 1
+          }
+        ],
+        "Npcs": [
+          {
+            "TemplateId": "master_smith",
             "Count": 1
           }
         ]

@@ -35,7 +35,8 @@ public static class ItemFactory
             LockKeyId = bp.LockKeyId,
             KeyId = bp.KeyId,
             IsLightSource = bp.IsLightSource,
-            GrantsDarkvision = bp.GrantsDarkvision
+            GrantsDarkvision = bp.GrantsDarkvision,
+            OriginalVirtualId = bp.VirtualId,
         };
     }
 }

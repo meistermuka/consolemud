@@ -22,7 +22,7 @@ public class InventoryCommand : ICommand
         foreach (var (count, item) in player.Inventory.GroupedByName())
         {
             var prefix = count > 1 ? $"{count} x " : string.Empty;
-            ColorConsole.WriteLine($"  - {prefix}{item.Name}: {item.Description}", ConsoleColor.Gray);
+            ColorConsole.WriteLine($"  - {prefix}{item.Name}", ConsoleColor.Gray);
         }
         ColorConsole.WriteLine();
     }
