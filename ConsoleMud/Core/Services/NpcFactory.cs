@@ -62,6 +62,21 @@ public static class NpcFactory
         if (!string.IsNullOrEmpty(bp.EquippedWeaponTemplateId) && itemTemplates.TryGetValue(bp.EquippedWeaponTemplateId, out var weaponBp))
             npc.Equipment[EquipmentSlot.MainHand] = ItemFactory.CreateLiveItem(weaponBp);
 
+        // Process richer item assignments: inventory items and multi-slot equipment.
+        if (bp.Items != null)
+        {
+            foreach (var itemRef in bp.Items.Where(r => !string.IsNullOrWhiteSpace(r?.TemplateId)))
+            {
+                if (!itemTemplates.TryGetValue(itemRef.TemplateId, out var ibp)) continue;
+                var liveItem = ItemFactory.CreateLiveItem(ibp);
+                if (!string.IsNullOrWhiteSpace(itemRef.Slot)
+                    && Enum.TryParse<EquipmentSlot>(itemRef.Slot, true, out var slot))
+                    npc.Equipment[slot] = liveItem;
+                else
+                    npc.Inventory.Add(liveItem);
+            }
+        }
+
         return npc;
     }
 
